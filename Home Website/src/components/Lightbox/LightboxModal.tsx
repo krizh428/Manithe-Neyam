@@ -57,14 +57,14 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         />
 
         {/* Top Control Bar */}
-        <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between text-theme-text px-2 sm:px-6">
+        <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between text-white px-2 sm:px-6">
           <div className="bg-black/40 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-xs border border-theme-border/10">
             <span>{currentIndex + 1}</span> / <span>{items.length}</span>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full bg-black/50 hover:bg-black/80 text-theme-text transition-colors border border-theme-border/20 focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            className="p-2.5 rounded-full bg-black/50 hover:bg-black/80 text-white transition-colors border border-theme-border/20 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             aria-label={isTamil ? 'மூடவும்' : 'Close lightbox'}
           >
             <X className="w-6 h-6" />
@@ -74,7 +74,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         {/* Prev Button */}
         <button
           onClick={onPrev}
-          className="fixed left-4 sm:left-8 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 hover:bg-theme-bg text-theme-text transition-all border border-theme-border/20 shadow-card hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          className="fixed left-4 sm:left-8 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 hover:bg-theme-bg text-white hover:text-brand-primary transition-all border border-theme-border/20 shadow-card hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-brand-primary"
           aria-label={isTamil ? 'முந்தையது' : 'Previous image'}
         >
           <ChevronLeft className="w-6 h-6" />
@@ -83,7 +83,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         {/* Next Button */}
         <button
           onClick={onNext}
-          className="fixed right-4 sm:right-8 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 hover:bg-theme-bg text-theme-text transition-all border border-theme-border/20 shadow-card hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          className="fixed right-4 sm:right-8 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 hover:bg-theme-bg text-white hover:text-brand-primary transition-all border border-theme-border/20 shadow-card hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-brand-primary"
           aria-label={isTamil ? 'அடுத்தது' : 'Next image'}
         >
           <ChevronRight className="w-6 h-6" />
@@ -107,11 +107,11 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
           </div>
 
           {/* Caption Box */}
-          <div className="mt-4 text-center max-w-xl px-4 py-2 bg-black/60 rounded-xl backdrop-blur-xs border border-theme-border/10 text-theme-text">
+          <div className="mt-4 text-center max-w-xl px-4 py-2 bg-black/60 rounded-xl backdrop-blur-xs border border-theme-border/10 text-white">
             <h4 className="text-base sm:text-lg font-bold">
               {isTamil ? currentItem.titleTa : currentItem.titleEn}
             </h4>
-            <p className="text-xs sm:text-sm text-theme-text mt-0.5 font-normal">
+            <p className="text-xs sm:text-sm text-white/90 mt-0.5 font-normal">
               {isTamil ? currentItem.captionTa : currentItem.captionEn}
             </p>
           </div>

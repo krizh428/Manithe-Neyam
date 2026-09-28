@@ -37,7 +37,7 @@ export const CallToAction: React.FC<CallToActionProps> = ({ onOpenSupport }) => 
 
           <div className="relative z-10 max-w-3xl mx-auto text-center flex flex-col items-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-brand-primary/20 text-xs sm:text-sm font-bold text-brand-primary mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-card/80 backdrop-blur-md border border-brand-primary/40 text-xs sm:text-sm font-bold text-brand-primary mb-6">
               <Sparkles className="w-4 h-4" />
               <span>{isTamil ? CTA_DATA.badgeTa : CTA_DATA.badgeEn}</span>
             </div>
@@ -56,15 +56,15 @@ export const CallToAction: React.FC<CallToActionProps> = ({ onOpenSupport }) => 
             <div className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto">
               <button
                 onClick={onOpenSupport}
-                className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-primary text-white font-extrabold text-sm sm:text-base hover:bg-brand-hover shadow-card hover:shadow-hover transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5"
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-brand-primary text-on-primary font-extrabold text-sm sm:text-base hover:bg-brand-hover shadow-card hover:shadow-hover transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5"
               >
-                <Heart className="w-5 h-5 text-white fill-white" />
+                <Heart className="w-5 h-5 text-heart fill-heart" />
                 <span>{isTamil ? CTA_DATA.btnSupportTa : CTA_DATA.btnSupportEn}</span>
               </button>
 
               <button
                 onClick={scrollToContact}
-                className="w-full sm:w-auto px-8 py-4 rounded-full bg-white hover:bg-brand-bg text-brand-primary font-bold text-sm sm:text-base border-2 border-brand-primary transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5"
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-transparent hover:bg-brand-bg text-brand-primary font-bold text-sm sm:text-base border-2 border-brand-primary transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2.5"
               >
                 <PhoneCall className="w-4 h-4" />
                 <span>{isTamil ? CTA_DATA.btnContactTa : CTA_DATA.btnContactEn}</span>

@@ -56,7 +56,7 @@ export const Introduction: React.FC = () => {
                   <HeartHandshake className="w-3.5 h-3.5" />
                   <span>{isTamil ? brand.fullNameTa : brand.fullNameEn}</span>
                 </div>
-                <p className="text-xs text-theme-text/90 font-medium">
+                <p className="text-xs text-white/90 font-medium">
                   {isTamil ? brand.fullAddressTa : brand.fullAddressEn}
                 </p>
               </div>

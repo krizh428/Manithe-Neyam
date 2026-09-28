@@ -156,7 +156,7 @@ export const Footer: React.FC = () => {
               ].map((soc, idx) => (
                 <span
                   key={idx}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-brand-primary text-theme-footer-text hover:text-white flex items-center justify-center text-xs font-bold transition-colors cursor-pointer border border-white/10"
+                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-brand-primary text-theme-footer-text hover:text-on-primary flex items-center justify-center text-xs font-bold transition-colors cursor-pointer border border-white/10"
                   title={soc.name}
                 >
                   {soc.icon}

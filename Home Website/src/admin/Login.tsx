@@ -103,7 +103,7 @@ export function Login() {
           <button
             type="submit"
             disabled={busy}
-            className="w-full py-3 rounded-lg bg-brand-primary text-white font-semibold text-sm hover:bg-brand-hover disabled:opacity-60 flex items-center justify-center gap-2 transition-colors"
+            className="w-full py-3 rounded-lg bg-brand-primary text-on-primary font-semibold text-sm hover:bg-brand-hover disabled:opacity-60 flex items-center justify-center gap-2 transition-colors"
           >
             {busy && <Loader2 className="w-4 h-4 animate-spin" />}
             Sign in

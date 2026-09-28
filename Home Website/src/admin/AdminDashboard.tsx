@@ -222,7 +222,7 @@ export function AdminDashboard() {
                     key={t.id}
                     to={t.id === 'overview' ? '/admin' : `/admin/${t.id}`}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                      isActive ? 'bg-brand-primary text-white' : 'text-theme-text-secondary hover:bg-theme-secondary'
+                      isActive ? 'bg-brand-primary text-on-primary' : 'text-theme-text-secondary hover:bg-theme-secondary'
                     }`}
                   >
                     <Icon className="w-4 h-4 shrink-0" />

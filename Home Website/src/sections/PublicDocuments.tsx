@@ -88,7 +88,7 @@ export function PublicDocuments() {
                   onClick={() => setSectionFilter(s.id)}
                   className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-colors ${
                     sectionFilter === s.id
-                      ? 'bg-brand-primary text-white border-brand-primary'
+                      ? 'bg-brand-primary text-on-primary border-brand-primary'
                       : 'border-theme-border text-theme-text hover:bg-theme-secondary'
                   }`}
                 >

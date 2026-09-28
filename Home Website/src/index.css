@@ -8,37 +8,42 @@
   --bg-primary: #FFFFFF;
   --bg-secondary: #F8FAFC;
   --bg-card: #FFFFFF;
-  --bg-accent-light: #F0FDF4;
+  --bg-accent-light: #EFF6FF;
 
   /* Light Theme Text */
-  --text-primary: #111827;
-  --text-body: #1F2937;
-  --text-secondary: #4B5563;
-  --text-muted: #6B7280;
+  --text-primary: #0F172A;
+  --text-body: #475569;
+  --text-secondary: #64748B;
+  --text-muted: #64748B;
 
-  /* Light Theme Brand (Forest Green) */
-  --brand-primary: #166534;
-  --brand-hover: #14532D;
-  --brand-light: #86EFAC;
-  --brand-bg: #F0FDF4;
+  /* Light Theme Brand (Blue) */
+  --brand-primary: #2563EB;
+  --brand-hover: #1D4ED8;
+  --brand-light: #BFDBFE;
+  --brand-bg: #DBEAFE;
+  /* Text used on top of a solid --brand-primary fill (buttons, filled badges) */
+  --on-primary: #FFFFFF;
+  /* Page/section heading accent — distinct from body text so themes can make
+     headings pop (e.g. gold) without turning every line of text that color */
+  --heading-accent: #0F172A;
 
   /* Light Theme Border */
-  --border-color: #E5E7EB;
+  --border-color: #E2E8F0;
   --border-light: #F1F5F9;
-  --border-strong: #E5E7EB;
+  --border-strong: #E2E8F0;
 
   /* Light Theme Card Text Tiers */
-  --card-heading: #1F2937;
-  --card-text: #374151;
-  --card-text-secondary: #6B7280;
-  --card-text-muted: #9CA3AF;
+  --card-heading: #1E293B;
+  --card-text: #475569;
+  --card-text-secondary: #64748B;
+  --card-text-muted: #94A3B8;
 
   /* Light Theme Footer (deliberately the darkest area, in both themes) */
   --footer-bg: #0F172A;
   --footer-heading: #FFFFFF;
   --footer-text: #CBD5E1;
-  --footer-link: #FFFFFF;
-  --footer-link-hover: #86EFAC;
+  --footer-link: #DBEAFE;
+  --footer-link-hover: #FFFFFF;
 
   /* Heart / Donation Accent */
   --heart: #EF4444;
@@ -66,49 +71,53 @@
 }
 
 [data-theme="dark"] {
-  /* Dark Theme Backgrounds */
-  --bg-primary: #070B14;
-  --bg-secondary: #0B1120;
-  --bg-card: #0F172A;
-  --bg-accent-light: #111827;
+  /* Dark Theme Backgrounds — Premium Navy */
+  --bg-primary: #071A2B;
+  --bg-secondary: #0B1F33;
+  --bg-card: #0D263D;
+  --bg-accent-light: #102D46;
 
   /* Dark Theme Text */
-  --text-primary: #F8FAFC;
-  --text-body: #CBD5E1;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --text-primary: #FFFFFF;
+  --text-body: #E2E8F0;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
 
-  /* Dark Theme Brand (Forest Green) */
-  --brand-primary: #166534;
-  --brand-hover: #22C55E;
-  --brand-light: #86EFAC;
-  --brand-bg: #052E16;
+  /* Dark Theme Brand (Royal Gold) */
+  --brand-primary: #D4AF37;
+  --brand-hover: #F4D35E;
+  --brand-light: #B8860B;
+  --brand-bg: #123B5A;
+  /* Gold on white/light backgrounds fails contrast, so text on a solid gold
+     fill (buttons, filled badges) must be dark navy, not white */
+  --on-primary: #071A2B;
+  --heading-accent: #D4AF37;
 
   /* Dark Theme Border */
-  --border-color: #1E293B;
-  --border-light: #172033;
-  --border-strong: #334155;
+  --border-color: #1E405C;
+  --border-light: #16324A;
+  --border-strong: #D4AF37;
 
   /* Dark Theme Card Text Tiers */
-  --card-heading: #F8FAFC;
-  --card-text: #CBD5E1;
-  --card-text-secondary: #94A3B8;
-  --card-text-muted: #64748B;
+  --card-heading: #D4AF37;
+  --card-text: #E2E8F0;
+  --card-text-secondary: #CBD5E1;
+  --card-text-muted: #94A3B8;
 
   /* Dark Theme Footer */
-  --footer-bg: #020617;
-  --footer-heading: #F8FAFC;
-  --footer-text: #94A3B8;
-  --footer-link: #CBD5E1;
-  --footer-link-hover: #4ADE80;
+  --footer-bg: #061522;
+  --footer-heading: #D4AF37;
+  --footer-text: #FFFFFF;
+  --footer-link: #D4AF37;
+  --footer-link-hover: #F4D35E;
 
-  /* Heart / Donation Accent */
+  /* Heart / Donation Accent — stays red in every theme */
   --heart: #EF4444;
   --heart-hover: #DC2626;
 
   /* Scrollbar */
-  --scrollbar-track: #070B14;
-  --scrollbar-thumb: #334155;
+  --scrollbar-track: #071A2B;
+  --scrollbar-thumb: #1E405C;
 
   /* Dark Theme Shadows */
   --card-shadow: 0 4px 25px -2px rgba(0, 0, 0, 0.5);
@@ -131,6 +140,8 @@
   --color-brand-hover: var(--brand-hover);
   --color-brand-light: var(--brand-light);
   --color-brand-bg: var(--brand-bg);
+  --color-on-primary: var(--on-primary);
+  --color-heading-accent: var(--heading-accent);
 
   --color-theme-border: var(--border-color);
   --color-theme-border-light: var(--border-light);

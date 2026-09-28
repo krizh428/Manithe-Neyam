@@ -41,7 +41,7 @@ export const Activities: React.FC = () => {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`relative px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-primary ${
                   isSelected
-                    ? 'text-white shadow-card hover:shadow-hover'
+                    ? 'text-on-primary shadow-card hover:shadow-hover'
                     : 'bg-theme-bg text-theme-text hover:text-brand-primary border border-theme-border hover:border-brand-primary/40'
                 }`}
               >
@@ -87,8 +87,8 @@ export const Activities: React.FC = () => {
                     </div>
 
                     {/* Beneficiaries Count Pill */}
-                    <div className="absolute bottom-3 left-3 z-10 pointer-events-none inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-xs text-theme-text text-xs font-medium">
-                      <Users className="w-3.5 h-3.5 text-theme-text" />
+                    <div className="absolute bottom-3 left-3 z-10 pointer-events-none inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37] backdrop-blur-xs text-[#5C3A21] text-xs font-bold shadow-xs">
+                      <Users className="w-3.5 h-3.5 text-[#5C3A21]" />
                       <span>{isTamil ? act.beneficiariesTa : act.beneficiariesEn}</span>
                     </div>
                   </div>

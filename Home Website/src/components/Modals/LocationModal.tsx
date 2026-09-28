@@ -58,7 +58,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-black/40 text-theme-text hover:bg-black/60 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
             aria-label={isTamil ? 'மூடவும்' : 'Close details'}
           >
             <X className="w-5 h-5" />
@@ -73,7 +73,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             
-            <div className="absolute bottom-4 left-6 right-6 text-theme-text">
+            <div className="absolute bottom-4 left-6 right-6 text-white">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-theme-bg/90 text-xs font-bold text-theme-text mb-2 border border-theme-border/30">
                 <span>{location.number}</span>
                 <span>•</span>

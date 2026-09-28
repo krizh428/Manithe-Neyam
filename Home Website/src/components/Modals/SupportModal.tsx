@@ -58,7 +58,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
           particleCount: 80,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#166534', '#22C55E', '#0F172A', '#D4AF37'],
+          colors: ['#2563EB', '#1D4ED8', '#0F172A', '#D4AF37'],
         });
       } catch {
         // Confetti fallback
@@ -158,7 +158,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                         >
                           <div
                             className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${
-                              isSelected ? 'bg-brand-primary text-white' : 'border border-theme-border'
+                              isSelected ? 'bg-brand-primary text-on-primary' : 'border border-theme-border'
                             }`}
                           >
                             {isSelected && <Check className="w-2.5 h-2.5" />}

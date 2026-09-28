@@ -53,12 +53,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
             </motion.div>
 
             {/* Main Hero Heading */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-theme-text tracking-tight leading-[1.2] mb-6 font-tamil">
-              <span className="text-theme-text">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-heading-accent tracking-tight leading-[1.2] mb-6 font-tamil">
+              <span className="text-heading-accent">
                 {isTamil ? hero.titleTa.split('—')[0] : hero.titleEn.split('—')[0]}
               </span>
               {hero.titleTa.includes('—') && (
-                <span className="block text-theme-text mt-1 text-2xl sm:text-3xl lg:text-4xl text-theme-text">
+                <span className="block mt-1 text-2xl sm:text-3xl lg:text-4xl text-heading-accent">
                   — {isTamil ? hero.titleTa.split('—')[1] : hero.titleEn.split('—')[1]}
                 </span>
               )}
@@ -73,7 +73,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
             <div className="flex flex-wrap items-center gap-3 mb-8 text-xs sm:text-sm text-theme-text font-bold bg-theme-bg px-4 py-2 rounded-xl border border-theme-border">
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-theme-text" />
-                <span>கோடாங்கிபட்டி & எஸ். சமதர்மபுரம், தேனி</span>
+                <span>{isTamil ? hero.locationTa : hero.locationEn}</span>
               </span>
               <span>•</span>
               <a href={`tel:${brand.phone1.replace(/\s+/g, '')}`} className="hover:underline text-theme-text">

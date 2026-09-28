@@ -33,7 +33,7 @@ export const BackToTop: React.FC = () => {
           whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.95 }}
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-theme-bg text-theme-text shadow-card hover:shadow-hover hover:bg-brand-primary hover:text-white hover:border-brand-hover border-2 border-theme-border transition-colors focus:outline-none focus:ring-4 focus:ring-brand-primary/50 cursor-pointer flex items-center justify-center group"
+          className="fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-theme-bg text-theme-text shadow-card hover:shadow-hover hover:bg-brand-primary hover:text-on-primary hover:border-brand-hover border-2 border-theme-border transition-colors focus:outline-none focus:ring-4 focus:ring-brand-primary/50 cursor-pointer flex items-center justify-center group"
           aria-label={isTamil ? 'மேலே செல்லவும்' : 'Scroll to top'}
           title={isTamil ? 'மேலே செல்லவும்' : 'Scroll to top'}
         >

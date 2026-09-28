@@ -77,7 +77,7 @@ export const UnsavedChangesBar: React.FC = () => {
         <button
           type="button"
           onClick={handleSave}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-primary text-white text-sm font-semibold hover:bg-brand-hover transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-primary text-on-primary text-sm font-semibold hover:bg-brand-hover transition-colors"
         >
           <Save className="w-4 h-4" /> Save changes
         </button>

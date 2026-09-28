@@ -8,7 +8,7 @@ export const inputClass =
 export const cardClass = 'bg-theme-card border border-theme-border rounded-2xl shadow-sm';
 
 export const buttonPrimary =
-  'inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-primary text-white text-sm font-semibold hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
+  'inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-primary text-on-primary text-sm font-semibold hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
 
 export const buttonGhost =
   'inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-theme-border text-theme-text text-sm font-medium hover:bg-theme-secondary disabled:opacity-50 transition-colors';
@@ -300,7 +300,7 @@ export const MultiImageField: React.FC<MultiImageFieldProps> = ({ label, value, 
           <div key={`${url}-${i}`} className="relative group rounded-lg overflow-hidden border border-theme-border bg-theme-secondary">
             <img src={url} alt="" className="w-full h-24 object-cover" />
             {i === 0 && (
-              <span className="absolute left-1.5 top-1.5 px-1.5 py-0.5 rounded bg-brand-primary text-white text-[10px] font-semibold">Cover</span>
+              <span className="absolute left-1.5 top-1.5 px-1.5 py-0.5 rounded bg-brand-primary text-on-primary text-[10px] font-semibold">Cover</span>
             )}
             {i !== 0 && (
               <span className="absolute left-1.5 top-1.5 w-5 h-5 rounded bg-black/60 text-white text-[10px] font-semibold flex items-center justify-center">

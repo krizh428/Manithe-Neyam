@@ -57,6 +57,8 @@ export interface HeroContentData {
   titleEn: string;
   subtitleTa: string;
   subtitleEn: string;
+  locationTa: string;
+  locationEn: string;
   image?: string;
 }
 
@@ -173,6 +175,8 @@ const DEFAULT_HERO: HeroContentData = {
   titleEn: HERO_DATA.titleEn,
   subtitleTa: HERO_DATA.subtitleTa,
   subtitleEn: HERO_DATA.subtitleEn,
+  locationTa: 'கோடாங்கிபட்டி & எஸ். சமதர்மபுரம், தேனி',
+  locationEn: 'Kodangipatti & S. Samatharmapuram, Theni',
   image: IMAGES.hero,
 };
 

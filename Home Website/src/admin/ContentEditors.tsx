@@ -83,6 +83,7 @@ export const HeroEditor: React.FC = () => {
     <SectionCard title="Home banner" description="The first thing visitors see at the top of the page.">
       <BiText label="Heading" base="title" data={hero} onChange={updateHero} />
       <BiText label="Sub-heading" base="subtitle" data={hero} onChange={updateHero} multiline />
+      <BiText label="Location line" base="location" data={hero} onChange={updateHero} />
       <ImageField label="Banner image" value={hero.image} onChange={(image) => updateHero({ image })} />
     </SectionCard>
   );

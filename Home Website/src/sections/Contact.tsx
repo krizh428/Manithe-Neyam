@@ -76,7 +76,7 @@ export const Contact: React.FC = () => {
           particleCount: 60,
           spread: 60,
           origin: { y: 0.7 },
-          colors: ['#166534', '#22C55E', '#0F172A'],
+          colors: ['#2563EB', '#1D4ED8', '#0F172A'],
         });
       } catch {
         // Fallback
@@ -198,7 +198,7 @@ export const Contact: React.FC = () => {
             <div className="bg-theme-card rounded-3xl border border-theme-border shadow-soft p-5 overflow-hidden">
               <div className="relative rounded-2xl overflow-hidden aspect-[16/9] bg-theme-bg flex items-center justify-center border border-theme-border">
                 {/* Visual Map Layout Graphic */}
-                <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#166534_1px,transparent_1px)] [background-size:16px_16px]" />
+                <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#2563EB_1px,transparent_1px)] [background-size:16px_16px]" />
                 
                 <div className="relative z-10 text-center p-4">
                   <div className="w-12 h-12 rounded-full bg-brand-bg text-brand-primary flex items-center justify-center mx-auto mb-2 shadow-card hover:shadow-hover animate-bounce">

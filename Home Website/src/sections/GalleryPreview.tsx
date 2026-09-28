@@ -65,7 +65,7 @@ export const GalleryPreview: React.FC = () => {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`relative px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-primary ${
                   isSelected
-                    ? 'text-white shadow-xs'
+                    ? 'text-on-primary shadow-xs'
                     : 'bg-theme-bg text-theme-text hover:text-brand-primary border border-theme-border'
                 }`}
               >
@@ -108,21 +108,21 @@ export const GalleryPreview: React.FC = () => {
                 {/* Dark Hover Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-6">
                   <div className="flex justify-end">
-                    <div className="w-10 h-10 rounded-full bg-theme-bg/30 backdrop-blur-md text-theme-text flex items-center justify-center shadow-card hover:shadow-hover">
+                    <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center shadow-card hover:shadow-hover">
                       <Eye className="w-5 h-5" />
                     </div>
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <h4 className="text-lg font-bold text-theme-text font-tamil">
+                      <h4 className="text-lg font-bold text-white font-tamil">
                         {isTamil ? item.titleTa : item.titleEn}
                       </h4>
-                      <span className="text-[10px] font-bold text-theme-text bg-black/40 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold text-white bg-black/40 px-2 py-0.5 rounded-full">
                         {isTamil ? item.momentDateTa : item.momentDateEn}
                       </span>
                     </div>
-                    <p className="text-xs text-theme-text line-clamp-1">
+                    <p className="text-xs text-white/90 line-clamp-1">
                       {isTamil ? item.detailedStoryTa || item.captionTa : item.detailedStoryEn || item.captionEn}
                     </p>
                   </div>
@@ -137,7 +137,7 @@ export const GalleryPreview: React.FC = () => {
                 )}
 
                 {/* Static indicator icon for mobile */}
-                <div className="absolute bottom-3 right-3 p-1.5 rounded-full bg-black/40 text-theme-text group-hover:opacity-0 transition-opacity sm:hidden">
+                <div className="absolute bottom-3 right-3 p-1.5 rounded-full bg-black/40 text-white group-hover:opacity-0 transition-opacity sm:hidden">
                   <ImageIcon className="w-3.5 h-3.5" />
                 </div>
               </motion.div>
