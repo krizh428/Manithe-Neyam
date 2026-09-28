@@ -58,7 +58,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
           particleCount: 80,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#0EA5E9', '#3B82F6', '#0B1120', '#D4AF37'],
+          colors: ['#166534', '#22C55E', '#0F172A', '#D4AF37'],
         });
       } catch {
         // Confetti fallback
@@ -86,14 +86,14 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="relative w-full max-w-xl bg-theme-bg rounded-3xl shadow-card hover:shadow-hover overflow-hidden z-10 border border-theme-border my-8"
+          className="relative w-full max-w-xl bg-theme-card rounded-3xl shadow-card hover:shadow-hover overflow-hidden z-10 border border-theme-border my-8"
         >
           {/* Header Banner */}
           <div className="bg-theme-bg p-6 sm:p-7 border-b border-theme-border relative">
             <button
               onClick={onClose}
               className="absolute top-5 right-5 p-2 rounded-full text-theme-text hover:text-theme-text hover:bg-theme-bg transition-colors focus:outline-none"
-              aria-label="Close"
+              aria-label={isTamil ? 'மூடவும்' : 'Close'}
             >
               <X className="w-5 h-5" />
             </button>
@@ -117,8 +117,8 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
           <div className="p-6 sm:p-8">
             {status === 'success' ? (
               <div className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-theme-bg border-2 border-theme-border text-theme-text flex items-center justify-center mx-auto shadow-card hover:shadow-hover">
-                  <Sparkles className="w-8 h-8 text-theme-text" />
+                <div className="w-16 h-16 rounded-full bg-brand-bg border-2 border-brand-primary text-brand-primary flex items-center justify-center mx-auto shadow-card hover:shadow-hover">
+                  <Sparkles className="w-8 h-8 text-brand-primary" />
                 </div>
                 <h4 className="text-2xl font-extrabold text-theme-text">
                   {isTamil ? 'மனிதநேயத்துடன் இணைந்ததற்கு நன்றி!' : 'Thank You for Your Generous Heart!'}
@@ -152,13 +152,13 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                           onClick={() => setSupportType(opt.id)}
                           className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold text-left transition-all cursor-pointer ${
                             isSelected
-                              ? 'border-theme-border bg-theme-bg text-theme-text shadow-xs'
-                              : 'border-theme-border text-theme-text hover:border-theme-border/40'
+                              ? 'border-brand-primary bg-brand-bg text-brand-primary shadow-xs'
+                              : 'border-theme-border text-theme-text hover:border-brand-primary/40'
                           }`}
                         >
                           <div
                             className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${
-                              isSelected ? 'bg-theme-bg text-theme-text' : 'border border-theme-border'
+                              isSelected ? 'bg-brand-primary text-white' : 'border border-theme-border'
                             }`}
                           >
                             {isSelected && <Check className="w-2.5 h-2.5" />}
@@ -182,7 +182,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={isTamil ? 'பெயர்' : 'Full Name'}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-theme-border text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9] focus:border-transparent"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-theme-border text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                     />
                   </div>
 
@@ -196,7 +196,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="+91 98765 43210"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-theme-border text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9] focus:border-transparent"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-theme-border text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -211,7 +211,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="email@example.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-theme-border text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9] focus:border-transparent"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-theme-border text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                   />
                 </div>
 
@@ -229,7 +229,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                         ? 'உதாரணமாக: பிறந்தநாள் அன்னதானம், கல்வி கட்டணம்...'
                         : 'e.g. Sponsoring a meal for a birthday, educational supplies...'
                     }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-theme-border text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9] focus:border-transparent resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-theme-border text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none"
                   />
                 </div>
 

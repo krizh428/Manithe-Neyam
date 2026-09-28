@@ -71,8 +71,8 @@ export const Introduction: React.FC = () => {
               className="relative mx-auto mt-6 w-[92%] sm:w-[85%] max-w-md bg-theme-bg p-5 rounded-2xl shadow-card hover:shadow-hover border border-theme-border z-20"
             >
               <div className="flex items-start gap-3">
-                <div className="p-2 rounded-xl bg-theme-bg text-theme-text shrink-0">
-                  <Quote className="w-5 h-5 text-theme-text" />
+                <div className="p-2 rounded-xl bg-brand-bg text-brand-primary shrink-0">
+                  <Quote className="w-5 h-5 text-brand-primary" />
                 </div>
                 <p className="text-xs sm:text-sm font-semibold text-theme-text leading-relaxed italic">
                   "{isTamil ? about.quoteTa : about.quoteEn}"
@@ -108,8 +108,8 @@ export const Introduction: React.FC = () => {
                     key={index}
                     className="flex items-center gap-3 p-3 rounded-xl bg-theme-bg border border-theme-border text-theme-text transition-transform hover:translate-x-1"
                   >
-                    <div className="w-6 h-6 rounded-full bg-theme-bg text-theme-text flex items-center justify-center shrink-0">
-                      <CheckCircle2 className="w-4 h-4 text-theme-text" />
+                    <div className="w-6 h-6 rounded-full bg-brand-bg text-brand-primary flex items-center justify-center shrink-0">
+                      <CheckCircle2 className="w-4 h-4 text-brand-primary" />
                     </div>
                     <span className="font-bold text-xs sm:text-sm">
                       {isTamil ? item.titleTa : item.titleEn}

@@ -105,7 +105,7 @@ export const PhotoSlider: React.FC<{ id: string; titleTa: string; titleEn: strin
           <button
             type="button"
             onClick={() => go(-1)}
-            aria-label="Previous photo"
+            aria-label={isTamil ? 'முந்தையது' : 'Previous photo'}
             className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/45 hover:bg-black/70 text-white flex items-center justify-center opacity-90 sm:opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -113,7 +113,7 @@ export const PhotoSlider: React.FC<{ id: string; titleTa: string; titleEn: strin
           <button
             type="button"
             onClick={() => go(1)}
-            aria-label="Next photo"
+            aria-label={isTamil ? 'அடுத்தது' : 'Next photo'}
             className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/45 hover:bg-black/70 text-white flex items-center justify-center opacity-90 sm:opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
           >
             <ChevronRight className="w-5 h-5" />
@@ -128,7 +128,7 @@ export const PhotoSlider: React.FC<{ id: string; titleTa: string; titleEn: strin
               <button
                 key={i}
                 type="button"
-                aria-label={`Show photo ${i + 1}`}
+                aria-label={isTamil ? `புகைப்படம் ${i + 1} காட்டு` : `Show photo ${i + 1}`}
                 onClick={() => {
                   setDirection(i > current ? 1 : -1);
                   setIndex(i);

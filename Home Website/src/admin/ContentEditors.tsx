@@ -200,6 +200,7 @@ export const LocationsEditor: React.FC = () => {
       capacityTa: '',
       capacityEn: '',
       phone: '',
+      email: '',
       image: IMAGES.hero,
       images: [IMAGES.hero],
       mapUrl: '',
@@ -234,6 +235,7 @@ export const LocationsEditor: React.FC = () => {
             <BiText label="Detailed description" base="details" data={data} onChange={patch} multiline />
             <BiText label="Capacity" base="capacity" data={data} onChange={patch} />
             <TextField label="Phone number of this home" hint="shown on the website as a tap-to-call link" value={loc.phone} onChange={(phone) => patch({ phone })} placeholder="+91 98765 43210" />
+            <TextField label="Email address of this home" hint="shown on the website as a tap-to-email link" type="email" value={loc.email} onChange={(email) => patch({ email })} placeholder="home@example.com" />
             <BiLines label="Features" base="features" data={data} onChange={patch} />
             <TextField label="Google Maps link" value={loc.mapUrl} onChange={(mapUrl) => patch({ mapUrl })} />
             <MultiImageField

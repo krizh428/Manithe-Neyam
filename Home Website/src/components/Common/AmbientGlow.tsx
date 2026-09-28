@@ -17,7 +17,7 @@ export const AmbientGlow: React.FC = () => {
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] max-w-[600px] max-h-[600px] rounded-full bg-radial from-theme-bg/8 via-[#0EA5E9]/3 to-transparent blur-3xl"
+        className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] max-w-[600px] max-h-[600px] rounded-full bg-radial from-theme-bg/8 via-brand-primary/3 to-transparent blur-3xl"
       />
 
       {/* Center Right Warm Ochre Aura */}
@@ -34,7 +34,7 @@ export const AmbientGlow: React.FC = () => {
           ease: 'easeInOut',
           delay: 2,
         }}
-        className="absolute top-[40%] -right-[15%] w-[60vw] h-[60vw] max-w-[650px] max-h-[650px] rounded-full bg-radial from-theme-bg/10 via-[#3B82F6]/3 to-transparent blur-3xl"
+        className="absolute top-[40%] -right-[15%] w-[60vw] h-[60vw] max-w-[650px] max-h-[650px] rounded-full bg-radial from-theme-bg/10 via-brand-primary/3 to-transparent blur-3xl"
       />
 
       {/* Bottom Center Slate Soft Light */}

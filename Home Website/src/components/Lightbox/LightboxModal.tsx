@@ -64,8 +64,8 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full bg-black/50 hover:bg-black/80 text-theme-text transition-colors border border-theme-border/20 focus:outline-none focus:ring-2 focus:ring-[#3B82F6]"
-            aria-label="Close lightbox"
+            className="p-2.5 rounded-full bg-black/50 hover:bg-black/80 text-theme-text transition-colors border border-theme-border/20 focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            aria-label={isTamil ? 'மூடவும்' : 'Close lightbox'}
           >
             <X className="w-6 h-6" />
           </button>
@@ -74,8 +74,8 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         {/* Prev Button */}
         <button
           onClick={onPrev}
-          className="fixed left-4 sm:left-8 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 hover:bg-theme-bg text-theme-text transition-all border border-theme-border/20 shadow-card hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-[#3B82F6]"
-          aria-label="Previous image"
+          className="fixed left-4 sm:left-8 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 hover:bg-theme-bg text-theme-text transition-all border border-theme-border/20 shadow-card hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          aria-label={isTamil ? 'முந்தையது' : 'Previous image'}
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -83,8 +83,8 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
         {/* Next Button */}
         <button
           onClick={onNext}
-          className="fixed right-4 sm:right-8 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 hover:bg-theme-bg text-theme-text transition-all border border-theme-border/20 shadow-card hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-[#3B82F6]"
-          aria-label="Next image"
+          className="fixed right-4 sm:right-8 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-black/50 hover:bg-theme-bg text-theme-text transition-all border border-theme-border/20 shadow-card hover:shadow-hover focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          aria-label={isTamil ? 'அடுத்தது' : 'Next image'}
         >
           <ChevronRight className="w-6 h-6" />
         </button>

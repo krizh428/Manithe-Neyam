@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Upload, Loader2 } from 'lucide-react';
 import { api } from '../../services/api';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface ImageUploaderProps {
   currentImageUrl: string;
@@ -17,8 +18,10 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   isAdmin,
   className = '',
   imgClassName = 'w-full h-full object-cover',
-  alt = 'Uploaded image',
+  alt,
 }) => {
+  const { isTamil } = useLanguage();
+  const resolvedAlt = alt ?? (isTamil ? 'பதிவேற்றப்பட்ட படம்' : 'Uploaded image');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -31,11 +34,11 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
     // Optional: Basic validation
     if (!file.type.startsWith('image/')) {
-      alert('Please select a valid image file.');
+      alert(isTamil ? 'சரியான பட கோப்பை தேர்ந்தெடுக்கவும்.' : 'Please select a valid image file.');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      alert('Image exceeds 5MB limit.');
+      alert(isTamil ? 'படம் 5MB அளவை தாண்டியுள்ளது.' : 'Image exceeds 5MB limit.');
       return;
     }
 
@@ -48,7 +51,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       onUploadComplete(await api.uploadImage(file));
     } catch (error) {
       console.error('Upload failed:', error);
-      alert(error instanceof Error ? error.message : 'Error uploading image.');
+      alert(error instanceof Error ? error.message : (isTamil ? 'படத்தை பதிவேற்றுவதில் பிழை.' : 'Error uploading image.'));
     } finally {
       setPreviewUrl(null);
       setIsUploading(false);
@@ -60,7 +63,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   return (
     <div className={`relative group ${className}`}>
-      <img src={displayUrl} alt={alt} className={imgClassName} />
+      <img src={displayUrl} alt={resolvedAlt} className={imgClassName} />
       
       {isAdmin && (
         <>
@@ -75,7 +78,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             {isUploading ? (
               <div className="flex flex-col items-center gap-2 text-white">
                 <Loader2 className="w-8 h-8 animate-spin" />
-                <span className="text-sm font-semibold">Uploading...</span>
+                <span className="text-sm font-semibold">{isTamil ? 'பதிவேற்றப்படுகிறது...' : 'Uploading...'}</span>
               </div>
             ) : (
               <button
@@ -87,7 +90,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
                 type="button"
               >
                 <Upload className="w-4 h-4" />
-                Replace Image
+                {isTamil ? 'படத்தை மாற்றவும்' : 'Replace Image'}
               </button>
             )}
           </div>

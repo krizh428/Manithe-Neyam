@@ -8,6 +8,12 @@ import {
   HeartHandshake,
   Users,
   Sparkles,
+  Dumbbell,
+  Flower2,
+  Palette,
+  Droplets,
+  Compass,
+  Star,
 } from 'lucide-react';
 import { SectionHeading } from '../components/Common/SectionHeading';
 import { useLanguage } from '../context/LanguageContext';
@@ -31,6 +37,18 @@ export const Services: React.FC = () => {
         return <HeartHandshake className="w-7 h-7" />;
       case 'Users':
         return <Users className="w-7 h-7" />;
+      case 'Dumbbell':
+        return <Dumbbell className="w-7 h-7" />;
+      case 'Flower2':
+        return <Flower2 className="w-7 h-7" />;
+      case 'Palette':
+        return <Palette className="w-7 h-7" />;
+      case 'Droplets':
+        return <Droplets className="w-7 h-7" />;
+      case 'Compass':
+        return <Compass className="w-7 h-7" />;
+      case 'Star':
+        return <Star className="w-7 h-7" />;
       default:
         return <Sparkles className="w-7 h-7" />;
     }
@@ -59,39 +77,39 @@ export const Services: React.FC = () => {
               viewport={{ once: true, margin: '-50px' }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               whileHover={{ y: -6 }}
-              className="p-7 sm:p-8 rounded-3xl bg-theme-bg/50 hover:bg-theme-bg border border-theme-border hover:border-theme-border/30 shadow-xs hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between group"
+              className="p-7 sm:p-8 rounded-3xl bg-theme-card hover:bg-brand-bg border border-theme-border hover:border-brand-primary shadow-xs hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
                 {/* Icon Container with Accent */}
-                <div className="w-14 h-14 rounded-2xl bg-theme-bg border border-theme-border shadow-xs flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-theme-bg group-hover:text-theme-text text-theme-text transition-all duration-300">
+                <div className="w-14 h-14 rounded-2xl bg-brand-bg border border-theme-border shadow-xs flex items-center justify-center mb-6 group-hover:scale-110 text-brand-primary transition-all duration-300">
                   <div className="transition-colors">
                     {getIcon(service.iconName)}
                   </div>
                 </div>
 
-                <h3 className="text-xl sm:text-2xl font-extrabold text-theme-text group-hover:text-theme-text transition-colors mb-3">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-card-heading transition-colors mb-3">
                   {isTamil ? service.titleTa : service.titleEn}
                 </h3>
 
-                <p className="text-sm sm:text-base text-theme-text leading-relaxed mb-4">
+                <p className="text-sm sm:text-base text-card-text leading-relaxed mb-4">
                   {isTamil ? service.descTa : service.descEn}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-theme-border/70 space-y-2">
                 <div className="flex justify-between items-center text-[11px] sm:text-xs">
-                  <span className="font-bold text-theme-text bg-theme-bg/10 px-2 py-1 rounded">
+                  <span className="font-bold text-card-text-secondary bg-brand-bg px-2 py-1 rounded">
                     {isTamil ? service.whyTa : service.whyEn}
                   </span>
-                  <span className="font-bold text-theme-text bg-theme-bg/10 px-2 py-1 rounded">
+                  <span className="font-bold text-card-text-secondary bg-brand-bg px-2 py-1 rounded">
                     {isTamil ? service.whenTa : service.whenEn}
                   </span>
                 </div>
-                <div className="flex justify-between items-center text-[10px] sm:text-[11px] text-theme-text">
+                <div className="flex justify-between items-center text-[10px] sm:text-[11px] text-card-text-muted">
                   <p className="italic">
                     {isTamil ? service.longDescTa : service.longDescEn}
                   </p>
-                  <span className="font-bold text-theme-text">
+                  <span className="font-bold text-card-text-muted">
                     {isTamil ? service.dateTa : service.dateEn}
                   </span>
                 </div>

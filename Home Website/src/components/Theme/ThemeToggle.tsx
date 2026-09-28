@@ -1,8 +1,10 @@
 import { useTheme } from '../../context/ThemeContext';
 import { Cloud, Sun, Moon, Star } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export function ThemeToggle() {
   const { setTheme, activeTheme } = useTheme();
+  const { isTamil } = useLanguage();
   const isDark = activeTheme === 'dark';
 
   const toggleTheme = () => {
@@ -21,7 +23,7 @@ export function ThemeToggle() {
         shadow-inner
         hover:scale-105 active:scale-95
       `}
-      aria-label="Toggle theme"
+      aria-label={isTamil ? 'தோற்றத்தை மாற்றவும்' : 'Toggle theme'}
     >
       {/* Dark Mode Background Elements (Moon & Stars) */}
       <div className={`absolute inset-0 flex items-center px-1.5 pointer-events-none transition-opacity duration-500 ${isDark ? 'opacity-100' : 'opacity-0'}`}>

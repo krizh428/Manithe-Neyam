@@ -63,16 +63,16 @@ export const GalleryPreview: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`relative px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0EA5E9] ${
+                className={`relative px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-primary ${
                   isSelected
-                    ? 'text-theme-text shadow-xs'
-                    : 'bg-theme-bg text-theme-text hover:text-theme-text border border-theme-border'
+                    ? 'text-white shadow-xs'
+                    : 'bg-theme-bg text-theme-text hover:text-brand-primary border border-theme-border'
                 }`}
               >
                 {isSelected && (
                   <motion.div
                     layoutId="galleryFilterPill"
-                    className="absolute inset-0 bg-theme-bg rounded-full"
+                    className="absolute inset-0 bg-brand-primary rounded-full"
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}

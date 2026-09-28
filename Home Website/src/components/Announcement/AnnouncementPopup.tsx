@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { api } from '../../services/api';
 import type { AnnouncementItem } from '../../types';
+import { useLanguage } from '../../context/LanguageContext';
 
 const DISMISSED_KEY = 'manithaneyam_announcement_dismissed';
 
@@ -13,8 +14,10 @@ interface ModalProps {
 }
 
 /** The popup itself: dark blurred overlay, rounded white frame, the image at its natural aspect ratio, and an X. */
-export const AnnouncementModal: React.FC<ModalProps> = ({ imageUrl, onClose, alt = 'Announcement' }) => {
+export const AnnouncementModal: React.FC<ModalProps> = ({ imageUrl, onClose, alt }) => {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { isTamil } = useLanguage();
+  const resolvedAlt = alt ?? (isTamil ? 'அறிவிப்பு' : 'Announcement');
 
   useEffect(() => {
     // Keep the page behind the popup from scrolling
@@ -34,7 +37,7 @@ export const AnnouncementModal: React.FC<ModalProps> = ({ imageUrl, onClose, alt
     <motion.div
       role="dialog"
       aria-modal="true"
-      aria-label={alt}
+      aria-label={resolvedAlt}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -54,14 +57,14 @@ export const AnnouncementModal: React.FC<ModalProps> = ({ imageUrl, onClose, alt
           ref={closeRef}
           type="button"
           onClick={onClose}
-          aria-label="Close announcement"
+          aria-label={isTamil ? 'அறிவிப்பை மூடவும்' : 'Close announcement'}
           className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 z-10 w-9 h-9 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center shadow-lg ring-2 ring-white/80 transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
         <img
           src={imageUrl}
-          alt={alt}
+          alt={resolvedAlt}
           decoding="async"
           className="block w-auto h-auto max-w-full max-h-[calc(100dvh-4.5rem)] sm:max-h-[calc(100dvh-5.5rem)] rounded-xl object-contain"
         />

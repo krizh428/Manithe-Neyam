@@ -35,31 +35,31 @@ const StatCard: React.FC<{
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: index * 0.12, duration: 0.6 }}
-      className="p-8 rounded-3xl bg-theme-bg border border-theme-border shadow-soft hover:shadow-card-hover transition-all duration-300 flex flex-col items-center text-center group relative overflow-hidden"
+      className="p-8 rounded-3xl bg-theme-card hover:bg-brand-bg border border-theme-border hover:border-brand-primary shadow-soft hover:shadow-card-hover transition-all duration-300 flex flex-col items-center text-center group relative overflow-hidden"
     >
-      <div className="w-14 h-14 rounded-2xl bg-theme-bg text-theme-text flex items-center justify-center mb-6 shadow-card hover:shadow-hover group-hover:scale-110 transition-transform duration-300">
+      <div className="w-14 h-14 rounded-2xl bg-brand-bg text-brand-primary flex items-center justify-center mb-6 shadow-card hover:shadow-hover group-hover:scale-110 transition-transform duration-300">
         {getIcon(stat.id)}
       </div>
 
       <div className="flex items-baseline justify-center gap-1 mb-2 font-poppins">
-        <span className="text-4xl sm:text-5xl font-black text-theme-text tracking-tight">
+        <span className="text-4xl sm:text-5xl font-black text-card-heading tracking-tight">
           {count}
         </span>
-        <span className="text-3xl sm:text-4xl font-black text-theme-text">
+        <span className="text-3xl sm:text-4xl font-black text-card-heading">
           {stat.suffix}
         </span>
       </div>
 
-      <h4 className="text-base sm:text-lg font-bold text-theme-text mb-1 font-tamil">
+      <h4 className="text-base sm:text-lg font-bold text-card-heading mb-1 font-tamil">
         {isTamil ? stat.labelTa : stat.labelEn}
       </h4>
 
-      <p className="text-xs text-theme-text font-normal max-w-[220px]">
+      <p className="text-xs text-card-text-secondary font-normal max-w-[220px]">
         {isTamil ? stat.descTa : stat.descEn}
       </p>
 
-      {/* Bottom Ochre Accent Bar */}
-      <div className="w-12 h-1 bg-theme-bg rounded-full mt-5 group-hover:w-20 transition-all duration-300" />
+      {/* Bottom Accent Bar */}
+      <div className="w-12 h-1 bg-brand-primary rounded-full mt-5 group-hover:w-20 transition-all duration-300" />
     </motion.div>
   );
 };

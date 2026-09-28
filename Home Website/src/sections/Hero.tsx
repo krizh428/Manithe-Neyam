@@ -128,7 +128,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
             className="lg:col-span-5 relative flex items-center justify-center"
           >
             {/* Decorative Organic Shape in Background */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-theme-bg/10 via-[#3B82F6]/15 to-transparent rounded-[50px] transform -rotate-3 blur-md pointer-events-none" />
+            <div className="absolute -inset-4 bg-gradient-to-tr from-theme-bg/10 via-brand-primary/15 to-transparent rounded-[50px] transform -rotate-3 blur-md pointer-events-none" />
             <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full bg-theme-bg/20 blur-xl pointer-events-none" />
 
 
@@ -174,7 +174,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
               transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
               className="absolute -bottom-5 -left-4 sm:-left-6 bg-theme-bg/95 backdrop-blur-md p-3.5 rounded-2xl shadow-card hover:shadow-hover border border-theme-border flex items-center gap-3 z-20"
             >
-              <div className="w-10 h-10 rounded-xl bg-theme-bg text-theme-text flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-brand-bg text-brand-primary flex items-center justify-center shrink-0">
                 <Clock className="w-5 h-5" />
               </div>
               <div>

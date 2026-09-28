@@ -76,7 +76,7 @@ export const Contact: React.FC = () => {
           particleCount: 60,
           spread: 60,
           origin: { y: 0.7 },
-          colors: ['#0EA5E9', '#3B82F6', '#0B1120'],
+          colors: ['#166534', '#22C55E', '#0F172A'],
         });
       } catch {
         // Fallback
@@ -127,7 +127,7 @@ export const Contact: React.FC = () => {
 
               {/* Address */}
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-2xl bg-theme-bg border border-theme-border/40 text-theme-text flex items-center justify-center shrink-0 mt-1">
+                <div className="w-11 h-11 rounded-2xl bg-brand-bg border border-theme-border/40 text-brand-primary flex items-center justify-center shrink-0 mt-1">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
@@ -142,7 +142,7 @@ export const Contact: React.FC = () => {
 
               {/* Phone Numbers */}
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-2xl bg-theme-bg border border-theme-border/40 text-theme-text flex items-center justify-center shrink-0 mt-1">
+                <div className="w-11 h-11 rounded-2xl bg-brand-bg border border-theme-border/40 text-brand-primary flex items-center justify-center shrink-0 mt-1">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
@@ -162,7 +162,7 @@ export const Contact: React.FC = () => {
 
               {/* Email */}
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-2xl bg-theme-bg border border-theme-border/40 text-theme-text flex items-center justify-center shrink-0 mt-1">
+                <div className="w-11 h-11 rounded-2xl bg-brand-bg border border-theme-border/40 text-brand-primary flex items-center justify-center shrink-0 mt-1">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
@@ -180,7 +180,7 @@ export const Contact: React.FC = () => {
 
               {/* Working Hours */}
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-2xl bg-theme-bg border border-theme-border/40 text-theme-text flex items-center justify-center shrink-0 mt-1">
+                <div className="w-11 h-11 rounded-2xl bg-brand-bg border border-theme-border/40 text-brand-primary flex items-center justify-center shrink-0 mt-1">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
@@ -195,14 +195,14 @@ export const Contact: React.FC = () => {
             </div>
 
             {/* Stylized Google Map Card */}
-            <div className="bg-theme-bg rounded-3xl border border-theme-border shadow-soft p-5 overflow-hidden">
+            <div className="bg-theme-card rounded-3xl border border-theme-border shadow-soft p-5 overflow-hidden">
               <div className="relative rounded-2xl overflow-hidden aspect-[16/9] bg-theme-bg flex items-center justify-center border border-theme-border">
                 {/* Visual Map Layout Graphic */}
-                <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#0EA5E9_1px,transparent_1px)] [background-size:16px_16px]" />
+                <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#166534_1px,transparent_1px)] [background-size:16px_16px]" />
                 
                 <div className="relative z-10 text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-theme-bg text-theme-text flex items-center justify-center mx-auto mb-2 shadow-card hover:shadow-hover animate-bounce">
-                    <MapPin className="w-6 h-6 text-theme-text" />
+                  <div className="w-12 h-12 rounded-full bg-brand-bg text-brand-primary flex items-center justify-center mx-auto mb-2 shadow-card hover:shadow-hover animate-bounce">
+                    <MapPin className="w-6 h-6 text-brand-primary" />
                   </div>
                   <h5 className="font-extrabold text-sm text-theme-text font-tamil">
                     {SITE_BRAND.fullNameTa}
@@ -233,11 +233,11 @@ export const Contact: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-7"
           >
-            <div className="bg-theme-bg rounded-3xl border border-theme-border shadow-soft p-8 sm:p-10">
+            <div className="bg-theme-card rounded-3xl border border-theme-border shadow-soft p-8 sm:p-10">
               {status === 'success' ? (
                 <div className="text-center py-12 space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-theme-bg border-2 border-theme-border text-theme-text flex items-center justify-center mx-auto shadow-card hover:shadow-hover">
-                    <CheckCircle2 className="w-8 h-8 text-theme-text" />
+                  <div className="w-16 h-16 rounded-full bg-brand-bg border-2 border-brand-primary text-brand-primary flex items-center justify-center mx-auto shadow-card hover:shadow-hover">
+                    <CheckCircle2 className="w-8 h-8 text-brand-primary" />
                   </div>
                   <h4 className="text-2xl font-extrabold text-theme-text">
                     {isTamil ? 'செய்தி வெற்றிகரமாக அனுப்பப்பட்டது!' : 'Message Sent Successfully!'}
@@ -281,7 +281,7 @@ export const Contact: React.FC = () => {
                         className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 ${
                           errors.name
                             ? 'border-red-400 bg-red-50/30 focus:ring-red-400'
-                            : 'border-theme-border bg-theme-bg focus:ring-[#0EA5E9] focus:border-transparent'
+                            : 'border-theme-border bg-theme-bg focus:ring-brand-primary focus:border-transparent'
                         }`}
                       />
                       {errors.name && (
@@ -308,7 +308,7 @@ export const Contact: React.FC = () => {
                         className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 ${
                           errors.email
                             ? 'border-red-400 bg-red-50/30 focus:ring-red-400'
-                            : 'border-theme-border bg-theme-bg focus:ring-[#0EA5E9] focus:border-transparent'
+                            : 'border-theme-border bg-theme-bg focus:ring-brand-primary focus:border-transparent'
                         }`}
                       />
                       {errors.email && (
@@ -338,7 +338,7 @@ export const Contact: React.FC = () => {
                         className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 ${
                           errors.phone
                             ? 'border-red-400 bg-red-50/30 focus:ring-red-400'
-                            : 'border-theme-border bg-theme-bg focus:ring-[#0EA5E9] focus:border-transparent'
+                            : 'border-theme-border bg-theme-bg focus:ring-brand-primary focus:border-transparent'
                         }`}
                       />
                       {errors.phone && (
@@ -365,7 +365,7 @@ export const Contact: React.FC = () => {
                         className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 ${
                           errors.subject
                             ? 'border-red-400 bg-red-50/30 focus:ring-red-400'
-                            : 'border-theme-border bg-theme-bg focus:ring-[#0EA5E9] focus:border-transparent'
+                            : 'border-theme-border bg-theme-bg focus:ring-brand-primary focus:border-transparent'
                         }`}
                       />
                       {errors.subject && (
@@ -393,7 +393,7 @@ export const Contact: React.FC = () => {
                       className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 resize-none ${
                         errors.message
                           ? 'border-red-400 bg-red-50/30 focus:ring-red-400'
-                          : 'border-theme-border bg-theme-bg focus:ring-[#0EA5E9] focus:border-transparent'
+                          : 'border-theme-border bg-theme-bg focus:ring-brand-primary focus:border-transparent'
                       }`}
                     />
                     {errors.message && (

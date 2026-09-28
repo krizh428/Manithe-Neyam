@@ -66,8 +66,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
               <button
                 onClick={onClose}
-                className="p-2 rounded-full text-theme-text hover:bg-theme-bg transition-colors focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]"
-                aria-label="Close menu"
+                className="p-2 rounded-full text-theme-text hover:bg-theme-bg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                aria-label={isTamil ? 'மெனுவை மூடவும்' : 'Close menu'}
               >
                 <X className="w-6 h-6" />
               </button>
@@ -86,12 +86,12 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                     }}
                     className={`flex items-center justify-between px-4 py-3 rounded-xl text-left font-semibold text-base transition-all ${
                       isActive
-                        ? 'bg-theme-bg text-theme-text shadow-card hover:shadow-hover'
+                        ? 'bg-brand-bg text-brand-primary shadow-card hover:shadow-hover'
                         : 'text-theme-text hover:bg-theme-bg'
                     }`}
                   >
                     <span>{isTamil ? item.labelTa : item.labelEn}</span>
-                    {isActive && <span className="w-2 h-2 rounded-full bg-theme-bg" />}
+                    {isActive && <span className="w-2 h-2 rounded-full bg-brand-primary" />}
                   </button>
                 );
               })}

@@ -22,7 +22,7 @@ export const Founder: React.FC = () => {
           }
         />
 
-        <div className="bg-theme-bg rounded-3xl border border-theme-border shadow-soft p-8 sm:p-12 lg:p-14">
+        <div className="bg-theme-card rounded-3xl border border-theme-border shadow-soft p-8 sm:p-12 lg:p-14">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
             {/* Left: Dignified Founder Portrait with Organic Frame */}

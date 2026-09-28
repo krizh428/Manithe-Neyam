@@ -65,14 +65,17 @@ export function PublicDocuments() {
   return (
     <section className="py-20 bg-theme-bg relative z-10" id="documents">
       <div className="container mx-auto px-4 max-w-7xl">
-        <SectionHeading 
-          title="DOCUMENTS AND INFORMATION"
-          subtitle="Important Documents and Information"
+        <SectionHeading
+          title={isTamil ? 'ஆவணங்கள் மற்றும் தகவல்கள்' : 'Documents and Information'}
+          subtitle={isTamil ? 'முக்கிய ஆவணங்கள் மற்றும் தகவல்கள்' : 'Important Documents and Information'}
         />
 
         {loading ? (
-          <div className="flex justify-center py-20">
+          <div className="flex flex-col items-center justify-center gap-3 py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-theme-primary"></div>
+            <p className="text-sm text-theme-text">
+              {isTamil ? 'ஆவணங்கள் ஏற்றப்படுகின்றன...' : 'Loading documents...'}
+            </p>
           </div>
         ) : (
           <>
@@ -100,15 +103,21 @@ export function PublicDocuments() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-                    <th className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 w-16 text-center">S.NO</th>
-                    <th className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">DOCUMENTS / INFORMATIONS</th>
+                    <th className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 w-16 text-center">
+                      {isTamil ? 'வ.எண்' : 'S.NO'}
+                    </th>
+                    <th className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      {isTamil ? 'ஆவணங்கள் / தகவல்கள்' : 'DOCUMENTS / INFORMATIONS'}
+                    </th>
                     <th className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 w-64">
                       <div className="flex items-center gap-2">
                         <UploadCloud className="w-4 h-4" />
-                        <span>UPLOADED DOCUMENTS</span>
+                        <span>{isTamil ? 'பதிவேற்றப்பட்ட ஆவணங்கள்' : 'UPLOADED DOCUMENTS'}</span>
                       </div>
                     </th>
-                    <th className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 w-48 text-center">ACTIONS</th>
+                    <th className="py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300 w-48 text-center">
+                      {isTamil ? 'செயல்கள்' : 'ACTIONS'}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -133,7 +142,9 @@ export function PublicDocuments() {
                             <span className="truncate">{doc.fileName}</span>
                           </span>
                         ) : (
-                          <span className="text-gray-400 italic">Document not available</span>
+                          <span className="text-gray-400 italic">
+                            {isTamil ? 'ஆவணம் கிடைக்கவில்லை' : 'Document not available'}
+                          </span>
                         )}
                       </td>
                       <td className="py-4 px-6">
@@ -144,18 +155,20 @@ export function PublicDocuments() {
                               className="flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:hover:bg-emerald-900/50 rounded-md transition-colors text-xs font-semibold"
                             >
                               <Eye className="w-4 h-4 mr-1" />
-                              VIEW
+                              {isTamil ? 'பார்க்க' : 'VIEW'}
                             </button>
                             <a
                               href={api.downloadDocumentUrl(doc._id)}
                               className="flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 rounded-md transition-colors text-xs font-semibold"
                             >
                               <Download className="w-4 h-4 mr-1" />
-                              DOWNLOAD
+                              {isTamil ? 'பதிவிறக்கம்' : 'DOWNLOAD'}
                             </a>
                           </div>
                         ) : (
-                          <span className="text-sm text-gray-400 italic text-center block">Not Available</span>
+                          <span className="text-sm text-gray-400 italic text-center block">
+                            {isTamil ? 'கிடைக்கவில்லை' : 'Not Available'}
+                          </span>
                         )}
                       </td>
                     </tr>
@@ -163,7 +176,7 @@ export function PublicDocuments() {
                   {visibleDocs.length === 0 && (
                     <tr>
                       <td colSpan={4} className="py-8 text-center text-gray-500">
-                        No documents available.
+                        {isTamil ? 'ஆவணங்கள் எதுவும் இல்லை.' : 'No documents available.'}
                       </td>
                     </tr>
                   )}
@@ -176,7 +189,9 @@ export function PublicDocuments() {
               {visibleDocs.map((doc, index) => (
                 <div key={doc._id} className="p-5 flex flex-col space-y-4">
                   <div className="flex justify-between items-start">
-                    <span className="text-xs font-bold text-gray-500">Document {String(index + 1).padStart(2, '0')}</span>
+                    <span className="text-xs font-bold text-gray-500">
+                      {isTamil ? 'ஆவணம்' : 'Document'} {String(index + 1).padStart(2, '0')}
+                    </span>
                   </div>
                   <div>
                     <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 leading-snug">{doc.title}</h4>
@@ -188,7 +203,9 @@ export function PublicDocuments() {
                     {doc.fileUrl ? (
                       <p className="text-sm text-emerald-600 dark:text-emerald-400 truncate">{doc.fileName}</p>
                     ) : (
-                      <p className="text-sm text-gray-400 italic">Document not available</p>
+                      <p className="text-sm text-gray-400 italic">
+                        {isTamil ? 'ஆவணம் கிடைக்கவில்லை' : 'Document not available'}
+                      </p>
                     )}
                   </div>
                   {doc.fileUrl && (
@@ -198,12 +215,12 @@ export function PublicDocuments() {
                         className="flex-1 flex justify-center items-center px-4 py-2 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 rounded-md transition-colors text-sm font-semibold"
                       >
                         <Eye className="w-4 h-4 mr-2" />
-                        VIEW PDF
+                        {isTamil ? 'PDF பார்க்க' : 'VIEW PDF'}
                       </button>
                       <a
                         href={api.downloadDocumentUrl(doc._id)}
                         className="flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 rounded-md transition-colors"
-                        aria-label="Download PDF"
+                        aria-label={isTamil ? 'PDF பதிவிறக்கவும்' : 'Download PDF'}
                       >
                         <Download className="w-4 h-4" />
                       </a>
@@ -213,7 +230,7 @@ export function PublicDocuments() {
               ))}
               {visibleDocs.length === 0 && (
                 <div className="py-8 text-center text-gray-500">
-                  No documents available.
+                  {isTamil ? 'ஆவணங்கள் எதுவும் இல்லை.' : 'No documents available.'}
                 </div>
               )}
             </div>
@@ -229,10 +246,11 @@ export function PublicDocuments() {
             <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                 <Eye className="w-5 h-5 mr-2 text-theme-primary" />
-                Document Viewer
+                {isTamil ? 'ஆவண காட்சி' : 'Document Viewer'}
               </h3>
-              <button 
+              <button
                 onClick={handleCloseModal}
+                aria-label={isTamil ? 'மூடவும்' : 'Close'}
                 className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors"
               >
                 <X className="w-6 h-6" />
@@ -240,14 +258,14 @@ export function PublicDocuments() {
             </div>
             <div className="flex-1 w-full bg-gray-100 dark:bg-gray-800 p-2">
               {currentPdfUrl ? (
-                <iframe 
-                  src={currentPdfUrl} 
+                <iframe
+                  src={currentPdfUrl}
                   className="w-full h-full rounded border-0"
-                  title="PDF Viewer"
+                  title={isTamil ? 'PDF காட்சி' : 'PDF Viewer'}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-500">
-                  Failed to load PDF
+                  {isTamil ? 'PDF ஏற்ற முடியவில்லை' : 'Failed to load PDF'}
                 </div>
               )}
             </div>

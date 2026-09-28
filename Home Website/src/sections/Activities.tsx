@@ -39,16 +39,16 @@ export const Activities: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`relative px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0EA5E9] ${
+                className={`relative px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-primary ${
                   isSelected
-                    ? 'text-theme-text shadow-card hover:shadow-hover'
-                    : 'bg-theme-bg text-theme-text hover:text-theme-text border border-theme-border hover:border-theme-border/40'
+                    ? 'text-white shadow-card hover:shadow-hover'
+                    : 'bg-theme-bg text-theme-text hover:text-brand-primary border border-theme-border hover:border-brand-primary/40'
                 }`}
               >
                 {isSelected && (
                   <motion.div
                     layoutId="activityFilterPill"
-                    className="absolute inset-0 bg-theme-bg rounded-full"
+                    className="absolute inset-0 bg-brand-primary rounded-full"
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -72,7 +72,7 @@ export const Activities: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.35 }}
-                className="bg-theme-bg rounded-3xl border border-theme-border shadow-soft hover:shadow-card-hover overflow-hidden transition-all duration-300 flex flex-col justify-between group"
+                className="bg-theme-card hover:bg-brand-bg rounded-3xl border border-theme-border hover:border-brand-primary shadow-soft hover:shadow-card-hover overflow-hidden transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
                   {/* Image with overlay tags */}
@@ -95,19 +95,19 @@ export const Activities: React.FC = () => {
 
                   {/* Body Text */}
                   <div className="p-6">
-                    <h3 className="text-lg sm:text-xl font-extrabold text-theme-text group-hover:text-theme-text transition-colors mb-2.5 line-clamp-2">
+                    <h3 className="text-lg sm:text-xl font-extrabold text-card-heading transition-colors mb-2.5 line-clamp-2">
                       {isTamil ? act.titleTa : act.titleEn}
                     </h3>
 
-                    <p className="text-sm text-theme-text leading-relaxed">
+                    <p className="text-sm text-card-text leading-relaxed">
                       {isTamil ? act.descTa : act.descEn}
                     </p>
                   </div>
                 </div>
 
-                <div className="px-6 pb-6 pt-2 border-t border-theme-border/60 flex items-center justify-between text-xs font-bold text-theme-text">
+                <div className="px-6 pb-6 pt-2 border-t border-theme-border/60 flex items-center justify-between text-xs font-bold text-card-text-secondary">
                   <span>{isTamil ? 'தொடர் நற்பணி' : 'Ongoing Initiative'}</span>
-                  <span className="w-2 h-2 rounded-full bg-theme-bg" />
+                  <span className="w-2 h-2 rounded-full bg-brand-primary" />
                 </div>
               </motion.div>
             ))}

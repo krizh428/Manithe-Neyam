@@ -69,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection, onOpenSupport, on
               e.preventDefault();
               handleNavClick('#hero');
             }}
-            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-[#0EA5E9] rounded-lg p-1"
+            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-brand-primary rounded-lg p-1"
           >
             <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-theme-bg p-1 shadow-card hover:shadow-hover border border-theme-border/20 flex items-center justify-center transition-transform group-hover:scale-105">
               <img
@@ -96,8 +96,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection, onOpenSupport, on
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.href)}
-                  className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0EA5E9] ${
-                    isActive ? 'text-theme-text' : 'text-theme-text hover:text-theme-text'
+                  className={`relative px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary ${
+                    isActive ? 'text-brand-primary' : 'text-theme-text hover:text-brand-primary'
                   }`}
                 >
                   {isActive && <SlidingPill />}
@@ -117,7 +117,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection, onOpenSupport, on
             {/* Language Switcher Icon */}
             <button
               onClick={() => setLanguage(language === 'ta' ? 'en' : 'ta')}
-              className="p-2 rounded-full bg-theme-bg border border-theme-border text-theme-text hover:bg-theme-bg shadow-card hover:shadow-hover transition-all focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]"
+              className="p-2 rounded-full bg-theme-bg border border-theme-border text-theme-text hover:bg-theme-bg shadow-card hover:shadow-hover transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              aria-label={isTamil ? 'மொழியை மாற்றவும்' : 'Change language'}
               title={language === 'ta' ? 'Switch to English' : 'தமிழுக்கு மாற்றவும்'}
             >
               <IconTranslate className="w-5 h-5" />
@@ -153,8 +154,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection, onOpenSupport, on
             
             <button
               onClick={() => setLanguage(language === 'ta' ? 'en' : 'ta')}
-              className="p-2 rounded-full bg-theme-bg border border-theme-border text-theme-text hover:bg-theme-bg shadow-xs focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]"
-              aria-label="Toggle language"
+              className="p-2 rounded-full bg-theme-bg border border-theme-border text-theme-text hover:bg-theme-bg shadow-xs focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              aria-label={isTamil ? 'மொழியை மாற்றவும்' : 'Change language'}
             >
               <IconTranslate className="w-4 h-4" />
             </button>
@@ -162,15 +163,15 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection, onOpenSupport, on
             <button
               onClick={onOpenAdmin}
               className="p-2 rounded-full bg-theme-bg border border-theme-border text-theme-text text-xs font-bold shadow-xs"
-              aria-label="Admin Login"
+              aria-label={isTamil ? 'நிர்வாக உள்நுழைவு' : 'Admin Login'}
             >
               <Lock className="w-3.5 h-3.5 text-theme-text" />
             </button>
 
             <button
               onClick={() => setIsMobileOpen(true)}
-              className="p-2.5 rounded-full bg-theme-bg border border-theme-border text-theme-text hover:bg-theme-bg shadow-xs focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]"
-              aria-label="Open mobile menu"
+              className="p-2.5 rounded-full bg-theme-bg border border-theme-border text-theme-text hover:bg-theme-bg shadow-xs focus:outline-none focus:ring-2 focus:ring-brand-primary"
+              aria-label={isTamil ? 'மெனுவைத் திறக்கவும்' : 'Open mobile menu'}
             >
               <Menu className="w-5 h-5 text-theme-text" />
             </button>

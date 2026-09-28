@@ -24,6 +24,8 @@ export interface HomeLocation {
   capacityEn: string;
   /** Contact number for this home (optional). */
   phone?: string;
+  /** Contact email for this home (optional). */
+  email?: string;
   image: string;
   /** Up to 6 photos shown as a slider. When missing, only `image` is shown. `image` always mirrors the first one. */
   images?: string[];

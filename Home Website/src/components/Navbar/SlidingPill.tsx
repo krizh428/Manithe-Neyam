@@ -5,7 +5,7 @@ export const SlidingPill: React.FC = () => {
   return (
     <motion.div
       layoutId="activeNavPill"
-      className="absolute inset-0 bg-theme-bg rounded-full shadow-card hover:shadow-hover"
+      className="absolute inset-0 bg-brand-bg rounded-full shadow-card hover:shadow-hover"
       transition={{
         type: 'spring',
         stiffness: 380,

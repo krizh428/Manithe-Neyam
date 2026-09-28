@@ -86,7 +86,7 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
                 duration: 1,
                 ease: 'easeInOut',
               }}
-              className="w-full h-full bg-gradient-to-r from-theme-bg via-[#3B82F6] to-theme-secondary rounded-full"
+              className="w-full h-full bg-gradient-to-r from-theme-bg via-brand-primary to-theme-secondary rounded-full"
             />
           </div>
         </motion.div>

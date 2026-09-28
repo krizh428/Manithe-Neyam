@@ -23,99 +23,99 @@ export const VisionMission: React.FC = () => {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
-          
-          {/* Card 1: Vision (Ochre Accent) */}
+
+          {/* Card 1: Vision */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="rounded-3xl bg-gradient-to-br from-theme-bg via-[#0B1120] to-theme-secondary p-8 sm:p-10 border-2 border-theme-border/50 shadow-soft hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
+            className="rounded-3xl bg-theme-card p-8 sm:p-10 border border-theme-border hover:border-brand-primary shadow-soft hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
           >
-            {/* Decorative Ochre Radial Shimmer */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-theme-bg/10 rounded-full blur-2xl pointer-events-none" />
+            {/* Decorative Light Green Shimmer */}
+            <div className="absolute top-0 right-0 w-48 h-48 bg-brand-bg/60 rounded-full blur-2xl pointer-events-none" />
 
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-theme-bg text-theme-text flex items-center justify-center shadow-card hover:shadow-hover">
+                <div className="w-12 h-12 rounded-2xl bg-brand-bg text-brand-primary flex items-center justify-center shadow-card hover:shadow-hover">
                   <Eye className="w-6 h-6" />
                 </div>
                 <div>
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-theme-text">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-brand-primary">
                     {isTamil ? vision.badgeTa : vision.badgeEn}
                   </span>
-                  <h3 className="text-2xl font-extrabold text-theme-text">
+                  <h3 className="text-2xl font-extrabold text-card-heading">
                     {isTamil ? vision.titleTa : vision.titleEn}
                   </h3>
                 </div>
               </div>
 
-              <p className="text-base sm:text-lg text-theme-text font-medium leading-relaxed mb-6">
+              <p className="text-base sm:text-lg text-card-text font-medium leading-relaxed mb-6">
                 {isTamil ? vision.textTa : vision.textEn}
               </p>
 
               <div className="space-y-3 pt-4 border-t border-theme-border">
                 {(isTamil ? vision.pointsTa : vision.pointsEn).map((point, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <div className="w-5 h-5 rounded-full bg-theme-bg/40 text-theme-text flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-theme-text" />
+                    <div className="w-5 h-5 rounded-full bg-brand-bg text-brand-primary flex items-center justify-center shrink-0 mt-0.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-brand-primary" />
                     </div>
-                    <span className="text-sm font-semibold text-theme-text">{point}</span>
+                    <span className="text-sm font-semibold text-card-text">{point}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="mt-8 pt-4 flex items-center gap-2 text-xs font-bold text-theme-text">
-              <span className="w-2 h-2 rounded-full bg-theme-bg" />
+            <div className="mt-8 pt-4 flex items-center gap-2 text-xs font-bold text-card-text-secondary">
+              <span className="w-2 h-2 rounded-full bg-brand-primary" />
               <span>{isTamil ? 'அன்பால் வளரும் சமூகம்' : 'A Society Built on Love'}</span>
             </div>
           </motion.div>
 
-          {/* Card 2: Mission (Cyan Accent) */}
+          {/* Card 2: Mission */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.15, duration: 0.6 }}
-            className="rounded-3xl bg-gradient-to-br from-theme-bg/20 via-[#0B1120]/60 to-theme-secondary p-8 sm:p-10 border-2 border-theme-border/30 shadow-soft hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
+            className="rounded-3xl bg-theme-card p-8 sm:p-10 border border-theme-border hover:border-brand-primary shadow-soft hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
           >
-            {/* Decorative Cyan Radial Shimmer */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-theme-bg/10 rounded-full blur-2xl pointer-events-none" />
+            {/* Decorative Light Green Shimmer */}
+            <div className="absolute top-0 right-0 w-48 h-48 bg-brand-bg/60 rounded-full blur-2xl pointer-events-none" />
 
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-theme-bg text-theme-text flex items-center justify-center shadow-card hover:shadow-hover">
-                  <Target className="w-6 h-6 text-theme-text" />
+                <div className="w-12 h-12 rounded-2xl bg-brand-bg text-brand-primary flex items-center justify-center shadow-card hover:shadow-hover">
+                  <Target className="w-6 h-6 text-brand-primary" />
                 </div>
                 <div>
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-theme-text">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-brand-primary">
                     {isTamil ? mission.badgeTa : mission.badgeEn}
                   </span>
-                  <h3 className="text-2xl font-extrabold text-theme-text">
+                  <h3 className="text-2xl font-extrabold text-card-heading">
                     {isTamil ? mission.titleTa : mission.titleEn}
                   </h3>
                 </div>
               </div>
 
-              <p className="text-base sm:text-lg text-theme-text font-medium leading-relaxed mb-6">
+              <p className="text-base sm:text-lg text-card-text font-medium leading-relaxed mb-6">
                 {isTamil ? mission.textTa : mission.textEn}
               </p>
 
               <div className="space-y-3 pt-4 border-t border-theme-border">
                 {(isTamil ? mission.pointsTa : mission.pointsEn).map((point, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <div className="w-5 h-5 rounded-full bg-theme-bg/20 text-theme-text flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-theme-text" />
+                    <div className="w-5 h-5 rounded-full bg-brand-bg text-brand-primary flex items-center justify-center shrink-0 mt-0.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-brand-primary" />
                     </div>
-                    <span className="text-sm font-semibold text-theme-text">{point}</span>
+                    <span className="text-sm font-semibold text-card-text">{point}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="mt-8 pt-4 flex items-center gap-2 text-xs font-bold text-theme-text">
-              <span className="w-2 h-2 rounded-full bg-theme-bg" />
+            <div className="mt-8 pt-4 flex items-center gap-2 text-xs font-bold text-card-text-secondary">
+              <span className="w-2 h-2 rounded-full bg-brand-primary" />
               <span>{isTamil ? 'நேரடி மக்கள் சேவை' : 'Direct Humanitarian Upliftment'}</span>
             </div>
           </motion.div>

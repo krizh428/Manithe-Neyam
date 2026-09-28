@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, CheckCircle2, Users } from 'lucide-react';
+import { X, MapPin, CheckCircle2, Users, Phone, Mail } from 'lucide-react';
 import type { HomeLocation } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -53,13 +53,13 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="relative w-full max-w-2xl bg-theme-bg rounded-3xl shadow-card hover:shadow-hover overflow-hidden z-10 border border-theme-border my-8"
+          className="relative w-full max-w-2xl bg-theme-card rounded-3xl shadow-card hover:shadow-hover overflow-hidden z-10 border border-theme-border my-8"
         >
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-black/40 text-theme-text hover:bg-black/60 transition-colors focus:outline-none focus:ring-2 focus:ring-[#3B82F6]"
-            aria-label="Close details"
+            className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-black/40 text-theme-text hover:bg-black/60 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            aria-label={isTamil ? 'மூடவும்' : 'Close details'}
           >
             <X className="w-5 h-5" />
           </button>
@@ -115,12 +115,36 @@ export const LocationModal: React.FC<LocationModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {(isTamil ? location.featuresTa : location.featuresEn).map((feat, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm text-theme-text">
-                    <CheckCircle2 className="w-4 h-4 text-theme-text shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-primary shrink-0" />
                     <span>{feat}</span>
                   </div>
                 ))}
               </div>
             </div>
+
+            {/* Direct Contact for this Home */}
+            {(location.phone || location.email) && (
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
+                {location.phone && (
+                  <a
+                    href={`tel:${location.phone.replace(/[^+\d]/g, '')}`}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-theme-text hover:text-brand-primary transition-colors"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>{location.phone}</span>
+                  </a>
+                )}
+                {location.email && (
+                  <a
+                    href={`mailto:${location.email}`}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-theme-text hover:text-brand-primary transition-colors"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span>{location.email}</span>
+                  </a>
+                )}
+              </div>
+            )}
 
             {/* Actions */}
             <div className="pt-4 border-t border-theme-border flex flex-col sm:flex-row items-center justify-between gap-3">
