@@ -53,8 +53,8 @@ export const Locations: React.FC<LocationsProps> = ({ onOpenSupport }) => {
                 </div>
 
                 {/* Location Badge */}
-                <div className="absolute bottom-3 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37] backdrop-blur-xs text-[#5C3A21] text-xs font-bold shadow-xs pointer-events-none">
-                  <MapPin className="w-3.5 h-3.5 text-[#5C3A21]" />
+                <div className="absolute bottom-3 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37] backdrop-blur-xs text-[#991B1B] text-xs font-bold shadow-xs pointer-events-none">
+                  <MapPin className="w-3.5 h-3.5 text-[#991B1B]" />
                   <span>{isTamil ? home.locationTa : home.locationEn}</span>
                 </div>
               </div>

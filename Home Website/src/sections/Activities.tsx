@@ -87,8 +87,8 @@ export const Activities: React.FC = () => {
                     </div>
 
                     {/* Beneficiaries Count Pill */}
-                    <div className="absolute bottom-3 left-3 z-10 pointer-events-none inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37] backdrop-blur-xs text-[#5C3A21] text-xs font-bold shadow-xs">
-                      <Users className="w-3.5 h-3.5 text-[#5C3A21]" />
+                    <div className="absolute bottom-3 left-3 z-10 pointer-events-none inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37] backdrop-blur-xs text-[#991B1B] text-xs font-bold shadow-xs">
+                      <Users className="w-3.5 h-3.5 text-[#991B1B]" />
                       <span>{isTamil ? act.beneficiariesTa : act.beneficiariesEn}</span>
                     </div>
                   </div>
