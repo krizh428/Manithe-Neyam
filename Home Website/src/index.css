@@ -1,48 +1,48 @@
-@import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@300;400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
 
 :root {
   /* Light Theme Backgrounds */
   --bg-primary: #FFFFFF;
   --bg-secondary: #F8FAFC;
   --bg-card: #FFFFFF;
-  --bg-accent-light: #EFF6FF;
+  --bg-accent-light: #F1F5F9;
 
   /* Light Theme Text */
   --text-primary: #0F172A;
-  --text-body: #475569;
+  --text-body: #334155;
   --text-secondary: #64748B;
   --text-muted: #64748B;
 
-  /* Light Theme Brand (Blue) */
-  --brand-primary: #2563EB;
-  --brand-hover: #1D4ED8;
-  --brand-light: #BFDBFE;
-  --brand-bg: #DBEAFE;
+  /* Light Theme Brand (#0F172A Deep Navy) */
+  --brand-primary: #0F172A;
+  --brand-hover: #1E293B;
+  --brand-light: #334155;
+  --brand-bg: #E2E8F0;
   /* Text used on top of a solid --brand-primary fill (buttons, filled badges) */
   --on-primary: #FFFFFF;
-  /* Page/section heading accent — distinct from body text so themes can make
-     headings pop (e.g. gold) without turning every line of text that color */
+  /* Page/section heading accent */
   --heading-accent: #0F172A;
 
   /* Light Theme Border */
   --border-color: #E2E8F0;
   --border-light: #F1F5F9;
-  --border-strong: #E2E8F0;
+  --border-strong: #0F172A;
 
   /* Light Theme Card Text Tiers */
-  --card-heading: #1E293B;
-  --card-text: #475569;
+  --card-heading: #0F172A;
+  --card-text: #334155;
   --card-text-secondary: #64748B;
   --card-text-muted: #94A3B8;
 
-  /* Light Theme Footer (deliberately the darkest area, in both themes) */
+  /* Light Theme Footer */
   --footer-bg: #0F172A;
   --footer-heading: #FFFFFF;
   --footer-text: #CBD5E1;
-  --footer-link: #DBEAFE;
+  --footer-link: #E2E8F0;
   --footer-link-hover: #FFFFFF;
 
   /* Heart / Donation Accent */
@@ -215,7 +215,39 @@
   .tech-card:hover {
     transform: translateY(-6px);
     border-color: var(--brand-primary);
-    box-shadow: 0 12px 30px -8px rgba(22, 101, 52, 0.15); /* More pronounced shadow on hover */
+    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.12);
+  }
+
+  /* Smart Hover Radial Light Spotlight Card */
+  .spotlight-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spotlight-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(350px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(15, 23, 42, 0.05), transparent 75%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms ease;
+    z-index: 1;
+  }
+
+  [data-theme="dark"] .spotlight-card::before {
+    background: radial-gradient(350px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(212, 175, 55, 0.12), transparent 75%);
+  }
+
+  .spotlight-card:hover::before {
+    opacity: 1;
+  }
+
+  @media (hover: none) or (max-width: 768px) {
+    .spotlight-card::before {
+      display: none !important;
+    }
   }
 
   .tech-card:hover .tech-card-icon {
@@ -287,7 +319,7 @@
   .btn-primary:hover {
     background-color: var(--brand-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(22, 101, 52, 0.20);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
   }
 
   .btn-primary:active {
@@ -317,7 +349,7 @@
     color: #FFFFFF;
     border-color: var(--brand-primary);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(22, 101, 52, 0.20);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
   }
 
   .btn-secondary:active {
@@ -388,13 +420,13 @@
   bottom: 0;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(circle at 80% 20%, rgba(22, 101, 52, 0.08), transparent 40%),
-              radial-gradient(circle at 20% 80%, rgba(22, 101, 52, 0.05), transparent 40%);
+  background: radial-gradient(circle at 80% 20%, rgba(15, 23, 42, 0.06), transparent 40%),
+              radial-gradient(circle at 20% 80%, rgba(15, 23, 42, 0.04), transparent 40%);
 }
 
 [data-theme="dark"] .hero-glow-bg {
-  background: radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.12), transparent 40%),
-              radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.08), transparent 40%);
+  background: radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.08), transparent 40%),
+              radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05), transparent 40%);
 }
 
 /* Organic Shapes (kept for backward compatibility if needed, but modern B2B is usually cleaner) */
@@ -406,6 +438,16 @@
 }
 .organic-frame-sm {
   border-radius: var(--radius-md);
+}
+
+@keyframes subtle-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: subtle-shake 0.4s ease-in-out;
 }
 
 /* Respect user motion preferences */

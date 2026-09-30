@@ -1,5 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useLayoutEffect, useRef } from 'react';
 import {
   GraduationCap,
   Utensils,
@@ -18,10 +17,39 @@ import {
 import { SectionHeading } from '../components/Common/SectionHeading';
 import { useLanguage } from '../context/LanguageContext';
 import { useAdminData } from '../context/AdminDataContext';
+import { gsap, EASING, prefersReducedMotion } from '../animations';
 
 export const Services: React.FC = () => {
   const { isTamil } = useLanguage();
   const { services } = useAdminData();
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (!gridRef.current || prefersReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      const cards = gridRef.current?.children;
+      if (cards && cards.length > 0) {
+        gsap.set(cards, { opacity: 0, y: 35 });
+        gsap.to(cards, {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          stagger: 0.1,
+          ease: EASING.cinematic,
+          scrollTrigger: {
+            trigger: gridRef.current,
+            start: 'top 82%',
+            once: true,
+          },
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [services]);
 
   const getIcon = (name: string) => {
     switch (name) {
@@ -55,7 +83,7 @@ export const Services: React.FC = () => {
   };
 
   return (
-    <section id="services" className="py-20 sm:py-28 bg-theme-bg relative overflow-hidden">
+    <section ref={sectionRef} id="services" className="py-20 sm:py-28 bg-theme-bg relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeading
           badge={isTamil ? 'நமது பணிகள்' : 'What We Do'}
@@ -67,27 +95,25 @@ export const Services: React.FC = () => {
           }
         />
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {services.map((service, index) => (
-            <motion.div
+        {/* Services Grid with GSAP Entrance and Interactive Cards */}
+        <div
+          ref={gridRef}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+        >
+          {services.map((service) => (
+            <div
               key={service.id}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -6 }}
-              className="p-7 sm:p-8 rounded-3xl bg-theme-card hover:bg-brand-bg border border-theme-border hover:border-brand-primary shadow-xs hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between group"
+              className="p-7 sm:p-8 rounded-3xl bg-theme-card hover:bg-brand-bg/40 border border-theme-border hover:border-brand-primary shadow-xs hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5 spotlight-card relative"
             >
               <div>
-                {/* Icon Container with Accent */}
-                <div className="w-14 h-14 rounded-2xl bg-brand-bg border border-theme-border shadow-xs flex items-center justify-center mb-6 group-hover:scale-110 text-brand-primary transition-all duration-300">
+                {/* Icon Container with Accent & Scale Animation */}
+                <div className="w-14 h-14 rounded-2xl bg-brand-bg border border-theme-border shadow-xs flex items-center justify-center mb-6 group-hover:scale-110 text-brand-primary transition-transform duration-300">
                   <div className="transition-colors">
                     {getIcon(service.iconName)}
                   </div>
                 </div>
 
-                <h3 className="text-xl sm:text-2xl font-extrabold text-card-heading transition-colors mb-3">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-card-heading group-hover:text-brand-primary transition-colors mb-3">
                   {isTamil ? service.titleTa : service.titleEn}
                 </h3>
 
@@ -98,10 +124,10 @@ export const Services: React.FC = () => {
 
               <div className="pt-4 border-t border-theme-border/70 space-y-2">
                 <div className="flex justify-between items-center text-[11px] sm:text-xs">
-                  <span className="font-bold text-card-text-secondary bg-brand-bg px-2 py-1 rounded">
+                  <span className="font-bold text-card-text-secondary bg-theme-bg px-2.5 py-1 rounded-lg border border-theme-border/50">
                     {isTamil ? service.whyTa : service.whyEn}
                   </span>
-                  <span className="font-bold text-card-text-secondary bg-brand-bg px-2 py-1 rounded">
+                  <span className="font-bold text-card-text-secondary bg-theme-bg px-2.5 py-1 rounded-lg border border-theme-border/50">
                     {isTamil ? service.whenTa : service.whenEn}
                   </span>
                 </div>
@@ -114,7 +140,7 @@ export const Services: React.FC = () => {
                   </span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

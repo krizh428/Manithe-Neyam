@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import {
   Heart,
   MapPin,
@@ -10,10 +10,39 @@ import {
 import { NAV_ITEMS } from '../../data/siteData';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAdminData } from '../../context/AdminDataContext';
+import { gsap, EASING, prefersReducedMotion } from '../../animations';
 
 export const Footer: React.FC = () => {
   const { isTamil } = useLanguage();
   const { brand: SITE_BRAND, locations: HOME_LOCATIONS } = useAdminData();
+
+  const footerRef = useRef<HTMLElement | null>(null);
+  const colsRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (!colsRef.current || prefersReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      const cols = colsRef.current?.children;
+      if (cols && cols.length > 0) {
+        gsap.set(cols, { opacity: 0, y: 30 });
+        gsap.to(cols, {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          stagger: 0.1,
+          ease: EASING.cinematic,
+          scrollTrigger: {
+            trigger: colsRef.current,
+            start: 'top 90%',
+            once: true,
+          },
+        });
+      }
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const handleNavClick = (href: string) => {
     const targetId = href.replace('#', '');
@@ -30,18 +59,17 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-theme-footer text-theme-footer-text relative overflow-hidden border-t-4 border-theme-border">
-      {/* Top Ochre Subtle Gradient Glow */}
+    <footer ref={footerRef} className="bg-theme-footer text-theme-footer-text relative overflow-hidden border-t-4 border-theme-border">
+      {/* Top Subtle Gradient Glow */}
       <div className="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-brand-primary to-transparent" />
 
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
-
+        <div ref={colsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
           {/* Col 1: Brand & Tagline (5 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-20 h-20 rounded-full bg-white p-1 border border-white/15 shadow-card hover:shadow-hover flex items-center justify-center">
+            <div className="flex items-center gap-3 group">
+              <div className="w-20 h-20 rounded-full bg-white p-1 border border-white/15 shadow-card hover:shadow-hover flex items-center justify-center transition-transform group-hover:scale-105">
                 <img
                   src="/logo.png"
                   alt="Manithaneyam Logo"
@@ -68,8 +96,8 @@ export const Footer: React.FC = () => {
                 : 'Providing dignified shelter, education, nutrition, and compassionate care for vulnerable children and elders.'}
             </p>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-theme-footer-text">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-theme-footer-text shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-brand-primary" />
               <span>{isTamil ? 'கோடாங்கிபட்டி, தேனி மாவட்டம்' : 'Kodangipatti, Theni District'}</span>
             </div>
           </div>
@@ -84,9 +112,9 @@ export const Footer: React.FC = () => {
                 <li key={item.id}>
                   <button
                     onClick={() => handleNavClick(item.href)}
-                    className="flex items-center gap-2 text-sm text-theme-footer-link hover:text-theme-footer-link-hover transition-colors cursor-pointer text-left"
+                    className="flex items-center gap-2 text-sm text-theme-footer-link hover:text-theme-footer-link-hover transition-all duration-200 cursor-pointer text-left hover:translate-x-1.5 group"
                   >
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
                     <span>{isTamil ? item.labelTa : item.labelEn}</span>
                   </button>
                 </li>
@@ -102,10 +130,13 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2.5 text-sm text-theme-footer-text">
               {HOME_LOCATIONS.map((home) => (
                 <li key={home.id} className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-light" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-primary shrink-0" />
                   <span>{isTamil ? home.titleTa : home.titleEn}</span>
                   {home.phone && (
-                    <a href={`tel:${home.phone.replace(/[^+\d]/g, '')}`} className="text-theme-footer-link opacity-80 hover:opacity-100 hover:text-theme-footer-link-hover">
+                    <a
+                      href={`tel:${home.phone.replace(/[^+\d]/g, '')}`}
+                      className="text-theme-footer-link opacity-80 hover:opacity-100 hover:text-theme-footer-link-hover transition-colors text-xs"
+                    >
                       · {home.phone}
                     </a>
                   )}
@@ -122,31 +153,40 @@ export const Footer: React.FC = () => {
 
             <div className="space-y-3 text-xs sm:text-sm text-theme-footer-text">
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-brand-primary" />
                 <span>{isTamil ? SITE_BRAND.fullAddressTa : SITE_BRAND.fullAddressEn}</span>
               </div>
 
               <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 shrink-0" />
+                <Phone className="w-4 h-4 shrink-0 text-brand-primary" />
                 <div className="flex flex-col">
-                  <a href={`tel:${SITE_BRAND.phone1.replace(/\s+/g, '')}`} className="text-theme-footer-link hover:text-theme-footer-link-hover">
+                  <a
+                    href={`tel:${SITE_BRAND.phone1.replace(/\s+/g, '')}`}
+                    className="text-theme-footer-link hover:text-theme-footer-link-hover transition-colors"
+                  >
                     {SITE_BRAND.phone1}
                   </a>
-                  <a href={`tel:${SITE_BRAND.phone2.replace(/\s+/g, '')}`} className="text-theme-footer-link hover:text-theme-footer-link-hover">
+                  <a
+                    href={`tel:${SITE_BRAND.phone2.replace(/\s+/g, '')}`}
+                    className="text-theme-footer-link hover:text-theme-footer-link-hover transition-colors"
+                  >
                     {SITE_BRAND.phone2}
                   </a>
                 </div>
               </div>
 
               <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 shrink-0" />
-                <a href={`mailto:${SITE_BRAND.email}`} className="text-theme-footer-link hover:text-theme-footer-link-hover hover:underline">
+                <Mail className="w-4 h-4 shrink-0 text-brand-primary" />
+                <a
+                  href={`mailto:${SITE_BRAND.email}`}
+                  className="text-theme-footer-link hover:text-theme-footer-link-hover hover:underline transition-colors"
+                >
                   {SITE_BRAND.email}
                 </a>
               </div>
             </div>
 
-            {/* Social Icons Placeholder */}
+            {/* Social Icons with Hover Micro-Interactions */}
             <div className="pt-2 flex items-center gap-3">
               {[
                 { name: 'Facebook', icon: 'FB' },
@@ -156,7 +196,7 @@ export const Footer: React.FC = () => {
               ].map((soc, idx) => (
                 <span
                   key={idx}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-brand-primary text-theme-footer-text hover:text-on-primary flex items-center justify-center text-xs font-bold transition-colors cursor-pointer border border-white/10"
+                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-brand-primary text-theme-footer-text hover:text-on-primary flex items-center justify-center text-xs font-bold transition-all duration-200 cursor-pointer border border-white/10 hover:-translate-y-1 hover:shadow-xs active:scale-95"
                   title={soc.name}
                 >
                   {soc.icon}
@@ -164,7 +204,6 @@ export const Footer: React.FC = () => {
               ))}
             </div>
           </div>
-
         </div>
 
         {/* Bottom Bar: Copyright & Dignity Statement */}
@@ -173,7 +212,7 @@ export const Footer: React.FC = () => {
 
           <p className="flex items-center gap-1 text-theme-footer-text">
             <span>{isTamil ? 'அன்பாலும் மனிதநேயத்தாலும் கட்டப்பட்டது' : 'Built with Love and Compassion'}</span>
-            <Heart className="w-3.5 h-3.5 text-heart fill-heart" />
+            <Heart className="w-3.5 h-3.5 text-heart fill-heart animate-pulse" />
           </p>
 
           <p className="text-[11px] text-theme-footer-text">

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Download, Eye, X, UploadCloud } from 'lucide-react';
 import { api } from '../services/api';
 import type { DocumentItem } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { useDocumentSections } from '../hooks/useDocumentSections';
 import { SectionHeading } from '../components/Common/SectionHeading';
+import { gsap, EASING, prefersReducedMotion } from '../animations';
 
 function AttachedImages({ doc }: { doc: DocumentItem }) {
   if (!doc.images || doc.images.length === 0) return null;
@@ -31,6 +32,30 @@ export function PublicDocuments() {
   const { sections, sectionOf, labelFor } = useDocumentSections();
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const [currentPdfUrl, setCurrentPdfUrl] = useState<string | null>(null);
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const tableContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (loading || !tableContainerRef.current || prefersReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      gsap.set(tableContainerRef.current, { opacity: 0, y: 30 });
+      gsap.to(tableContainerRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: EASING.cinematic,
+        scrollTrigger: {
+          trigger: tableContainerRef.current,
+          start: 'top 85%',
+          once: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [loading, sectionFilter]);
 
   useEffect(() => {
     fetchDocuments();
@@ -63,7 +88,7 @@ export function PublicDocuments() {
   };
 
   return (
-    <section className="py-20 bg-theme-bg relative z-10" id="documents">
+    <section ref={sectionRef} className="py-20 bg-theme-bg relative z-10" id="documents">
       <div className="container mx-auto px-4 max-w-7xl">
         <SectionHeading
           title={isTamil ? 'ஆவணங்கள் மற்றும் தகவல்கள்' : 'Documents and Information'}
@@ -97,7 +122,7 @@ export function PublicDocuments() {
               ))}
             </div>
           )}
-          <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div ref={tableContainerRef} className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">

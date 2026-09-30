@@ -7,7 +7,7 @@ const FloatingObjects: React.FC = () => {
       <div 
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: 'linear-gradient(rgba(14, 165, 233, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233, 0.2) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.08) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
         }}
       />

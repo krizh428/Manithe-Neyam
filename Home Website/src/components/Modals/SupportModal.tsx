@@ -58,7 +58,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
           particleCount: 80,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#2563EB', '#1D4ED8', '#0F172A', '#D4AF37'],
+          colors: ['#0F172A', '#1E293B', '#334155', '#D4AF37'],
         });
       } catch {
         // Confetti fallback
@@ -234,7 +234,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                 </div>
 
                 {status === 'error' && (
-                  <div className="flex items-center gap-2 p-3 rounded-xl bg-red-50 text-red-700 text-xs font-medium">
+                  <div className="flex items-center gap-2 p-3 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-xs font-medium animate-shake">
                     <AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{isTamil ? 'தயவுசெய்து பெயர் மற்றும் தொலைபேசி எண்ணை உள்ளிடவும்.' : 'Please enter your name and phone number.'}</span>
                   </div>
@@ -244,7 +244,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-5 py-2.5 rounded-full border border-theme-border text-xs font-semibold text-theme-text hover:bg-theme-bg"
+                    className="px-5 py-2.5 rounded-full border border-theme-border text-xs font-semibold text-theme-text hover:bg-theme-secondary transition-colors cursor-pointer"
                   >
                     {isTamil ? 'ரத்து' : 'Cancel'}
                   </button>
@@ -252,13 +252,13 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
                   <button
                     type="submit"
                     disabled={status === 'submitting'}
-                    className="px-7 py-2.5 rounded-full bg-theme-bg text-theme-text font-bold text-xs sm:text-sm hover:bg-theme-bg shadow-card hover:shadow-hover transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer border border-theme-border/40"
+                    className="px-7 py-2.5 rounded-full bg-brand-primary text-on-primary font-bold text-xs sm:text-sm hover:bg-brand-hover shadow-card hover:shadow-hover transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer active:scale-98"
                   >
                     {status === 'submitting' ? (
                       <span>{isTamil ? 'பதிவாகிறது...' : 'Submitting...'}</span>
                     ) : (
                       <>
-                        <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+                        <Heart className="w-4 h-4 text-red-400 fill-red-400 animate-pulse" />
                         <span>{isTamil ? 'விருப்பத்தை சமர்ப்பிக்கவும்' : 'Submit Support Inquiry'}</span>
                       </>
                     )}

@@ -17,6 +17,7 @@ import { FloatingSupport } from './components/Common/FloatingSupport';
 // Navbar & Footer
 import { Navbar } from './components/Navbar/Navbar';
 import { Footer } from './components/Footer/Footer';
+import { CustomCursor, SectionDivider, OrganizationTreeIntro } from './components/Animated';
 
 // Modals
 import { SupportModal } from './components/Modals/SupportModal';
@@ -51,7 +52,29 @@ function MainContent() {
   const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
   const navigate = useNavigate();
   const [siteReady, setSiteReady] = useState(false);
-  const handlePreloaderDone = useCallback(() => setSiteReady(true), []);
+
+  const [showOrgTree, setShowOrgTree] = useState(false);
+  const [isTreeReplay, setIsTreeReplay] = useState(false);
+
+  const handlePreloaderDone = useCallback(() => {
+    setSiteReady(true);
+  }, []);
+
+  const handleTransitionToTree = useCallback(() => {
+    setShowOrgTree(true);
+    setIsTreeReplay(false);
+  }, []);
+
+  const handleTreeComplete = useCallback(() => {
+    setShowOrgTree(false);
+    sessionStorage.setItem('mn_intro_seen', 'true');
+    setSiteReady(true);
+  }, []);
+
+  const handleReplayOrgTree = useCallback(() => {
+    setIsTreeReplay(true);
+    setShowOrgTree(true);
+  }, []);
 
   const handleOpenSupport = () => {
     setIsSupportModalOpen(true);
@@ -68,8 +91,21 @@ function MainContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-theme-bg text-theme-text relative selection:bg-theme-bg selection:text-theme-text">
+      {/* Interactive Desktop Custom Cursor */}
+      <CustomCursor />
+
       {/* 1. Preloader */}
-      <Preloader onComplete={handlePreloaderDone} />
+      <Preloader
+        onComplete={handlePreloaderDone}
+        onTransitionToTree={handleTransitionToTree}
+      />
+
+      {/* 1.1 Organization Tree Intro Layer */}
+      <OrganizationTreeIntro
+        isOpen={showOrgTree}
+        isReplay={isTreeReplay}
+        onComplete={handleTreeComplete}
+      />
 
       {/* Dynamic Ambient Glow and Floating Objects */}
       <FloatingObjects />
@@ -86,35 +122,57 @@ function MainContent() {
         {/* 3. Hero */}
         <Hero onOpenSupport={handleOpenSupport} />
 
+        <SectionDivider variant="curve" />
+
         {/* 4. Introduction */}
         <Introduction />
 
+        <SectionDivider variant="wave" />
+
         {/* 5. Three Home Locations */}
-        <Locations onOpenSupport={handleOpenSupport} />
+        <Locations onOpenSupport={handleOpenSupport} onReplayOrgTree={handleReplayOrgTree} />
+
+        <SectionDivider variant="curve" flip />
 
         {/* 6. Our Services */}
         <Services />
 
+        <SectionDivider variant="slope" />
+
         {/* 7. Founder */}
         <Founder />
+
+        <SectionDivider variant="wave" />
 
         {/* 8. Vision & Mission */}
         <VisionMission />
 
+        <SectionDivider variant="curve" />
+
         {/* 9. Service Activities */}
         <Activities />
+
+        <SectionDivider variant="wave" flip />
 
         {/* 10. Gallery Preview */}
         <GalleryPreview />
 
+        <SectionDivider variant="curve" />
+
         {/* 11. Statistics */}
         <Statistics />
+
+        <SectionDivider variant="slope" />
 
         {/* 12. Documents */}
         <PublicDocuments />
 
+        <SectionDivider variant="wave" />
+
         {/* 13. Call To Action */}
         <CallToAction onOpenSupport={handleOpenSupport} />
+
+        <SectionDivider variant="curve" />
 
         {/* 13. Contact */}
         <Contact />
@@ -144,21 +202,25 @@ import { UnsavedChangesBar } from './components/Admin/UnsavedChangesBar';
 import { AnnouncementPopup } from './components/Announcement/AnnouncementPopup';
 import { PublicDocuments } from './sections/PublicDocuments';
 
+import { PageTransition } from './components/Animated/PageTransition';
+
 export function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
         <AdminDataProvider>
           <Router>
-            <Routes>
-              <Route path="/" element={<MainContent />} />
-              
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<Login />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/:tab" element={<AdminDashboard />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            <PageTransition>
+              <Routes>
+                <Route path="/" element={<MainContent />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin/login" element={<Login />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/:tab" element={<AdminDashboard />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </PageTransition>
           </Router>
           <UnsavedChangesBar />
         </AdminDataProvider>
