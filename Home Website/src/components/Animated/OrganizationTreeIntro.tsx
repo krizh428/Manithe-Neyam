@@ -80,129 +80,89 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
     }
   };
 
-  // DESKTOP: 1200 x 660 Canvas Coordinates
-  // 10 services arranged with pristine symmetry: 5 along the upper arc, 5 along the lower arc
-  // Centered around the iconic Manithaneyam core at (600, 330)
-  const desktopNodes = [
-    // --- TOP ROW (5 Services) ---
-    {
-      ...ORGANIZATIONS_DATA[0], // Specialised Adoption Centre
-      index: 0,
-      cardX: 20,
-      cardY: 35,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 550 300 C 440 240, 260 170, 128 119',
-      leaf1: { x: 380, y: 230, rot: -35, scale: 1 },
-      leaf2: { x: 230, y: 165, rot: -25, scale: 1.1 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[1], // Children's Home (Kodangipatti)
-      index: 1,
-      cardX: 256,
-      cardY: 18,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 575 280 C 510 195, 440 145, 364 102',
-      leaf1: { x: 495, y: 195, rot: -50, scale: 1 },
-      leaf2: { x: 420, y: 145, rot: -40, scale: 1.1 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[2], // Free Clinic (NEW SERVICE)
-      index: 2,
-      cardX: 492,
-      cardY: 10,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 600 270 C 585 210, 615 150, 600 94',
-      leaf1: { x: 590, y: 210, rot: -25, scale: 1 },
-      leaf2: { x: 610, y: 150, rot: 25, scale: 1.1 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[3], // Special Training Centre (RSTC)
-      index: 3,
-      cardX: 728,
-      cardY: 18,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 625 280 C 690 195, 760 145, 836 102',
-      leaf1: { x: 705, y: 195, rot: 50, scale: 1 },
-      leaf2: { x: 780, y: 145, rot: 40, scale: 1.1 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[4], // Dream Nursery & Primary School
-      index: 4,
-      cardX: 964,
-      cardY: 35,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 650 300 C 760 240, 940 170, 1072 119',
-      leaf1: { x: 820, y: 230, rot: 35, scale: 1 },
-      leaf2: { x: 970, y: 165, rot: 25, scale: 1.1 },
-    },
+  // DESKTOP: 360° Circular Radial Tree Canopy Geometry (Canvas: 1150 x 860)
+  // Central Logo Root fixed at (575, 450)
+  // All 10 services arranged evenly around the center in a 360° mandala formation (every 36°)
+  const DESKTOP_CANVAS = {
+    cx: 575,
+    cy: 450,
+    radius: 330,
+    cardW: 198,
+    cardH: 74,
+  };
 
-    // --- BOTTOM ROW (5 Services) ---
-    {
-      ...ORGANIZATIONS_DATA[5], // Children's Home (Theni)
-      index: 5,
-      cardX: 20,
-      cardY: 540,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 550 360 C 440 420, 260 485, 128 540',
-      leaf1: { x: 380, y: 430, rot: 35, scale: 1 },
-      leaf2: { x: 230, y: 495, rot: 25, scale: 1.1 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[6], // Old Age Home
-      index: 6,
-      cardX: 256,
-      cardY: 560,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 575 380 C 510 465, 440 515, 364 560',
-      leaf1: { x: 495, y: 465, rot: 50, scale: 1 },
-      leaf2: { x: 420, y: 515, rot: 40, scale: 1.1 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[7], // Free Food (NEW SERVICE)
-      index: 7,
-      cardX: 492,
-      cardY: 568,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 600 390 C 615 450, 585 510, 600 568',
-      leaf1: { x: 610, y: 450, rot: 25, scale: 1 },
-      leaf2: { x: 590, y: 510, rot: -25, scale: 1.1 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[8], // Sewing Training Centre
-      index: 8,
-      cardX: 728,
-      cardY: 560,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 625 380 C 690 465, 760 515, 836 560',
-      leaf1: { x: 705, y: 465, rot: -50, scale: 1 },
-      leaf2: { x: 780, y: 515, rot: -40, scale: 1.1 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[9], // Computer Training Centre
-      index: 9,
-      cardX: 964,
-      cardY: 540,
-      cardW: 216,
-      cardH: 84,
-      branchPath: 'M 650 360 C 760 420, 940 485, 1072 540',
-      leaf1: { x: 820, y: 430, rot: -35, scale: 1 },
-      leaf2: { x: 970, y: 495, rot: -25, scale: 1.1 },
-    },
+  // Harmonious radial distribution (10 positions at 36° intervals):
+  // 0° (Top Center, 12 o'clock): Free Clinic
+  // 180° (Bottom Center, 6 o'clock): Free Food
+  const RADIAL_SERVICE_ORDER: Array<{ dataIndex: number; deg: number }> = [
+    { dataIndex: 2, deg: 0 },    // 0° (Top 12 o'clock): Free Clinic
+    { dataIndex: 0, deg: 36 },   // 36°: Specialised Adoption Centre
+    { dataIndex: 4, deg: 72 },   // 72°: Dream Nursery & Primary School
+    { dataIndex: 3, deg: 108 },  // 108°: Special Training Centre (RSTC)
+    { dataIndex: 9, deg: 144 },  // 144°: Computer Training Centre
+    { dataIndex: 7, deg: 180 },  // 180° (Bottom 6 o'clock): Free Food
+    { dataIndex: 8, deg: 216 },  // 216°: Sewing Training Centre
+    { dataIndex: 6, deg: 252 },  // 252°: Old Age Home
+    { dataIndex: 5, deg: 288 },  // 288°: Children's Home (Theni)
+    { dataIndex: 1, deg: 324 },  // 324°: Children's Home (Kodangipatti)
   ];
+
+  const desktopNodes = RADIAL_SERVICE_ORDER.map(({ dataIndex, deg }, index) => {
+    const data = ORGANIZATIONS_DATA[dataIndex];
+    const rad = (deg * Math.PI) / 180;
+    const { cx, cy, radius, cardW, cardH } = DESKTOP_CANVAS;
+
+    // Card Center & Top-Left Anchor
+    const cardCenterX = cx + radius * Math.sin(rad);
+    const cardCenterY = cy - radius * Math.cos(rad);
+    const cardX = Math.round(cardCenterX - cardW / 2);
+    const cardY = Math.round(cardCenterY - cardH / 2);
+
+    // Branch Start (perimeter of central circular shield at r = 58)
+    const sx = Math.round(cx + 58 * Math.sin(rad));
+    const sy = Math.round(cy - 58 * Math.cos(rad));
+
+    // Branch End (inner perimeter of card at r = radius - 55)
+    const ex = Math.round(cx + (radius - 55) * Math.sin(rad));
+    const ey = Math.round(cy - (radius - 55) * Math.cos(rad));
+
+    // Organic curved boughs: control points gently sweep with tangential angle offsets
+    const cp1Rad = ((deg + 15) * Math.PI) / 180;
+    const cp1x = Math.round(cx + 125 * Math.sin(cp1Rad));
+    const cp1y = Math.round(cy - 125 * Math.cos(cp1Rad));
+
+    const cp2Rad = ((deg + 6) * Math.PI) / 180;
+    const cp2x = Math.round(cx + 215 * Math.sin(cp2Rad));
+    const cp2y = Math.round(cy - 215 * Math.cos(cp2Rad));
+
+    const branchPath = `M ${sx} ${sy} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${ex} ${ey}`;
+
+    // Sprouting Leaves along the curved branch
+    const l1Rad = ((deg + 10) * Math.PI) / 180;
+    const l1x = Math.round(cx + 145 * Math.sin(l1Rad));
+    const l1y = Math.round(cy - 145 * Math.cos(l1Rad));
+
+    const l2Rad = ((deg + 4) * Math.PI) / 180;
+    const l2x = Math.round(cx + 230 * Math.sin(l2Rad));
+    const l2y = Math.round(cy - 230 * Math.cos(l2Rad));
+
+    return {
+      ...data,
+      index,
+      cardX,
+      cardY,
+      cardW,
+      cardH,
+      branchPath,
+      leaf1: { x: l1x, y: l1y, rot: deg - 25, scale: 1 },
+      leaf2: { x: l2x, y: l2y, rot: deg + 30, scale: 1.1 },
+    };
+  });
 
   // MOBILE: 420 x 1080 Canvas Coordinates with graceful alternating branch geometry
   const mobileNodes = [
     {
-      ...ORGANIZATIONS_DATA[0],
+      ...ORGANIZATIONS_DATA[2], // Free Clinic
       index: 0,
       cardX: 12,
       cardY: 110,
@@ -213,7 +173,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 130, y: 145, rot: -15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[1],
+      ...ORGANIZATIONS_DATA[0], // Adoption
       index: 1,
       cardX: 220,
       cardY: 195,
@@ -224,7 +184,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 290, y: 230, rot: 15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[2],
+      ...ORGANIZATIONS_DATA[4], // School
       index: 2,
       cardX: 12,
       cardY: 280,
@@ -235,7 +195,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 130, y: 315, rot: -15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[3],
+      ...ORGANIZATIONS_DATA[3], // RSTC
       index: 3,
       cardX: 220,
       cardY: 365,
@@ -246,7 +206,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 290, y: 400, rot: 15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[4],
+      ...ORGANIZATIONS_DATA[9], // Computer
       index: 4,
       cardX: 12,
       cardY: 450,
@@ -257,7 +217,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 130, y: 485, rot: -15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[5],
+      ...ORGANIZATIONS_DATA[7], // Free Food
       index: 5,
       cardX: 220,
       cardY: 535,
@@ -268,7 +228,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 290, y: 570, rot: 15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[6],
+      ...ORGANIZATIONS_DATA[8], // Sewing
       index: 6,
       cardX: 12,
       cardY: 620,
@@ -279,7 +239,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 130, y: 655, rot: -15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[7],
+      ...ORGANIZATIONS_DATA[6], // Old Age
       index: 7,
       cardX: 220,
       cardY: 705,
@@ -290,7 +250,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 290, y: 740, rot: 15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[8],
+      ...ORGANIZATIONS_DATA[5], // Theni
       index: 8,
       cardX: 12,
       cardY: 790,
@@ -301,7 +261,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       leaf2: { x: 130, y: 825, rot: -15, scale: 0.95 },
     },
     {
-      ...ORGANIZATIONS_DATA[9],
+      ...ORGANIZATIONS_DATA[1], // Kodangipatti Children
       index: 9,
       cardX: 220,
       cardY: 875,
@@ -353,7 +313,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
         gsap.set(logoGroup, {
           scale: 0.65,
           opacity: 0,
-          transformOrigin: isMobile ? '210px 65px' : '600px 330px',
+          transformOrigin: isMobile ? '210px 65px' : '575px 450px',
         });
       }
 
@@ -361,7 +321,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       gsap.set(rippleRings, {
         scale: 0.7,
         opacity: 0,
-        transformOrigin: isMobile ? '210px 65px' : '600px 330px',
+        transformOrigin: isMobile ? '210px 65px' : '575px 450px',
       });
 
       // Prepare branches for stroke animation
@@ -380,7 +340,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       gsap.set(leaves, { scale: 0, opacity: 0, transformOrigin: 'center center' });
 
       // Service cards start softly shifted with 0 opacity
-      gsap.set(serviceCards, { opacity: 0, y: 16, scale: 0.92 });
+      gsap.set(serviceCards, { opacity: 0, scale: 0.9 });
 
       // Points and sparkles start hidden
       gsap.set(travelPoints, { opacity: 0, scale: 0.8 });
@@ -401,7 +361,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
         rippleRings,
         {
           scale: 1,
-          opacity: (i) => 0.5 - i * 0.12,
+          opacity: (i) => 0.55 - i * 0.1,
           duration: 0.9,
           stagger: 0.1,
           ease: 'power2.out',
@@ -433,7 +393,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
         const startTime = (tl.duration() - 0.28) > 0 ? (tl.duration() - 0.28) : 1.0;
 
-        // A. Branch curves smoothly outward like wood grain
+        // A. Branch curves smoothly outward like natural boughs
         tl.to(
           branch,
           {
@@ -535,13 +495,12 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
           );
         }
 
-        // E. Large Service Card Softly Reveals
+        // E. Service Card Softly Blooms In
         if (card) {
           tl.to(
             card,
             {
               opacity: 1,
-              y: 0,
               scale: 1,
               duration: 0.55,
               ease: 'power2.out',
@@ -555,7 +514,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       tl.add(() => {
         breathingTweenRef.current = gsap.to(rippleRings, {
           scale: 1.15,
-          opacity: (i) => 0.65 - i * 0.14,
+          opacity: (i) => 0.65 - i * 0.12,
           duration: 2.8,
           repeat: -1,
           yoyo: true,
@@ -629,7 +588,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
     >
       {/* Subtle organic ambient backdrop glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1150px] h-[800px] rounded-full bg-gradient-to-tr from-[#1B4332]/6 via-[#D4AF37]/10 to-[#5C3A21]/6 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1150px] h-[850px] rounded-full bg-gradient-to-tr from-[#1B4332]/6 via-[#D4AF37]/10 to-[#5C3A21]/6 blur-3xl pointer-events-none" />
       </div>
 
       {/* Top Header Controls: Skip Button */}
@@ -645,7 +604,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
         </button>
       </div>
 
-      {/* Top Heading in Rich Warm Brown Color (#5C3A21), Noticeably Larger & More Premium */}
+      {/* Top Heading in Rich Warm Brown Color (#5C3A21) */}
       <div ref={titleGroupRef} className="text-center z-20 -mt-1 max-w-4xl px-4 shrink-0">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#5C3A21] font-tamil tracking-tight leading-tight">
           {isTamil ? 'மனிதநேயம் – எங்கள் சேவைகள்' : 'MANITHANEYA – OUR SERVICES'}
@@ -657,10 +616,10 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
         </p>
       </div>
 
-      {/* Main Humanity Tree Canvas Area with Tight Screen-Filling Geometry */}
+      {/* Main Humanity Tree Radial Mandala Canvas Area */}
       <div className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden my-auto">
         <svg
-          viewBox={isMobile ? '0 0 420 1080' : '0 0 1200 660'}
+          viewBox={isMobile ? '0 0 420 1080' : '0 0 1150 860'}
           className="w-full h-full max-h-[calc(100vh-95px)] max-w-[1440px] pointer-events-none"
           preserveAspectRatio="xMidYMid meet"
           fill="none"
@@ -696,31 +655,45 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
             </linearGradient>
           </defs>
 
-          {/* 1. Organic Tree Trunk Base Anchor */}
+          {/* 1. Organic Tree Canopy Rings / Tree Trunk Roots */}
           {!isMobile && (
-            <g className="tree-trunk-base opacity-40">
+            <g className="tree-mandala-background opacity-45">
+              {/* Outer Canopy Ring connecting branches */}
+              <circle
+                cx={575}
+                cy={450}
+                r={210}
+                stroke="#D4AF37"
+                strokeWidth="1.5"
+                strokeDasharray="6 12"
+                strokeOpacity="0.35"
+              />
+              {/* Ground Anchor Roots extending gently downward */}
               <path
-                d="M 585 390 Q 575 450, 555 520"
+                d="M 565 505 Q 555 570, 535 635"
                 stroke="#5C3A21"
                 strokeWidth="5"
                 strokeLinecap="round"
+                strokeOpacity="0.35"
               />
               <path
-                d="M 615 390 Q 625 450, 645 520"
+                d="M 585 505 Q 595 570, 615 635"
                 stroke="#5C3A21"
                 strokeWidth="5"
                 strokeLinecap="round"
+                strokeOpacity="0.35"
               />
               <path
-                d="M 600 390 L 600 495"
+                d="M 575 505 L 575 615"
                 stroke="#5C3A21"
-                strokeWidth="7"
+                strokeWidth="6"
                 strokeLinecap="round"
+                strokeOpacity="0.35"
               />
             </g>
           )}
 
-          {/* 2. Organic Service Branches for All 10 Services */}
+          {/* 2. Organic Radial Service Branches for All 10 Services */}
           {currentNodes.map((node) => {
             const isHovered = hoveredNodeId === node.id;
             return (
@@ -730,7 +703,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
                   d={node.branchPath}
                   className="tree-branch-trail"
                   stroke={isHovered ? '#D4AF37' : '#1B4332'}
-                  strokeWidth={isMobile ? (isHovered ? '7' : '4') : (isHovered ? '8' : '4.5')}
+                  strokeWidth={isMobile ? (isHovered ? '7' : '4') : (isHovered ? '7.5' : '4.5')}
                   strokeLinecap="round"
                   strokeOpacity={isHovered ? '0.55' : '0.15'}
                   filter={isHovered ? 'url(#gold-flow-glow)' : undefined}
@@ -741,7 +714,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
                   d={node.branchPath}
                   className="tree-branch-path"
                   stroke={isHovered ? 'url(#activeBranchGradient)' : 'url(#branchGradient)'}
-                  strokeWidth={isMobile ? (isHovered ? '4' : '3') : (isHovered ? '5' : '3.8')}
+                  strokeWidth={isMobile ? (isHovered ? '4' : '3') : (isHovered ? '4.8' : '3.6')}
                   strokeLinecap="round"
                 />
 
@@ -776,27 +749,27 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
               <circle
                 className="travel-point fill-[#D4AF37]"
                 r={isMobile ? '6' : '7.5'}
-                cx={isMobile ? 210 : 600}
-                cy={isMobile ? 65 : 330}
+                cx={isMobile ? 210 : 575}
+                cy={isMobile ? 65 : 450}
                 filter="url(#gold-flow-glow)"
               />
               <circle
                 className="travel-sparkle fill-[#2D6A4F]"
                 r={isMobile ? '4' : '5'}
-                cx={isMobile ? 210 : 600}
-                cy={isMobile ? 65 : 330}
+                cx={isMobile ? 210 : 575}
+                cy={isMobile ? 65 : 450}
                 filter="url(#emerald-glow)"
               />
             </g>
           ))}
 
-          {/* 4. Large Bold Central Logo Trunk / Core (Diameter: ~130px) */}
+          {/* 4. Large Bold Central Logo Root / Core at Exact Center (575, 450) */}
           <g className="central-logo-group pointer-events-auto">
             {/* Outer Ripple Ring 3 */}
             <circle
-              cx={isMobile ? 210 : 600}
-              cy={isMobile ? 65 : 330}
-              r={isMobile ? 60 : 132}
+              cx={isMobile ? 210 : 575}
+              cy={isMobile ? 65 : 450}
+              r={isMobile ? 60 : 142}
               className="ripple-ring stroke-[#D4AF37]/35 fill-none"
               strokeWidth="2"
               strokeDasharray="8 8"
@@ -804,37 +777,37 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
             {/* Middle Ripple Ring 2 */}
             <circle
-              cx={isMobile ? 210 : 600}
-              cy={isMobile ? 65 : 330}
-              r={isMobile ? 48 : 104}
+              cx={isMobile ? 210 : 575}
+              cy={isMobile ? 65 : 450}
+              r={isMobile ? 48 : 106}
               className="ripple-ring stroke-[#2D6A4F]/40 fill-[#2D6A4F]/5"
               strokeWidth="2.5"
             />
 
             {/* Inner Shield Ring 1 */}
             <circle
-              cx={isMobile ? 210 : 600}
-              cy={isMobile ? 65 : 330}
-              r={isMobile ? 38 : 80}
+              cx={isMobile ? 210 : 575}
+              cy={isMobile ? 65 : 450}
+              r={isMobile ? 38 : 78}
               className="ripple-ring stroke-[#5C3A21]/45 fill-[#FAF7F2]"
               strokeWidth="3"
             />
 
             {/* Solid Center Shield */}
             <circle
-              cx={isMobile ? 210 : 600}
-              cy={isMobile ? 65 : 330}
-              r={isMobile ? 32 : 65}
+              cx={isMobile ? 210 : 575}
+              cy={isMobile ? 65 : 450}
+              r={isMobile ? 32 : 62}
               className="fill-white stroke-[#5C3A21] shadow-xl"
               strokeWidth="3.5"
             />
 
             {/* Official Manithaneyam Seal Emblem */}
             <foreignObject
-              x={isMobile ? 210 - 32 : 600 - 65}
-              y={isMobile ? 65 - 32 : 330 - 65}
-              width={isMobile ? 64 : 130}
-              height={isMobile ? 64 : 130}
+              x={isMobile ? 210 - 32 : 575 - 62}
+              y={isMobile ? 65 - 32 : 450 - 62}
+              width={isMobile ? 64 : 124}
+              height={isMobile ? 64 : 124}
               className="pointer-events-none"
             >
               <div className="w-full h-full flex items-center justify-center p-0.5">
@@ -847,7 +820,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
             </foreignObject>
           </g>
 
-          {/* 5. 10 Premium Service Cards - NO CATEGORY LABELS, DIRECT BOLD 2-LINE TITLE & SUBTITLE */}
+          {/* 5. 10 Service Cards Evenly Spaced around the 360° Perimeter */}
           {currentNodes.map((node) => {
             const isHovered = hoveredNodeId === node.id;
 
@@ -864,7 +837,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
                     onMouseEnter={() => setHoveredNodeId(node.id)}
                     onMouseLeave={() => setHoveredNodeId(null)}
                     onClick={handleSkip}
-                    className={`relative w-full h-full px-3 sm:px-3.5 py-2.5 rounded-2xl transition-all duration-300 flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none group ${
+                    className={`relative w-full h-full px-3 py-2 rounded-2xl transition-all duration-300 flex items-center gap-2.5 cursor-pointer select-none group ${
                       isHovered
                         ? 'bg-white border-[#2D6A4F] shadow-[0_16px_36px_-6px_rgba(27,67,50,0.22)] ring-2 ring-[#2D6A4F]/35 -translate-y-1'
                         : 'bg-white/94 backdrop-blur-md border border-[#E7DFD5] shadow-[0_4px_16px_-2px_rgba(92,58,33,0.07),0_2px_6px_-1px_rgba(0,0,0,0.04)] hover:shadow-xl hover:border-[#2D6A4F]/60'
@@ -883,7 +856,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
                     {/* Icon Pill with Forest Green & Warm Gold Accent */}
                     <div
-                      className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      className={`w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
                         isHovered
                           ? 'bg-gradient-to-br from-[#1B4332] to-[#2D6A4F] text-[#F4D35E] shadow-md shadow-[#1B4332]/25 scale-105'
                           : 'bg-[#1B4332]/8 text-[#1B4332] border border-[#1B4332]/15 group-hover:bg-[#1B4332]/12'
@@ -894,14 +867,14 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
                     {/* Direct Two-Line Service Information - NO CATEGORY LABELS */}
                     <div className="flex-1 min-w-0 pr-0.5">
-                      {/* Line 1: Service Name in Bold, Large Font (Full 2-Line Support, No Cutoff) */}
-                      <h4 className="text-[12px] sm:text-[13px] md:text-[13.5px] font-bold text-[#3B2314] leading-[1.25] tracking-tight font-tamil line-clamp-2">
+                      {/* Line 1: Service Name in Bold, Large Font (Full 2-Line Support) */}
+                      <h4 className="text-[11.5px] sm:text-[12.5px] font-bold text-[#3B2314] leading-[1.2] tracking-tight font-tamil line-clamp-2">
                         {isTamil ? node.shortTa : node.shortEn}
                       </h4>
 
                       {/* Line 2: Supporting Description / Location in Smaller Text */}
-                      <p className="text-[9.5px] sm:text-[10.5px] font-medium text-[#7A614D] flex items-center gap-1 mt-1 font-tamil truncate">
-                        <MapPin className="w-3 h-3 text-[#2D6A4F] shrink-0" />
+                      <p className="text-[9px] sm:text-[10px] font-medium text-[#7A614D] flex items-center gap-0.5 mt-0.5 font-tamil truncate">
+                        <MapPin className="w-2.5 h-2.5 text-[#2D6A4F] shrink-0" />
                         <span className="truncate">{isTamil ? node.descriptionTa : node.descriptionEn}</span>
                       </p>
                     </div>
