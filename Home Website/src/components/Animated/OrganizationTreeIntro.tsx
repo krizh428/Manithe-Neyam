@@ -48,9 +48,9 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Icon Resolver with large, elegant minimal line styling
+  // Icon Resolver with clean line styling
   const getIcon = (name: OrganizationBranch['iconName'], isHovered: boolean) => {
-    const iconClass = `w-6 h-6 sm:w-6.5 sm:h-6.5 transition-transform duration-300 ${
+    const iconClass = `w-5.5 h-5.5 sm:w-6 sm:h-6 transition-transform duration-300 ${
       isHovered ? 'scale-110 text-inherit' : 'text-[#1B4332]'
     }`;
 
@@ -80,17 +80,17 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
     }
   };
 
-  // FULL SCREEN WIDESCREEN 360° RADIAL TREE GEOMETRY (Canvas: 1480 x 820)
-  // Perfectly proportioned for 16:9 / 16:10 desktop screens with zero empty void margins
-  // Center Core fixed at (740, 410)
-  // Large Cards: 250px x 88px with full typography and zero truncation
+  // FULL SCREEN WIDESCREEN 360° RADIAL TREE GEOMETRY (Canvas: 1520 x 820)
+  // Designed so every card is clearly viewable, spacious, and 100% visible with zero truncation
+  // Center Core at (760, 410)
+  // Large Cards: 260px x 82px
   const DESKTOP_CANVAS = {
-    cx: 740,
+    cx: 760,
     cy: 410,
-    rx: 530, // Horizontal radius to span widescreen displays
-    ry: 295, // Vertical radius fitted to screen height
-    cardW: 250,
-    cardH: 88,
+    rx: 540, // Horizontal radius to span full screen width
+    ry: 295, // Vertical radius fitted to full screen height
+    cardW: 260,
+    cardH: 82,
   };
 
   // Harmonious radial distribution (10 positions at 36° intervals):
@@ -315,7 +315,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
         gsap.set(logoGroup, {
           scale: 0.65,
           opacity: 0,
-          transformOrigin: isMobile ? '210px 65px' : '740px 410px',
+          transformOrigin: isMobile ? '210px 65px' : '760px 410px',
         });
       }
 
@@ -323,7 +323,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       gsap.set(rippleRings, {
         scale: 0.7,
         opacity: 0,
-        transformOrigin: isMobile ? '210px 65px' : '740px 410px',
+        transformOrigin: isMobile ? '210px 65px' : '760px 410px',
       });
 
       // Prepare branches for stroke animation
@@ -583,7 +583,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[120] overflow-hidden flex flex-col items-center justify-between p-1 sm:p-3 select-none"
+      className="fixed inset-0 z-[120] overflow-hidden flex flex-col items-center justify-between p-1 sm:p-2.5 select-none"
       style={{
         background: 'radial-gradient(ellipse at 50% 50%, #FDFBF7 0%, #F6EFE8 55%, #ECE2D4 100%)',
       }}
@@ -621,7 +621,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       {/* Main Full-Screen Radial Tree Canvas Area */}
       <div className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden my-auto">
         <svg
-          viewBox={isMobile ? '0 0 420 1080' : '0 0 1480 820'}
+          viewBox={isMobile ? '0 0 420 1080' : '0 0 1520 820'}
           className="w-full h-full max-h-[calc(100vh-80px)] max-w-[1720px] pointer-events-none"
           preserveAspectRatio="xMidYMid meet"
           fill="none"
@@ -662,7 +662,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
             <g className="tree-mandala-background opacity-45">
               {/* Outer Canopy Ring connecting branches */}
               <ellipse
-                cx={740}
+                cx={760}
                 cy={410}
                 rx={270}
                 ry={150}
@@ -673,21 +673,21 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
               />
               {/* Ground Anchor Roots extending gently downward */}
               <path
-                d="M 730 470 Q 720 540, 695 615"
+                d="M 750 470 Q 740 540, 715 615"
                 stroke="#5C3A21"
                 strokeWidth="5"
                 strokeLinecap="round"
                 strokeOpacity="0.35"
               />
               <path
-                d="M 750 470 Q 760 540, 785 615"
+                d="M 770 470 Q 780 540, 805 615"
                 stroke="#5C3A21"
                 strokeWidth="5"
                 strokeLinecap="round"
                 strokeOpacity="0.35"
               />
               <path
-                d="M 740 470 L 740 595"
+                d="M 760 470 L 760 595"
                 stroke="#5C3A21"
                 strokeWidth="6"
                 strokeLinecap="round"
@@ -752,25 +752,25 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
               <circle
                 className="travel-point fill-[#D4AF37]"
                 r={isMobile ? '6' : '8'}
-                cx={isMobile ? 210 : 740}
+                cx={isMobile ? 210 : 760}
                 cy={isMobile ? 65 : 410}
                 filter="url(#gold-flow-glow)"
               />
               <circle
                 className="travel-sparkle fill-[#2D6A4F]"
                 r={isMobile ? '4' : '5.5'}
-                cx={isMobile ? 210 : 740}
+                cx={isMobile ? 210 : 760}
                 cy={isMobile ? 65 : 410}
                 filter="url(#emerald-glow)"
               />
             </g>
           ))}
 
-          {/* 4. Large Bold Central Logo Root / Core at Exact Center (740, 410) */}
+          {/* 4. Large Bold Central Logo Root / Core at Exact Center (760, 410) */}
           <g className="central-logo-group pointer-events-auto">
             {/* Outer Ripple Ring 3 */}
             <circle
-              cx={isMobile ? 210 : 740}
+              cx={isMobile ? 210 : 760}
               cy={isMobile ? 65 : 410}
               r={isMobile ? 60 : 155}
               className="ripple-ring stroke-[#D4AF37]/35 fill-none"
@@ -780,7 +780,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
             {/* Middle Ripple Ring 2 */}
             <circle
-              cx={isMobile ? 210 : 740}
+              cx={isMobile ? 210 : 760}
               cy={isMobile ? 65 : 410}
               r={isMobile ? 48 : 116}
               className="ripple-ring stroke-[#2D6A4F]/40 fill-[#2D6A4F]/5"
@@ -789,7 +789,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
             {/* Inner Shield Ring 1 */}
             <circle
-              cx={isMobile ? 210 : 740}
+              cx={isMobile ? 210 : 760}
               cy={isMobile ? 65 : 410}
               r={isMobile ? 38 : 86}
               className="ripple-ring stroke-[#5C3A21]/45 fill-[#FAF7F2]"
@@ -798,7 +798,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
             {/* Solid Center Shield */}
             <circle
-              cx={isMobile ? 210 : 740}
+              cx={isMobile ? 210 : 760}
               cy={isMobile ? 65 : 410}
               r={isMobile ? 32 : 68}
               className="fill-white stroke-[#5C3A21] shadow-xl"
@@ -807,7 +807,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
             {/* Official Manithaneyam Seal Emblem */}
             <foreignObject
-              x={isMobile ? 210 - 32 : 740 - 68}
+              x={isMobile ? 210 - 32 : 760 - 68}
               y={isMobile ? 65 - 32 : 410 - 68}
               width={isMobile ? 64 : 136}
               height={isMobile ? 64 : 136}
@@ -823,7 +823,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
             </foreignObject>
           </g>
 
-          {/* 5. 10 Large Big Service Cards Spanning Full Screen - NO TRUNCATION */}
+          {/* 5. 10 Service Cards - Exactly fitted like the Free Clinic reference card */}
           {currentNodes.map((node) => {
             const isHovered = hoveredNodeId === node.id;
 
@@ -840,45 +840,45 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
                     onMouseEnter={() => setHoveredNodeId(node.id)}
                     onMouseLeave={() => setHoveredNodeId(null)}
                     onClick={handleSkip}
-                    className={`relative w-full h-full px-3.5 py-3 rounded-2xl transition-all duration-300 flex items-center gap-3 cursor-pointer select-none group ${
+                    className={`relative w-full h-full px-3 sm:px-3.5 py-2.5 rounded-2xl transition-all duration-300 flex items-center gap-3 cursor-pointer select-none group ${
                       isHovered
                         ? 'bg-white border-[#2D6A4F] shadow-[0_20px_42px_-8px_rgba(27,67,50,0.25)] ring-2 ring-[#2D6A4F]/40 -translate-y-1'
-                        : 'bg-white/95 backdrop-blur-md border border-[#E5DDD2] shadow-[0_6px_20px_-3px_rgba(92,58,33,0.08),0_2px_8px_-1px_rgba(0,0,0,0.04)] hover:shadow-2xl hover:border-[#2D6A4F]/70'
+                        : 'bg-white/96 backdrop-blur-md border border-[#E5DDD2] shadow-[0_6px_20px_-3px_rgba(92,58,33,0.08),0_2px_8px_-1px_rgba(0,0,0,0.04)] hover:shadow-2xl hover:border-[#2D6A4F]/70'
                     }`}
                   >
                     {/* Small Decorative Corner Leaf Accent */}
                     <div
-                      className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 pointer-events-none ${
+                      className={`absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 pointer-events-none ${
                         isHovered
                           ? 'bg-[#1B4332] text-[#F4D35E] scale-110 shadow-sm'
-                          : 'bg-[#EBF4EE] text-[#2D6A4F]/70 border border-[#2D6A4F]/20'
+                          : 'bg-[#EBF4EE] text-[#2D6A4F]/80 border border-[#2D6A4F]/20'
                       }`}
                     >
-                      <Leaf className="w-3 h-3" />
+                      <Leaf className="w-2.5 h-2.5" />
                     </div>
 
-                    {/* Icon Pill with Forest Green & Warm Gold Accent */}
+                    {/* Icon Pill with Soft Tint & Nature Green Line Icon */}
                     <div
-                      className={`w-12 h-12 sm:w-13 sm:h-13 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      className={`w-11 h-11 sm:w-11.5 sm:h-11.5 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
                         isHovered
                           ? 'bg-gradient-to-br from-[#1B4332] to-[#2D6A4F] text-[#F4D35E] shadow-md shadow-[#1B4332]/30 scale-105'
-                          : 'bg-[#1B4332]/8 text-[#1B4332] border border-[#1B4332]/15 group-hover:bg-[#1B4332]/12'
+                          : 'bg-[#EBF3ED] text-[#1B4332] border border-[#1B4332]/15 group-hover:bg-[#1B4332]/12'
                       }`}
                     >
                       {getIcon(node.iconName, isHovered)}
                     </div>
 
-                    {/* Direct Large Two-Line Service Information - ZERO TRUNCATION */}
-                    <div className="flex-1 min-w-0 pr-0.5">
+                    {/* Direct Clean Two-Line Service Information - Zero Truncation */}
+                    <div className="flex-1 min-w-0 pr-1">
                       {/* Line 1: Service Name in Bold, Large Font */}
-                      <h4 className="text-[13px] sm:text-[14px] md:text-[15px] font-extrabold text-[#3B2314] leading-[1.2] tracking-tight font-tamil line-clamp-2">
+                      <h4 className="text-[13px] sm:text-[14px] font-bold text-[#3B2314] leading-snug tracking-tight font-tamil truncate">
                         {isTamil ? node.shortTa : node.shortEn}
                       </h4>
 
                       {/* Line 2: Supporting Description / Location in Crisp Readable Font */}
-                      <p className="text-[10.5px] sm:text-[11.5px] font-semibold text-[#7A614D] flex items-center gap-1 mt-1 font-tamil">
-                        <MapPin className="w-3 h-3 text-[#2D6A4F] shrink-0" />
-                        <span className="leading-tight">{isTamil ? node.descriptionTa : node.descriptionEn}</span>
+                      <p className="text-[10.5px] sm:text-[11.5px] font-medium text-[#7A614D] flex items-center gap-1.5 mt-0.5 font-tamil whitespace-nowrap">
+                        <MapPin className="w-3.5 h-3.5 text-[#2D6A4F] shrink-0" />
+                        <span className="truncate">{isTamil ? node.descriptionTa : node.descriptionEn}</span>
                       </p>
                     </div>
                   </div>
