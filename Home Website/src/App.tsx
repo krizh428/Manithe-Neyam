@@ -13,6 +13,7 @@ import { BackToTop } from './components/Common/BackToTop';
 import { AmbientGlow } from './components/Common/AmbientGlow';
 import FloatingObjects from './components/Common/FloatingObjects';
 import { FloatingSupport } from './components/Common/FloatingSupport';
+import { FloatingWhatsApp } from './components/Common/FloatingWhatsApp';
 
 // Navbar & Footer
 import { Navbar } from './components/Navbar/Navbar';
@@ -189,6 +190,9 @@ function MainContent() {
 
       {/* 16. Floating Support */}
       <FloatingSupport onClick={handleOpenSupport} />
+
+      {/* 17. Floating Animated WhatsApp (Right Corner) */}
+      <FloatingWhatsApp />
 
       {/* Support / Volunteer Inquiry Modal */}
       <SupportModal isOpen={isSupportModalOpen} onClose={handleCloseSupport} />

@@ -65,12 +65,12 @@ export const Locations: React.FC<LocationsProps> = ({ onOpenSupport, onReplayOrg
             <button
               type="button"
               onClick={onReplayOrgTree}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary/10 hover:bg-brand-primary text-brand-primary hover:text-on-primary border border-brand-primary/25 transition-all duration-300 text-xs sm:text-sm font-bold cursor-pointer group shadow-xs hover:shadow-card hover:-translate-y-0.5 active:translate-y-0"
+              className="inline-flex items-center gap-2 px-4.5 py-2 rounded-full pill-badge text-xs sm:text-sm font-bold cursor-pointer group shadow-xs hover:shadow-card hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
               title={isTamil ? 'அமைப்பு வரைபடத்தை மீண்டும் காண்க' : 'Explore Organization Tree Animation'}
             >
-              <Network className="w-4 h-4 text-brand-primary group-hover:text-on-primary transition-colors" />
-              <span>{isTamil ? 'எங்கள் சேவைகளை காண (அமைப்பு வரைபடம்)' : 'Explore Our Homes (Organization Network)'}</span>
-              <Sparkles className="w-3.5 h-3.5 text-brand-primary group-hover:text-on-primary transition-colors animate-pulse" />
+              <Network className="w-4 h-4 pill-badge-icon group-hover:scale-110 transition-transform" />
+              <span className="pill-badge-text">{isTamil ? 'எங்கள் சேவைகளை காண (அமைப்பு வரைபடம்)' : 'Explore Our Homes (Organization Network)'}</span>
+              <Sparkles className="w-3.5 h-3.5 pill-badge-icon animate-pulse" />
             </button>
           </div>
         )}

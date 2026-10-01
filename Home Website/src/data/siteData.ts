@@ -36,6 +36,17 @@ export const SITE_BRAND = {
   timingsEn: 'Monday - Sunday: 9:00 AM - 6:00 PM',
 };
 
+export const DONATION_DETAILS = {
+  taxExemptionEn: 'Income tax exemption 12AA, 80G, CSR facility is available for your donations.',
+  taxExemptionTa: 'உங்கள் நன்கொடைகளுக்கு வருமான வரி விலக்கு 12AA, 80G மற்றும் CSR வசதி உண்டு.',
+  accountName: 'HUMANITY TRUST',
+  bankName: 'CANARA BANK',
+  branch: 'THENI',
+  accountNumber: '1020101030789',
+  ifscCode: 'CNRB0001020',
+  gpayNumber: '+91 9894789391',
+};
+
 export const NAV_ITEMS: NavItem[] = [
   { id: 'hero', labelTa: 'முகப்பு', labelEn: 'Home', href: '#hero' },
   { id: 'about', labelTa: 'எங்களை பற்றி', labelEn: 'About Us', href: '#about' },

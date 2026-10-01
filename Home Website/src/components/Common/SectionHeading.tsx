@@ -107,10 +107,10 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
       {badge && (
         <div
           ref={badgeRef}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-theme-bg border border-theme-border text-theme-text text-xs sm:text-sm font-semibold mb-3.5 shadow-xs"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full pill-badge text-xs sm:text-sm font-bold mb-3.5 shadow-xs cursor-default select-none"
         >
-          <span className="w-2 h-2 rounded-full bg-brand-primary animate-pulse" />
-          <span>{badge}</span>
+          <span className="w-2 h-2 rounded-full pill-badge-dot animate-pulse" />
+          <span className="pill-badge-text">{badge}</span>
         </div>
       )}
 

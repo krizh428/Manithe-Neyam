@@ -204,7 +204,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection, onOpenSupport, on
               ) : (
                 <>
                   <Lock className="w-3.5 h-3.5 text-theme-text shrink-0" />
-                  <span className="whitespace-nowrap">{isTamil ? 'உள்நுழைவு' : 'Login'}</span>
+                  <span className="whitespace-nowrap">{isTamil ? 'நிர்வாக உள்நுழைவு' : 'Admin Login'}</span>
                 </>
               )}
             </button>

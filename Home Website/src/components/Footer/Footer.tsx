@@ -2,7 +2,6 @@ import React, { useLayoutEffect, useRef } from 'react';
 import {
   Heart,
   MapPin,
-  Phone,
   Mail,
   ArrowRight,
   Sparkles,
@@ -10,6 +9,7 @@ import {
 import { NAV_ITEMS } from '../../data/siteData';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAdminData } from '../../context/AdminDataContext';
+import { WhatsAppIcon } from '../Common/WhatsAppIcon';
 import { gsap, EASING, prefersReducedMotion } from '../../animations';
 
 export const Footer: React.FC = () => {
@@ -158,19 +158,33 @@ export const Footer: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 shrink-0 text-brand-primary" />
-                <div className="flex flex-col">
+                <WhatsAppIcon className="w-4 h-4 shrink-0 text-emerald-400" />
+                <div className="flex flex-col gap-1">
                   <a
-                    href={`tel:${SITE_BRAND.phone1.replace(/\s+/g, '')}`}
-                    className="text-theme-footer-link hover:text-theme-footer-link-hover transition-colors"
+                    href={`https://wa.me/${SITE_BRAND.phone1.replace(/\D/g, '')}?text=${encodeURIComponent(
+                      isTamil
+                        ? 'வணக்கம், மனிதநேய ஆதரவற்றோர் காப்பகம் பற்றிய தகவல்களை அறிய விரும்புகிறேன்.'
+                        : 'Hello, I would like to get more information about Manithaneyam Orphanage Home.'
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-theme-footer-link hover:text-emerald-400 transition-colors inline-flex items-center gap-1.5"
+                    title={isTamil ? 'வாட்ஸ்அப் மூலம் தொடர்புகொள்ள' : 'Chat on WhatsApp'}
                   >
-                    {SITE_BRAND.phone1}
+                    <span>{SITE_BRAND.phone1}</span>
                   </a>
                   <a
-                    href={`tel:${SITE_BRAND.phone2.replace(/\s+/g, '')}`}
-                    className="text-theme-footer-link hover:text-theme-footer-link-hover transition-colors"
+                    href={`https://wa.me/${SITE_BRAND.phone2.replace(/\D/g, '')}?text=${encodeURIComponent(
+                      isTamil
+                        ? 'வணக்கம், மனிதநேய ஆதரவற்றோர் காப்பகம் பற்றிய தகவல்களை அறிய விரும்புகிறேன்.'
+                        : 'Hello, I would like to get more information about Manithaneyam Orphanage Home.'
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-theme-footer-link hover:text-emerald-400 transition-colors inline-flex items-center gap-1.5"
+                    title={isTamil ? 'வாட்ஸ்அப் மூலம் தொடர்புகொள்ள' : 'Chat on WhatsApp'}
                   >
-                    {SITE_BRAND.phone2}
+                    <span>{SITE_BRAND.phone2}</span>
                   </a>
                 </div>
               </div>

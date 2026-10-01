@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, Check, Sparkles, AlertCircle } from 'lucide-react';
+import { X, Heart, Check, Sparkles, AlertCircle, Building2, Copy, ShieldCheck, Smartphone } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useLanguage } from '../../context/LanguageContext';
+import { DONATION_DETAILS } from '../../data/siteData';
 
 interface SupportModalProps {
   isOpen: boolean;
@@ -11,12 +12,26 @@ interface SupportModalProps {
 
 export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) => {
   const { isTamil } = useLanguage();
+  const [activeTab, setActiveTab] = useState<'form' | 'bank'>('form');
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const [supportType, setSupportType] = useState<string>('education');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
+  const handleCopy = (text: string, field: string) => {
+    try {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch {
+      // fallback
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -108,14 +123,192 @@ export const SupportModal: React.FC<SupportModalProps> = ({ isOpen, onClose }) =
             </h3>
             <p className="text-xs sm:text-sm text-theme-text mt-1">
               {isTamil
-                ? 'உங்கள் ஆதரவு விருப்பத்தை தெரிவியுங்கள்; எங்கள் நிர்வாக குழு உங்களை நேரடியாக தொடர்பு கொள்ளும்.'
-                : 'Select your preferred way to help. Our administration team will connect with you directly.'}
+                ? 'உங்கள் ஆதரவு விருப்பத்தை தெரிவியுங்கள் அல்லது நேரடியாக வங்கி மூலம் நன்கொடை அளியுங்கள்.'
+                : 'Share your support preference or make a direct donation through bank transfer.'}
             </p>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="flex border-b border-theme-border bg-theme-bg/40">
+            <button
+              type="button"
+              onClick={() => setActiveTab('form')}
+              className={`flex-1 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer ${
+                activeTab === 'form'
+                  ? 'border-brand-primary text-brand-primary bg-theme-card'
+                  : 'border-transparent text-theme-text/70 hover:text-theme-text'
+              }`}
+            >
+              {isTamil ? 'ஆதரவு படிவம்' : 'Support Inquiry Form'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('bank')}
+              className={`flex-1 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                activeTab === 'bank'
+                  ? 'border-brand-primary text-brand-primary bg-theme-card'
+                  : 'border-transparent text-theme-text/70 hover:text-theme-text'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>{isTamil ? 'வங்கி & வரிவிலக்கு விவரங்கள்' : 'Bank & 80G Details'}</span>
+            </button>
           </div>
 
           {/* Body Content */}
           <div className="p-6 sm:p-8">
-            {status === 'success' ? (
+            {activeTab === 'bank' ? (
+              <div className="space-y-4">
+                {/* Tax Exemption Banner */}
+                <div className="p-3.5 rounded-2xl bg-brand-bg/60 border border-brand-primary/25 space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs font-extrabold text-brand-primary">
+                    <ShieldCheck className="w-4 h-4 shrink-0 text-brand-primary" />
+                    <span>
+                      {isTamil
+                        ? 'வருமான வரி விலக்கு & CSR அங்கீகாரம்'
+                        : 'Income Tax Exemption & CSR Facility'}
+                    </span>
+                  </div>
+                  <p className="text-xs font-medium text-theme-text leading-relaxed">
+                    {isTamil ? DONATION_DETAILS.taxExemptionTa : DONATION_DETAILS.taxExemptionEn}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                    <span className="px-2.5 py-0.5 rounded-md bg-theme-bg border border-theme-border text-[11px] font-bold text-theme-text">
+                      12AA
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-md bg-theme-bg border border-theme-border text-[11px] font-bold text-theme-text">
+                      80G
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-md bg-theme-bg border border-theme-border text-[11px] font-bold text-theme-text">
+                      CSR Facility
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bank Account Details */}
+                <div className="space-y-2 text-xs sm:text-sm">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-theme-bg border border-theme-border gap-1">
+                    <span className="text-theme-text/70 font-medium">
+                      {isTamil ? 'கணக்கு பெயர் (A/C Name):' : 'A/C Name:'}
+                    </span>
+                    <span className="font-extrabold text-theme-text uppercase">
+                      {DONATION_DETAILS.accountName}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-theme-bg border border-theme-border gap-1">
+                    <span className="text-theme-text/70 font-medium">
+                      {isTamil ? 'வங்கி பெயர் (Bank Name):' : 'Bank Name:'}
+                    </span>
+                    <span className="font-bold text-theme-text">
+                      {DONATION_DETAILS.bankName}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-theme-bg border border-theme-border gap-1">
+                    <span className="text-theme-text/70 font-medium">
+                      {isTamil ? 'கிளை (Branch):' : 'Branch:'}
+                    </span>
+                    <span className="font-bold text-theme-text">
+                      {DONATION_DETAILS.branch}
+                    </span>
+                  </div>
+
+                  {/* A/c No */}
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-theme-bg border border-theme-border gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                      <span className="text-theme-text/70 font-medium">
+                        {isTamil ? 'கணக்கு எண் (A/c No.):' : 'A/c No.:'}
+                      </span>
+                      <span className="font-extrabold text-theme-text font-mono text-sm tracking-wide">
+                        {DONATION_DETAILS.accountNumber}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(DONATION_DETAILS.accountNumber, 'ac')}
+                      className="p-1.5 rounded-lg bg-theme-card hover:bg-brand-bg border border-theme-border text-theme-text/70 hover:text-brand-primary transition-all shrink-0 cursor-pointer"
+                      title={isTamil ? 'நகலெடு' : 'Copy Account Number'}
+                    >
+                      {copiedField === 'ac' ? (
+                        <Check className="w-4 h-4 text-emerald-500" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* IFSC */}
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-theme-bg border border-theme-border gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                      <span className="text-theme-text/70 font-medium">
+                        {isTamil ? 'ஐ.எப்.எஸ்.சி (IFSC):' : 'IFSC Code:'}
+                      </span>
+                      <span className="font-extrabold text-theme-text font-mono text-sm tracking-wide">
+                        {DONATION_DETAILS.ifscCode}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(DONATION_DETAILS.ifscCode, 'ifsc')}
+                      className="p-1.5 rounded-lg bg-theme-card hover:bg-brand-bg border border-theme-border text-theme-text/70 hover:text-brand-primary transition-all shrink-0 cursor-pointer"
+                      title={isTamil ? 'நகலெடு' : 'Copy IFSC Code'}
+                    >
+                      {copiedField === 'ifsc' ? (
+                        <Check className="w-4 h-4 text-emerald-500" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* GPay */}
+                  <div className="flex items-center justify-between p-3 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-500/30 gap-2 mt-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                        <Smartphone className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">
+                          GPay / PhonePe / UPI
+                        </span>
+                        <span className="font-extrabold text-theme-text font-mono text-sm">
+                          {DONATION_DETAILS.gpayNumber}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(DONATION_DETAILS.gpayNumber.replace(/\s+/g, ''), 'gpay')}
+                      className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-slate-700 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold transition-all shrink-0 flex items-center gap-1 cursor-pointer"
+                      title={isTamil ? 'GPay எண் நகலெடு' : 'Copy GPay Number'}
+                    >
+                      {copiedField === 'gpay' ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                          <span>{isTamil ? 'நகலெடுக்கப்பட்டது' : 'Copied'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>{isTamil ? 'நகலெடு' : 'Copy'}</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-6 py-2.5 rounded-full bg-brand-primary text-on-primary font-bold text-xs hover:bg-brand-hover transition-colors cursor-pointer"
+                  >
+                    {isTamil ? 'நன்றி / முடிந்தது' : 'Done'}
+                  </button>
+                </div>
+              </div>
+            ) : status === 'success' ? (
               <div className="text-center py-8 space-y-4">
                 <div className="w-16 h-16 rounded-full bg-brand-bg border-2 border-brand-primary text-brand-primary flex items-center justify-center mx-auto shadow-card hover:shadow-hover">
                   <Sparkles className="w-8 h-8 text-brand-primary" />

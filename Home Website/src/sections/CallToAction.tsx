@@ -82,9 +82,9 @@ export const CallToAction: React.FC<CallToActionProps> = ({ onOpenSupport }) => 
             className="relative z-10 max-w-3xl mx-auto text-center flex flex-col items-center"
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-card/80 backdrop-blur-md border border-brand-primary/40 text-xs sm:text-sm font-bold text-brand-primary mb-6">
-              <Sparkles className="w-4 h-4" />
-              <span>{isTamil ? CTA_DATA.badgeTa : CTA_DATA.badgeEn}</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full pill-badge text-xs sm:text-sm font-bold mb-6 shadow-xs cursor-default select-none">
+              <Sparkles className="w-4 h-4 pill-badge-icon" />
+              <span className="pill-badge-text">{isTamil ? CTA_DATA.badgeTa : CTA_DATA.badgeEn}</span>
             </div>
 
             {/* Title */}

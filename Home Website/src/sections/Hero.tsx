@@ -202,11 +202,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
             {/* Humanitarian Trust Badge */}
             <div
               ref={badgeRef}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-bg border border-theme-border shadow-xs text-xs sm:text-sm font-bold text-theme-text mb-6"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full pill-badge text-xs sm:text-sm font-bold mb-6 shadow-xs cursor-default select-none"
             >
-              <span className="w-2 h-2 rounded-full bg-brand-primary animate-ping" />
-              <Sparkles className="w-3.5 h-3.5 text-brand-primary" />
-              <span>{isTamil ? HERO_DATA.badgeTa : HERO_DATA.badgeEn}</span>
+              <span className="w-2 h-2 rounded-full pill-badge-dot animate-ping" />
+              <Sparkles className="w-3.5 h-3.5 pill-badge-icon" />
+              <span className="pill-badge-text">{isTamil ? HERO_DATA.badgeTa : HERO_DATA.badgeEn}</span>
             </div>
 
             {/* Main Hero Heading */}
