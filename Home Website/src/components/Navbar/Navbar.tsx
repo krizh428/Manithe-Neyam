@@ -14,9 +14,15 @@ interface NavbarProps {
   activeSection: SectionId;
   onOpenSupport: () => void;
   onOpenAdmin: () => void;
+  onReplayOrgTree?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeSection, onOpenSupport, onOpenAdmin }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  activeSection,
+  onOpenSupport,
+  onOpenAdmin,
+  onReplayOrgTree,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { language, setLanguage, isTamil } = useLanguage();
@@ -89,6 +95,17 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection, onOpenSupport, on
   }, []);
 
   const handleNavClick = (href: string) => {
+    if (href === '#hero' || href === '#') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      if (onReplayOrgTree) {
+        onReplayOrgTree();
+      }
+      return;
+    }
+
     if (href.startsWith('#')) {
       const targetId = href.replace('#', '');
       const element = document.getElementById(targetId);

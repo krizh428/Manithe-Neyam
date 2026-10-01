@@ -116,7 +116,12 @@ function MainContent() {
       <ScrollProgress />
 
       {/* 2. Sticky Navbar */}
-      <Navbar activeSection={activeSection} onOpenSupport={handleOpenSupport} onOpenAdmin={handleOpenAdmin} />
+      <Navbar
+        activeSection={activeSection}
+        onOpenSupport={handleOpenSupport}
+        onOpenAdmin={handleOpenAdmin}
+        onReplayOrgTree={handleReplayOrgTree}
+      />
 
       {/* Main Sections */}
       <main className="flex-grow">
