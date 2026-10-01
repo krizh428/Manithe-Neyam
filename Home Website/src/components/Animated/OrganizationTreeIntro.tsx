@@ -8,7 +8,10 @@ import {
   HeartPulse,
   Scissors,
   Monitor,
+  Stethoscope,
+  UtensilsCrossed,
   MapPin,
+  Leaf,
   X,
 } from 'lucide-react';
 import { gsap, EASING, prefersReducedMotion } from '../../animations';
@@ -45,10 +48,10 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Icon Resolver with large icon styling
+  // Icon Resolver with minimal elegant line styling
   const getIcon = (name: OrganizationBranch['iconName'], isHovered: boolean) => {
-    const iconClass = `w-6 h-6 sm:w-6.5 sm:h-6.5 transition-transform duration-300 ${
-      isHovered ? 'scale-110 text-white' : 'text-[#1B4332]'
+    const iconClass = `w-5.5 h-5.5 sm:w-6 sm:h-6 transition-transform duration-300 ${
+      isHovered ? 'scale-110 text-inherit' : 'text-[#1B4332]'
     }`;
 
     switch (name) {
@@ -68,226 +71,245 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
         return <Scissors className={iconClass} />;
       case 'Monitor':
         return <Monitor className={iconClass} />;
+      case 'Stethoscope':
+        return <Stethoscope className={iconClass} />;
+      case 'UtensilsCrossed':
+        return <UtensilsCrossed className={iconClass} />;
       default:
         return <Sparkles className={iconClass} />;
     }
   };
 
-  // DESKTOP: Tight, high-fill 1100 x 540 coordinate space
-  // Fills the screen with large visible cards and a prominent central logo core.
-  // Zero empty voids: cards span from x=18 to x=1082 and y=15 to y=526.
+  // DESKTOP: 1200 x 660 Canvas Coordinates
+  // 10 services arranged with pristine symmetry: 5 along the upper arc, 5 along the lower arc
+  // Centered around the iconic Manithaneyam core at (600, 330)
   const desktopNodes = [
+    // --- TOP ROW (5 Services) ---
     {
       ...ORGANIZATIONS_DATA[0], // Specialised Adoption Centre
       index: 0,
-      categoryTa: 'குழந்தை தத்தெடுப்பு',
-      categoryEn: 'ADOPTION CARE',
-      cardX: 18,
-      cardY: 40,
-      cardW: 245,
-      cardH: 76,
-      branchPath: 'M 500 245 C 410 190, 260 145, 140 116',
-      leaf1: { x: 380, y: 190, rot: -30, scale: 1 },
-      leaf2: { x: 240, y: 145, rot: -20, scale: 1.1 },
+      cardX: 20,
+      cardY: 35,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 550 300 C 440 240, 260 170, 128 119',
+      leaf1: { x: 380, y: 230, rot: -35, scale: 1 },
+      leaf2: { x: 230, y: 165, rot: -25, scale: 1.1 },
     },
     {
       ...ORGANIZATIONS_DATA[1], // Children's Home (Kodangipatti)
       index: 1,
-      categoryTa: 'பாதுகாப்பு இல்லம்',
-      categoryEn: 'SHELTER & CARE',
-      cardX: 285,
-      cardY: 15,
-      cardW: 245,
-      cardH: 76,
-      branchPath: 'M 525 218 C 490 155, 450 120, 407 91',
-      leaf1: { x: 490, y: 165, rot: -50, scale: 1 },
-      leaf2: { x: 440, y: 120, rot: -40, scale: 1.1 },
+      cardX: 256,
+      cardY: 18,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 575 280 C 510 195, 440 145, 364 102',
+      leaf1: { x: 495, y: 195, rot: -50, scale: 1 },
+      leaf2: { x: 420, y: 145, rot: -40, scale: 1.1 },
     },
     {
-      ...ORGANIZATIONS_DATA[2], // Special Training Centre (RSTC)
+      ...ORGANIZATIONS_DATA[2], // Free Clinic (NEW SERVICE)
       index: 2,
-      categoryTa: 'சிறப்பு கல்வி மையம்',
-      categoryEn: 'SPECIAL EDUCATION',
-      cardX: 570,
-      cardY: 15,
-      cardW: 245,
-      cardH: 76,
-      branchPath: 'M 575 218 C 610 155, 650 120, 693 91',
-      leaf1: { x: 610, y: 165, rot: 50, scale: 1 },
-      leaf2: { x: 660, y: 120, rot: 40, scale: 1.1 },
+      cardX: 492,
+      cardY: 10,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 600 270 C 585 210, 615 150, 600 94',
+      leaf1: { x: 590, y: 210, rot: -25, scale: 1 },
+      leaf2: { x: 610, y: 150, rot: 25, scale: 1.1 },
     },
     {
-      ...ORGANIZATIONS_DATA[3], // Dream Nursery & Primary School
+      ...ORGANIZATIONS_DATA[3], // Special Training Centre (RSTC)
       index: 3,
-      categoryTa: 'தொடக்கப்பள்ளி',
-      categoryEn: 'PRIMARY EDUCATION',
-      cardX: 837,
-      cardY: 40,
-      cardW: 245,
-      cardH: 76,
-      branchPath: 'M 600 245 C 690 190, 840 145, 960 116',
-      leaf1: { x: 720, y: 190, rot: 30, scale: 1 },
-      leaf2: { x: 860, y: 145, rot: 20, scale: 1.1 },
+      cardX: 728,
+      cardY: 18,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 625 280 C 690 195, 760 145, 836 102',
+      leaf1: { x: 705, y: 195, rot: 50, scale: 1 },
+      leaf2: { x: 780, y: 145, rot: 40, scale: 1.1 },
     },
     {
-      ...ORGANIZATIONS_DATA[4], // Children's Home (Theni)
+      ...ORGANIZATIONS_DATA[4], // Dream Nursery & Primary School
       index: 4,
-      categoryTa: 'குழந்தைகள் இல்லம்',
-      categoryEn: "CHILDREN'S SANCTUARY",
-      cardX: 18,
-      cardY: 425,
-      cardW: 245,
-      cardH: 76,
-      branchPath: 'M 500 295 C 410 350, 260 395, 140 425',
-      leaf1: { x: 380, y: 350, rot: 30, scale: 1 },
-      leaf2: { x: 240, y: 395, rot: 20, scale: 1.1 },
+      cardX: 964,
+      cardY: 35,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 650 300 C 760 240, 940 170, 1072 119',
+      leaf1: { x: 820, y: 230, rot: 35, scale: 1 },
+      leaf2: { x: 970, y: 165, rot: 25, scale: 1.1 },
     },
+
+    // --- BOTTOM ROW (5 Services) ---
     {
-      ...ORGANIZATIONS_DATA[5], // Old Age Home
+      ...ORGANIZATIONS_DATA[5], // Children's Home (Theni)
       index: 5,
-      categoryTa: 'முதியோர் நல்வாழ்வு',
-      categoryEn: 'ELDERLY SANCTUARY',
-      cardX: 285,
-      cardY: 450,
-      cardW: 245,
-      cardH: 76,
-      branchPath: 'M 525 322 C 490 385, 450 420, 407 450',
-      leaf1: { x: 490, y: 375, rot: 50, scale: 1 },
-      leaf2: { x: 440, y: 420, rot: 40, scale: 1.1 },
+      cardX: 20,
+      cardY: 540,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 550 360 C 440 420, 260 485, 128 540',
+      leaf1: { x: 380, y: 430, rot: 35, scale: 1 },
+      leaf2: { x: 230, y: 495, rot: 25, scale: 1.1 },
     },
     {
-      ...ORGANIZATIONS_DATA[6], // Sewing Training Centre
+      ...ORGANIZATIONS_DATA[6], // Old Age Home
       index: 6,
-      categoryTa: 'தையல் பயிற்சி மையம்',
-      categoryEn: 'WOMEN EMPOWERMENT',
-      cardX: 570,
-      cardY: 450,
-      cardW: 245,
-      cardH: 76,
-      branchPath: 'M 575 322 C 610 385, 650 420, 693 450',
-      leaf1: { x: 610, y: 375, rot: -50, scale: 1 },
-      leaf2: { x: 660, y: 420, rot: -40, scale: 1.1 },
+      cardX: 256,
+      cardY: 560,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 575 380 C 510 465, 440 515, 364 560',
+      leaf1: { x: 495, y: 465, rot: 50, scale: 1 },
+      leaf2: { x: 420, y: 515, rot: 40, scale: 1.1 },
     },
     {
-      ...ORGANIZATIONS_DATA[7], // Computer Training Centre
+      ...ORGANIZATIONS_DATA[7], // Free Food (NEW SERVICE)
       index: 7,
-      categoryTa: 'கணினி தொழிற்பயிற்சி',
-      categoryEn: 'DIGITAL SKILLS',
-      cardX: 837,
-      cardY: 425,
-      cardW: 245,
-      cardH: 76,
-      branchPath: 'M 600 295 C 690 350, 840 395, 960 425',
-      leaf1: { x: 720, y: 350, rot: -30, scale: 1 },
-      leaf2: { x: 860, y: 395, rot: -20, scale: 1.1 },
+      cardX: 492,
+      cardY: 568,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 600 390 C 615 450, 585 510, 600 568',
+      leaf1: { x: 610, y: 450, rot: 25, scale: 1 },
+      leaf2: { x: 590, y: 510, rot: -25, scale: 1.1 },
+    },
+    {
+      ...ORGANIZATIONS_DATA[8], // Sewing Training Centre
+      index: 8,
+      cardX: 728,
+      cardY: 560,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 625 380 C 690 465, 760 515, 836 560',
+      leaf1: { x: 705, y: 465, rot: -50, scale: 1 },
+      leaf2: { x: 780, y: 515, rot: -40, scale: 1.1 },
+    },
+    {
+      ...ORGANIZATIONS_DATA[9], // Computer Training Centre
+      index: 9,
+      cardX: 964,
+      cardY: 540,
+      cardW: 216,
+      cardH: 84,
+      branchPath: 'M 650 360 C 760 420, 940 485, 1072 540',
+      leaf1: { x: 820, y: 430, rot: -35, scale: 1 },
+      leaf2: { x: 970, y: 495, rot: -25, scale: 1.1 },
     },
   ];
 
-  // MOBILE: 380 x 860 Canvas Coordinates with balanced alternating layout
+  // MOBILE: 420 x 1080 Canvas Coordinates with graceful alternating branch geometry
   const mobileNodes = [
     {
       ...ORGANIZATIONS_DATA[0],
       index: 0,
-      categoryTa: 'தத்தெடுப்பு மையம்',
-      categoryEn: 'ADOPTION CARE',
-      cardX: 10,
+      cardX: 12,
       cardY: 110,
-      cardW: 175,
-      cardH: 70,
-      branchPath: 'M 190 95 C 190 120, 140 145, 97 145',
-      leaf1: { x: 145, y: 130, rot: -30, scale: 0.9 },
-      leaf2: { x: 115, y: 142, rot: -15, scale: 0.95 },
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 120 C 190 148, 140 148, 106 148',
+      leaf1: { x: 165, y: 135, rot: -30, scale: 0.9 },
+      leaf2: { x: 130, y: 145, rot: -15, scale: 0.95 },
     },
     {
       ...ORGANIZATIONS_DATA[1],
       index: 1,
-      categoryTa: 'பாதுகாப்பு இல்லம்',
-      categoryEn: 'SHELTER & CARE',
-      cardX: 195,
+      cardX: 220,
       cardY: 195,
-      cardW: 175,
-      cardH: 70,
-      branchPath: 'M 190 160 C 190 200, 240 230, 282 230',
-      leaf1: { x: 235, y: 215, rot: 30, scale: 0.9 },
-      leaf2: { x: 265, y: 227, rot: 15, scale: 0.95 },
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 210 C 230 233, 280 233, 314 233',
+      leaf1: { x: 255, y: 220, rot: 30, scale: 0.9 },
+      leaf2: { x: 290, y: 230, rot: 15, scale: 0.95 },
     },
     {
       ...ORGANIZATIONS_DATA[2],
       index: 2,
-      categoryTa: 'சிறப்பு கல்வி',
-      categoryEn: 'SPECIAL EDUCATION',
-      cardX: 10,
+      cardX: 12,
       cardY: 280,
-      cardW: 175,
-      cardH: 70,
-      branchPath: 'M 190 245 C 190 285, 140 315, 97 315',
-      leaf1: { x: 145, y: 300, rot: -30, scale: 0.9 },
-      leaf2: { x: 115, y: 312, rot: -15, scale: 0.95 },
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 295 C 190 318, 140 318, 106 318',
+      leaf1: { x: 165, y: 305, rot: -30, scale: 0.9 },
+      leaf2: { x: 130, y: 315, rot: -15, scale: 0.95 },
     },
     {
       ...ORGANIZATIONS_DATA[3],
       index: 3,
-      categoryTa: 'தொடக்கப்பள்ளி',
-      categoryEn: 'PRIMARY EDUCATION',
-      cardX: 195,
+      cardX: 220,
       cardY: 365,
-      cardW: 175,
-      cardH: 70,
-      branchPath: 'M 190 330 C 190 370, 240 400, 282 400',
-      leaf1: { x: 235, y: 385, rot: 30, scale: 0.9 },
-      leaf2: { x: 265, y: 397, rot: 15, scale: 0.95 },
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 380 C 230 403, 280 403, 314 403',
+      leaf1: { x: 255, y: 390, rot: 30, scale: 0.9 },
+      leaf2: { x: 290, y: 400, rot: 15, scale: 0.95 },
     },
     {
       ...ORGANIZATIONS_DATA[4],
       index: 4,
-      categoryTa: 'குழந்தைகள் இல்லம்',
-      categoryEn: "CHILDREN'S HOME",
-      cardX: 10,
+      cardX: 12,
       cardY: 450,
-      cardW: 175,
-      cardH: 70,
-      branchPath: 'M 190 415 C 190 455, 140 485, 97 485',
-      leaf1: { x: 145, y: 470, rot: -30, scale: 0.9 },
-      leaf2: { x: 115, y: 482, rot: -15, scale: 0.95 },
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 465 C 190 488, 140 488, 106 488',
+      leaf1: { x: 165, y: 475, rot: -30, scale: 0.9 },
+      leaf2: { x: 130, y: 485, rot: -15, scale: 0.95 },
     },
     {
       ...ORGANIZATIONS_DATA[5],
       index: 5,
-      categoryTa: 'முதியோர் நல்வாழ்வு',
-      categoryEn: 'ELDERLY CARE',
-      cardX: 195,
+      cardX: 220,
       cardY: 535,
-      cardW: 175,
-      cardH: 70,
-      branchPath: 'M 190 500 C 190 540, 240 570, 282 570',
-      leaf1: { x: 235, y: 555, rot: 30, scale: 0.9 },
-      leaf2: { x: 265, y: 567, rot: 15, scale: 0.95 },
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 550 C 230 573, 280 573, 314 573',
+      leaf1: { x: 255, y: 560, rot: 30, scale: 0.9 },
+      leaf2: { x: 290, y: 570, rot: 15, scale: 0.95 },
     },
     {
       ...ORGANIZATIONS_DATA[6],
       index: 6,
-      categoryTa: 'தையல் பயிற்சி',
-      categoryEn: 'WOMEN EMPOWERMENT',
-      cardX: 10,
+      cardX: 12,
       cardY: 620,
-      cardW: 175,
-      cardH: 70,
-      branchPath: 'M 190 585 C 190 625, 140 655, 97 655',
-      leaf1: { x: 145, y: 640, rot: -30, scale: 0.9 },
-      leaf2: { x: 115, y: 652, rot: -15, scale: 0.95 },
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 635 C 190 658, 140 658, 106 658',
+      leaf1: { x: 165, y: 645, rot: -30, scale: 0.9 },
+      leaf2: { x: 130, y: 655, rot: -15, scale: 0.95 },
     },
     {
       ...ORGANIZATIONS_DATA[7],
       index: 7,
-      categoryTa: 'கணினி பயிற்சி',
-      categoryEn: 'DIGITAL SKILLS',
-      cardX: 195,
+      cardX: 220,
       cardY: 705,
-      cardW: 175,
-      cardH: 70,
-      branchPath: 'M 190 670 C 190 710, 240 740, 282 740',
-      leaf1: { x: 235, y: 725, rot: 30, scale: 0.9 },
-      leaf2: { x: 265, y: 737, rot: 15, scale: 0.95 },
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 720 C 230 743, 280 743, 314 743',
+      leaf1: { x: 255, y: 730, rot: 30, scale: 0.9 },
+      leaf2: { x: 290, y: 740, rot: 15, scale: 0.95 },
+    },
+    {
+      ...ORGANIZATIONS_DATA[8],
+      index: 8,
+      cardX: 12,
+      cardY: 790,
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 805 C 190 828, 140 828, 106 828',
+      leaf1: { x: 165, y: 815, rot: -30, scale: 0.9 },
+      leaf2: { x: 130, y: 825, rot: -15, scale: 0.95 },
+    },
+    {
+      ...ORGANIZATIONS_DATA[9],
+      index: 9,
+      cardX: 220,
+      cardY: 875,
+      cardW: 188,
+      cardH: 76,
+      branchPath: 'M 210 890 C 230 913, 280 913, 314 913',
+      leaf1: { x: 255, y: 900, rot: 30, scale: 0.9 },
+      leaf2: { x: 290, y: 910, rot: 15, scale: 0.95 },
     },
   ];
 
@@ -331,7 +353,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
         gsap.set(logoGroup, {
           scale: 0.65,
           opacity: 0,
-          transformOrigin: isMobile ? '190px 65px' : '550px 270px',
+          transformOrigin: isMobile ? '210px 65px' : '600px 330px',
         });
       }
 
@@ -339,7 +361,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       gsap.set(rippleRings, {
         scale: 0.7,
         opacity: 0,
-        transformOrigin: isMobile ? '190px 65px' : '550px 270px',
+        transformOrigin: isMobile ? '210px 65px' : '600px 330px',
       });
 
       // Prepare branches for stroke animation
@@ -602,16 +624,16 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
       ref={containerRef}
       className="fixed inset-0 z-[120] overflow-hidden flex flex-col items-center justify-between p-2 sm:p-4 select-none"
       style={{
-        background: 'radial-gradient(ellipse at 50% 48%, #FDFBF7 0%, #F5EFEB 55%, #EDE4D8 100%)',
+        background: 'radial-gradient(ellipse at 50% 50%, #FDFBF7 0%, #F6EFE8 55%, #ECE2D4 100%)',
       }}
     >
       {/* Subtle organic ambient backdrop glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[750px] rounded-full bg-gradient-to-tr from-[#1B4332]/6 via-[#D4AF37]/10 to-[#5C3A21]/6 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1150px] h-[800px] rounded-full bg-gradient-to-tr from-[#1B4332]/6 via-[#D4AF37]/10 to-[#5C3A21]/6 blur-3xl pointer-events-none" />
       </div>
 
       {/* Top Header Controls: Skip Button */}
-      <div className="w-full max-w-7xl flex items-center justify-end z-30 shrink-0 px-2 sm:px-4">
+      <div className="w-full max-w-7xl flex items-center justify-end z-30 shrink-0 px-2 sm:px-4 pt-1">
         <button
           type="button"
           onClick={handleSkip}
@@ -619,7 +641,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
           title={isTamil ? 'அறிமுகத்தை தவிர்க்க' : 'Skip Introduction'}
         >
           <span>{isTamil ? 'தவிர்க்க' : 'Skip'}</span>
-          <X className="w-3 h-3 stroke-[2.5]" />
+          <X className="w-3.5 h-3.5 stroke-[2.5]" />
         </button>
       </div>
 
@@ -630,16 +652,16 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
         </h2>
         <p className="text-xs sm:text-sm md:text-base font-bold text-[#7A614D] mt-1 font-tamil">
           {isTamil
-            ? 'ஒரே அன்பிலிருந்து மலரும் எட்டு மனிதநேயக் கிளைகள்'
-            : 'From One Shared Love, Eight Flourishing Branches of Humanity'}
+            ? 'ஒரே அன்பிலிருந்து மலரும் பத்து மனிதநேயக் கிளைகள்'
+            : 'From One Shared Love, Ten Flourishing Branches of Humanity'}
         </p>
       </div>
 
       {/* Main Humanity Tree Canvas Area with Tight Screen-Filling Geometry */}
       <div className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden my-auto">
         <svg
-          viewBox={isMobile ? '0 0 380 860' : '0 0 1100 540'}
-          className="w-full h-full max-h-[calc(100vh-95px)] max-w-[1380px] pointer-events-none"
+          viewBox={isMobile ? '0 0 420 1080' : '0 0 1200 660'}
+          className="w-full h-full max-h-[calc(100vh-95px)] max-w-[1440px] pointer-events-none"
           preserveAspectRatio="xMidYMid meet"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -662,9 +684,9 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
             </filter>
 
             <linearGradient id="branchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#5C3A21" stopOpacity="0.85" />
-              <stop offset="60%" stopColor="#2D6A4F" stopOpacity="0.78" />
-              <stop offset="100%" stopColor="#1B4332" stopOpacity="0.9" />
+              <stop offset="0%" stopColor="#5C3A21" stopOpacity="0.88" />
+              <stop offset="55%" stopColor="#2D6A4F" stopOpacity="0.82" />
+              <stop offset="100%" stopColor="#1B4332" stopOpacity="0.92" />
             </linearGradient>
 
             <linearGradient id="activeBranchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -676,21 +698,21 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
           {/* 1. Organic Tree Trunk Base Anchor */}
           {!isMobile && (
-            <g className="tree-trunk-base opacity-45">
+            <g className="tree-trunk-base opacity-40">
               <path
-                d="M 540 330 Q 535 380, 520 430"
+                d="M 585 390 Q 575 450, 555 520"
                 stroke="#5C3A21"
                 strokeWidth="5"
                 strokeLinecap="round"
               />
               <path
-                d="M 560 330 Q 565 380, 580 430"
+                d="M 615 390 Q 625 450, 645 520"
                 stroke="#5C3A21"
                 strokeWidth="5"
                 strokeLinecap="round"
               />
               <path
-                d="M 550 330 L 550 410"
+                d="M 600 390 L 600 495"
                 stroke="#5C3A21"
                 strokeWidth="7"
                 strokeLinecap="round"
@@ -698,7 +720,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
             </g>
           )}
 
-          {/* 2. Organic Service Branches */}
+          {/* 2. Organic Service Branches for All 10 Services */}
           {currentNodes.map((node) => {
             const isHovered = hoveredNodeId === node.id;
             return (
@@ -754,27 +776,27 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
               <circle
                 className="travel-point fill-[#D4AF37]"
                 r={isMobile ? '6' : '7.5'}
-                cx={isMobile ? 190 : 550}
-                cy={isMobile ? 65 : 270}
+                cx={isMobile ? 210 : 600}
+                cy={isMobile ? 65 : 330}
                 filter="url(#gold-flow-glow)"
               />
               <circle
                 className="travel-sparkle fill-[#2D6A4F]"
                 r={isMobile ? '4' : '5'}
-                cx={isMobile ? 190 : 550}
-                cy={isMobile ? 65 : 270}
+                cx={isMobile ? 210 : 600}
+                cy={isMobile ? 65 : 330}
                 filter="url(#emerald-glow)"
               />
             </g>
           ))}
 
-          {/* 4. Large Bold Central Logo Trunk / Core (Diameter: 124px) */}
+          {/* 4. Large Bold Central Logo Trunk / Core (Diameter: ~130px) */}
           <g className="central-logo-group pointer-events-auto">
             {/* Outer Ripple Ring 3 */}
             <circle
-              cx={isMobile ? 190 : 550}
-              cy={isMobile ? 65 : 270}
-              r={isMobile ? 58 : 126}
+              cx={isMobile ? 210 : 600}
+              cy={isMobile ? 65 : 330}
+              r={isMobile ? 60 : 132}
               className="ripple-ring stroke-[#D4AF37]/35 fill-none"
               strokeWidth="2"
               strokeDasharray="8 8"
@@ -782,37 +804,37 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
             {/* Middle Ripple Ring 2 */}
             <circle
-              cx={isMobile ? 190 : 550}
-              cy={isMobile ? 65 : 270}
-              r={isMobile ? 46 : 100}
+              cx={isMobile ? 210 : 600}
+              cy={isMobile ? 65 : 330}
+              r={isMobile ? 48 : 104}
               className="ripple-ring stroke-[#2D6A4F]/40 fill-[#2D6A4F]/5"
               strokeWidth="2.5"
             />
 
             {/* Inner Shield Ring 1 */}
             <circle
-              cx={isMobile ? 190 : 550}
-              cy={isMobile ? 65 : 270}
-              r={isMobile ? 36 : 78}
+              cx={isMobile ? 210 : 600}
+              cy={isMobile ? 65 : 330}
+              r={isMobile ? 38 : 80}
               className="ripple-ring stroke-[#5C3A21]/45 fill-[#FAF7F2]"
               strokeWidth="3"
             />
 
             {/* Solid Center Shield */}
             <circle
-              cx={isMobile ? 190 : 550}
-              cy={isMobile ? 65 : 270}
-              r={isMobile ? 32 : 64}
+              cx={isMobile ? 210 : 600}
+              cy={isMobile ? 65 : 330}
+              r={isMobile ? 32 : 65}
               className="fill-white stroke-[#5C3A21] shadow-xl"
               strokeWidth="3.5"
             />
 
             {/* Official Manithaneyam Seal Emblem */}
             <foreignObject
-              x={isMobile ? 190 - 32 : 550 - 64}
-              y={isMobile ? 65 - 32 : 270 - 64}
-              width={isMobile ? 64 : 128}
-              height={isMobile ? 64 : 128}
+              x={isMobile ? 210 - 32 : 600 - 65}
+              y={isMobile ? 65 - 32 : 330 - 65}
+              width={isMobile ? 64 : 130}
+              height={isMobile ? 64 : 130}
               className="pointer-events-none"
             >
               <div className="w-full h-full flex items-center justify-center p-0.5">
@@ -825,7 +847,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
             </foreignObject>
           </g>
 
-          {/* 5. Big, Highly Visible Service Cards with Clear Hierarchy and Zero Truncation */}
+          {/* 5. 10 Premium Service Cards - NO CATEGORY LABELS, DIRECT BOLD 2-LINE TITLE & SUBTITLE */}
           {currentNodes.map((node) => {
             const isHovered = hoveredNodeId === node.id;
 
@@ -842,41 +864,45 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
                     onMouseEnter={() => setHoveredNodeId(node.id)}
                     onMouseLeave={() => setHoveredNodeId(null)}
                     onClick={handleSkip}
-                    className={`w-full h-full px-3 py-2.5 rounded-2xl bg-white/95 backdrop-blur-md border transition-all duration-300 flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none ${
+                    className={`relative w-full h-full px-3 sm:px-3.5 py-2.5 rounded-2xl transition-all duration-300 flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none group ${
                       isHovered
-                        ? 'border-[#2D6A4F] shadow-2xl ring-2 ring-[#2D6A4F]/30 -translate-y-1.5 bg-white'
-                        : 'border-[#E7DFD5] shadow-md hover:shadow-xl hover:border-[#2D6A4F]/70'
+                        ? 'bg-white border-[#2D6A4F] shadow-[0_16px_36px_-6px_rgba(27,67,50,0.22)] ring-2 ring-[#2D6A4F]/35 -translate-y-1'
+                        : 'bg-white/94 backdrop-blur-md border border-[#E7DFD5] shadow-[0_4px_16px_-2px_rgba(92,58,33,0.07),0_2px_6px_-1px_rgba(0,0,0,0.04)] hover:shadow-xl hover:border-[#2D6A4F]/60'
                     }`}
                   >
-                    {/* Big Icon Pill with Forest Green & Gold Glow */}
+                    {/* Small Decorative Corner Leaf Accent */}
+                    <div
+                      className={`absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 pointer-events-none ${
+                        isHovered
+                          ? 'bg-[#1B4332] text-[#F4D35E] scale-110 shadow-sm'
+                          : 'bg-[#EBF4EE] text-[#2D6A4F]/70 border border-[#2D6A4F]/20'
+                      }`}
+                    >
+                      <Leaf className="w-2.5 h-2.5" />
+                    </div>
+
+                    {/* Icon Pill with Forest Green & Warm Gold Accent */}
                     <div
                       className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
                         isHovered
-                          ? 'bg-[#1B4332] text-white shadow-lg scale-105'
-                          : 'bg-[#1B4332]/10 text-[#1B4332] border border-[#1B4332]/20'
+                          ? 'bg-gradient-to-br from-[#1B4332] to-[#2D6A4F] text-[#F4D35E] shadow-md shadow-[#1B4332]/25 scale-105'
+                          : 'bg-[#1B4332]/8 text-[#1B4332] border border-[#1B4332]/15 group-hover:bg-[#1B4332]/12'
                       }`}
                     >
                       {getIcon(node.iconName, isHovered)}
                     </div>
 
-                    {/* Rich Typographic Hierarchy - Full Uncut Text */}
+                    {/* Direct Two-Line Service Information - NO CATEGORY LABELS */}
                     <div className="flex-1 min-w-0 pr-0.5">
-                      {/* Micro Badge / Category Tag */}
-                      <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-[#1E3A8A] font-english">
-                          {isTamil ? node.categoryTa : node.categoryEn}
-                        </span>
-                      </div>
-
-                      {/* Main Service Title - Clear, Bold, NO TRUNCATION */}
-                      <h4 className="text-xs sm:text-[13px] md:text-[14px] font-black text-[#3B2314] leading-snug line-clamp-1 font-tamil">
+                      {/* Line 1: Service Name in Bold, Large Font (Full 2-Line Support, No Cutoff) */}
+                      <h4 className="text-[12px] sm:text-[13px] md:text-[13.5px] font-bold text-[#3B2314] leading-[1.25] tracking-tight font-tamil line-clamp-2">
                         {isTamil ? node.shortTa : node.shortEn}
                       </h4>
 
-                      {/* Location with Pin */}
-                      <p className="text-[10px] sm:text-[11px] font-bold text-[#7A6E63] flex items-center gap-1 mt-0.5">
+                      {/* Line 2: Supporting Description / Location in Smaller Text */}
+                      <p className="text-[9.5px] sm:text-[10.5px] font-medium text-[#7A614D] flex items-center gap-1 mt-1 font-tamil truncate">
                         <MapPin className="w-3 h-3 text-[#2D6A4F] shrink-0" />
-                        <span>{isTamil ? node.locationTa : node.locationEn}</span>
+                        <span className="truncate">{isTamil ? node.descriptionTa : node.descriptionEn}</span>
                       </p>
                     </div>
                   </div>

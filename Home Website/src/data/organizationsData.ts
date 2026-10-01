@@ -6,7 +6,19 @@ export interface OrganizationBranch {
   shortTa: string;
   locationEn: string;
   locationTa: string;
-  iconName: 'HeartHandshake' | 'Users' | 'Sparkles' | 'BookOpen' | 'Home' | 'HeartPulse' | 'Scissors' | 'Monitor';
+  descriptionEn: string;
+  descriptionTa: string;
+  iconName:
+    | 'HeartHandshake'
+    | 'Users'
+    | 'Sparkles'
+    | 'BookOpen'
+    | 'Home'
+    | 'HeartPulse'
+    | 'Scissors'
+    | 'Monitor'
+    | 'Stethoscope'
+    | 'UtensilsCrossed';
 }
 
 export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
@@ -18,6 +30,8 @@ export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
     shortTa: 'சிறப்பு தத்தெடுப்பு மையம்',
     locationEn: 'Kodangipatti',
     locationTa: 'கோடாங்கிபட்டி',
+    descriptionEn: 'Kodangipatti • Adoption & Infant Care',
+    descriptionTa: 'கோடாங்கிபட்டி • குழந்தை தத்தெடுப்பு',
     iconName: 'HeartHandshake',
   },
   {
@@ -28,7 +42,21 @@ export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
     shortTa: 'குழந்தைகள் இல்லம்',
     locationEn: 'Kodangipatti',
     locationTa: 'கோடாங்கிபட்டி',
+    descriptionEn: 'Kodangipatti • Shelter & Holistic Care',
+    descriptionTa: 'கோடாங்கிபட்டி • பாதுகாப்பு இல்லம்',
     iconName: 'Users',
+  },
+  {
+    id: 'clinic',
+    en: 'MANITHANEYA FREE CLINIC, KODANGIPATTI',
+    ta: 'மனிதநேயம் இலவச மருத்துவமனை, கோடாங்கிபட்டி',
+    shortEn: 'Free Clinic',
+    shortTa: 'இலவச மருத்துவமனை',
+    locationEn: 'Kodangipatti',
+    locationTa: 'கோடாங்கிபட்டி',
+    descriptionEn: 'Quality Healthcare for All',
+    descriptionTa: 'அனைவருக்கும் தரமான மருத்துவ சேவை',
+    iconName: 'Stethoscope',
   },
   {
     id: 'rstc',
@@ -38,6 +66,8 @@ export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
     shortTa: 'சிறப்பு பயிற்சி மையம் (RSTC)',
     locationEn: 'Kodangipatti',
     locationTa: 'கோடாங்கிபட்டி',
+    descriptionEn: 'Kodangipatti • Special Education',
+    descriptionTa: 'கோடாங்கிபட்டி • சிறப்பு கல்வி மையம்',
     iconName: 'Sparkles',
   },
   {
@@ -48,6 +78,8 @@ export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
     shortTa: 'கனவு மழலையர் & தொடக்கப்பள்ளி',
     locationEn: 'Kodangipatti',
     locationTa: 'கோடாங்கிபட்டி',
+    descriptionEn: 'Kodangipatti • Foundation Education',
+    descriptionTa: 'கோடாங்கிபட்டி • தொடக்கக் கல்வி',
     iconName: 'BookOpen',
   },
   {
@@ -58,6 +90,8 @@ export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
     shortTa: 'குழந்தைகள் இல்லம்',
     locationEn: 'Theni',
     locationTa: 'தேனி',
+    descriptionEn: 'Theni • Sanctuary of Love & Care',
+    descriptionTa: 'தேனி • அன்பு & அரவணைப்பு இல்லம்',
     iconName: 'Home',
   },
   {
@@ -68,7 +102,21 @@ export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
     shortTa: 'முதியோர் நல்வாழ்வு இல்லம்',
     locationEn: 'Arappadi Thevan Patti',
     locationTa: 'அரப்படிதேவன்பட்டி',
+    descriptionEn: 'Arappadi Thevan Patti • Elderly Sanctuary',
+    descriptionTa: 'அரப்படிதேவன்பட்டி • முதியோர் இல்லம்',
     iconName: 'HeartPulse',
+  },
+  {
+    id: 'food',
+    en: 'MANITHANEYA FREE FOOD INITIATIVE, THENI',
+    ta: 'மனிதநேயம் இலவச அன்னதான சேவை, தேனி',
+    shortEn: 'Free Food',
+    shortTa: 'இலவச உணவு',
+    locationEn: 'Theni',
+    locationTa: 'தேனி',
+    descriptionEn: 'Nutritious Meals for Everyone',
+    descriptionTa: 'அனைவருக்கும் சத்தான அன்னதானம்',
+    iconName: 'UtensilsCrossed',
   },
   {
     id: 'sewing',
@@ -78,6 +126,8 @@ export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
     shortTa: 'தையல் பயிற்சி மையம்',
     locationEn: 'Kodangipatti',
     locationTa: 'கோடாங்கிபட்டி',
+    descriptionEn: 'Kodangipatti • Women Empowerment',
+    descriptionTa: 'கோடாங்கிபட்டி • மகளிர் தையற்பயிற்சி',
     iconName: 'Scissors',
   },
   {
@@ -88,6 +138,8 @@ export const ORGANIZATIONS_DATA: OrganizationBranch[] = [
     shortTa: 'கணினி தொழிற்பயிற்சி மையம்',
     locationEn: 'Kodangipatti',
     locationTa: 'கோடாங்கிபட்டி',
+    descriptionEn: 'Kodangipatti • Digital Skills & Employment',
+    descriptionTa: 'கோடாங்கிபட்டி • கணினி தொழிற்கல்வி',
     iconName: 'Monitor',
   },
 ];
