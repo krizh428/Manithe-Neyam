@@ -9,3 +9,4 @@ export * from './SpotlightCard';
 export * from './Magnetic';
 export * from './SectionDivider';
 export * from './OrganizationTreeIntro';
+export * from './CharacterGlitchText';

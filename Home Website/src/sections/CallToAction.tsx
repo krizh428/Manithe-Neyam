@@ -103,7 +103,7 @@ export const CallToAction: React.FC<CallToActionProps> = ({ onOpenSupport }) => 
                 onClick={onOpenSupport}
                 className="w-full sm:w-auto px-8 py-4 bg-brand-primary text-on-primary font-extrabold"
               >
-                <Heart className="w-5 h-5 text-red-500 fill-red-500 animate-pulse" />
+                <Heart className="w-5 h-5 text-white fill-white animate-pulse" />
                 <span>{isTamil ? CTA_DATA.btnSupportTa : CTA_DATA.btnSupportEn}</span>
               </AnimatedButton>
 

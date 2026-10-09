@@ -123,15 +123,15 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
         );
       }
 
-      // 7. Right Hero Image & Frame entrance
+      // 7. Right Hero Baby Image rising reveal entrance
       if (imageColumnRef.current) {
-        gsap.set(imageColumnRef.current, { opacity: 0, scale: 0.94 });
+        gsap.set(imageColumnRef.current, { opacity: 0, y: 48 });
         tl.to(
           imageColumnRef.current,
           {
             opacity: 1,
-            scale: 1,
-            duration: 0.85,
+            y: 0,
+            duration: 1.25,
             ease: EASING.cinematic,
           },
           '-=0.7'
@@ -309,20 +309,22 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
             ref={imageColumnRef}
             className="lg:col-span-5 relative flex items-center justify-center will-change-transform"
           >
-            {/* Decorative Organic Shape in Background */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-brand-primary/10 via-theme-secondary/40 to-transparent rounded-[50px] transform -rotate-3 blur-md pointer-events-none" />
-            <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full bg-brand-primary/15 blur-xl pointer-events-none" />
+            {/* Soft Ambient Ethereal Glow Aura (Natural, clean, no rotation or distortion) */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-[115%] h-[115%] rounded-full bg-gradient-to-tr from-amber-400/18 via-blue-500/12 to-emerald-400/8 blur-3xl animate-baby-glow pointer-events-none" />
+              <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-amber-400/15 blur-2xl animate-baby-glow pointer-events-none" />
+            </div>
 
-            {/* Animated Hero Image */}
-            <div className="relative w-full max-w-md lg:max-w-none aspect-[4/3.8] flex items-center justify-center z-10">
+            {/* Smooth Floating and Breathing Baby Image Container */}
+            <div className="relative w-full max-w-md lg:max-w-none aspect-[4/3.8] flex items-center justify-center z-10 animate-baby-float">
               <ImageUploader
                 currentImageUrl={
                   hero.image && hero.image !== IMAGES.hero ? hero.image : '/hero-image.png'
                 }
                 onUploadComplete={(newUrl) => updateHero({ image: newUrl })}
                 isAdmin={isAdmin}
-                className="w-full h-full drop-shadow-2xl"
-                imgClassName="w-full h-full object-contain"
+                className="w-full h-full filter drop-shadow-[0_20px_40px_rgba(15,23,42,0.14)] drop-shadow-[0_0_35px_rgba(212,175,55,0.22)] transition-all duration-500"
+                imgClassName="w-full h-full object-contain select-none"
                 alt="Manithaneyam Home Care"
               />
             </div>

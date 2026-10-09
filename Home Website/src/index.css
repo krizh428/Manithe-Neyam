@@ -1,10 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Pacifico&display=swap');
 
 @import "tailwindcss";
 
 
-:root {
+/* .theme-light re-applies the light palette to a subtree, even when dark mode is on */
+:root,
+.theme-light {
   /* Light Theme Backgrounds */
   --bg-primary: #FFFFFF;
   --bg-secondary: #F8FAFC;
@@ -170,6 +173,43 @@
   --font-english: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* Tailwind resolves these tokens once on <html>; re-map them so .theme-light subtrees pick up the light values */
+.theme-light {
+  --color-theme-bg: var(--bg-primary);
+  --color-theme-secondary: var(--bg-secondary);
+  --color-theme-card: var(--bg-card);
+  --color-theme-accent: var(--bg-accent-light);
+  --color-theme-text: var(--text-primary);
+  --color-theme-text-body: var(--text-body);
+  --color-theme-text-secondary: var(--text-secondary);
+  --color-theme-text-muted: var(--text-muted);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-light: var(--brand-light);
+  --color-brand-bg: var(--brand-bg);
+  --color-on-primary: var(--on-primary);
+  --color-heading-accent: var(--heading-accent);
+  --color-theme-border: var(--border-color);
+  --color-theme-border-light: var(--border-light);
+  --color-theme-border-strong: var(--border-strong);
+  --color-card-heading: var(--card-heading);
+  --color-card-text: var(--card-text);
+  --color-card-text-secondary: var(--card-text-secondary);
+  --color-card-text-muted: var(--card-text-muted);
+  --color-theme-footer: var(--footer-bg);
+  --color-theme-footer-heading: var(--footer-heading);
+  --color-theme-footer-text: var(--footer-text);
+  --color-theme-footer-link: var(--footer-link);
+  --color-theme-footer-link-hover: var(--footer-link-hover);
+  --color-heart: var(--heart);
+  --color-heart-hover: var(--heart-hover);
+  --shadow-card: var(--card-shadow);
+  --shadow-hover: var(--card-shadow-hover);
+  --shadow-card-hover: var(--card-shadow-hover);
+  --shadow-soft: var(--card-shadow-soft);
+}
+
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -278,71 +318,72 @@
     border-bottom: 1px solid #1E293B;
   }
 
-  /* Pill Badges: Dark Red Effect & Golden Text Effect in Light Theme */
+  /* Pill Badges: Rich Crimson Red Gradient Effect & Crisp White Text */
   .pill-badge {
-    background: linear-gradient(135deg, #700B13 0%, #88131E 50%, #5E080F 100%);
-    border: 1px solid rgba(220, 38, 38, 0.45);
-    box-shadow: 0 2px 10px -1px rgba(112, 11, 19, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    color: #FDE047;
+    background: linear-gradient(90deg, #4A0004 0%, #6E0109 15%, #9E0713 32%, #CE0E1E 46%, #DC1422 50%, #CE0E1E 54%, #9E0713 68%, #6E0109 85%, #4A0004 100%);
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    box-shadow: 0 3px 12px -1px rgba(110, 1, 9, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
     transition: all 250ms ease;
   }
 
   .pill-badge:hover {
-    background: linear-gradient(135deg, #88131E 0%, #A21825 50%, #700B13 100%);
-    border-color: rgba(239, 68, 68, 0.65);
-    box-shadow: 0 4px 14px -1px rgba(112, 11, 19, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    background: linear-gradient(90deg, #5A0005 0%, #82020B 15%, #B40A17 32%, #E21223 46%, #F01827 50%, #E21223 54%, #B40A17 68%, #82020B 85%, #5A0005 100%);
+    border-color: rgba(248, 113, 113, 0.65);
+    box-shadow: 0 5px 18px -1px rgba(176, 12, 24, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
   .pill-badge-text {
     display: inline-block;
-    color: #FDE047;
-    background: linear-gradient(135deg, #FFFDF0 0%, #FEE08B 30%, #F59E0B 75%, #D97706 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #FFFFFF !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: #FFFFFF !important;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+    letter-spacing: 0.025em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   }
 
   .pill-badge-icon {
-    color: #FBBF24;
-    filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.55));
+    color: #FFFFFF;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.65));
   }
 
   .pill-badge-dot {
-    background-color: #F59E0B;
-    box-shadow: 0 0 8px rgba(245, 158, 11, 0.85);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
   }
 
-  /* Dark Theme support for pill badges */
+  /* Dark Theme support for pill badges: keeps the rich red gradient & crisp white text */
   [data-theme="dark"] .pill-badge {
-    background: rgba(212, 175, 55, 0.12);
-    border: 1px solid rgba(212, 175, 55, 0.35);
-    box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.3);
-    color: #F4D35E;
+    background: linear-gradient(90deg, #440003 0%, #680108 15%, #960611 32%, #C80D1D 46%, #D61220 50%, #C80D1D 54%, #960611 68%, #680108 85%, #440003 100%);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.6), 0 0 12px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
   }
 
   [data-theme="dark"] .pill-badge:hover {
-    background: rgba(212, 175, 55, 0.2);
-    border-color: rgba(212, 175, 55, 0.55);
+    background: linear-gradient(90deg, #540005 0%, #7C020A 15%, #AC0915 32%, #DC1021 46%, #EA1625 50%, #DC1021 54%, #AC0915 68%, #7C020A 85%, #540005 100%);
+    border-color: rgba(248, 113, 113, 0.6);
+    box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.7), 0 0 16px rgba(239, 68, 68, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.28);
   }
 
   [data-theme="dark"] .pill-badge-text {
-    color: #F4D35E;
-    background: linear-gradient(135deg, #FFFFFF 0%, #F4D35E 50%, #D4AF37 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+    color: #FFFFFF !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   }
 
   [data-theme="dark"] .pill-badge-icon {
-    color: #D4AF37;
-    filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.5));
+    color: #FFFFFF;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.65));
   }
 
   [data-theme="dark"] .pill-badge-dot {
-    background-color: #D4AF37;
-    box-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
   }
 
   .glass-nav {
@@ -517,6 +558,211 @@
   animation: subtle-shake 0.4s ease-in-out;
 }
 
+/* Talent Development Card - Organic Corner Wave Subtle Floating Keyframes (4-6px movement) */
+@keyframes cornerFloatTR {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(-5px, 5px) scale(1.02);
+  }
+}
+
+@keyframes cornerFloatBL {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(5px, -5px) scale(1.02);
+  }
+}
+
+.animate-corner-tr {
+  animation: cornerFloatTR 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-corner-bl {
+  animation: cornerFloatBL 6.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Brush Script Font style matching calligraphy */
+.font-brush {
+  font-family: 'Kaushan Script', 'Pacifico', cursive, sans-serif;
+}
+
+/* ========================================================
+   Midnight Navy to Sapphire Gradient & Glitch Text Animation
+   (Matching Reference 1: Dark Navy #040D1A to Vibrant Blue #2563EB)
+   ======================================================== */
+.glitch-blue-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-blue-text {
+  position: relative;
+  display: inline-block;
+  /* Deep midnight navy to rich sapphire gradient fill matching Image 1 */
+  background: linear-gradient(95deg, #051329 0%, #0A2246 35%, #103B70 65%, #1D4ED8 90%, #2563EB 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #0A2246; /* fallback */
+  text-shadow: none;
+  filter: drop-shadow(0 2px 8px rgba(10, 34, 70, 0.2));
+  letter-spacing: 0.02em;
+}
+
+/* Layer 1: Midnight Deep Navy offset slice during glitch */
+.glitch-blue-text::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+  -webkit-text-fill-color: #051329;
+  color: #051329;
+  text-shadow: -2px 0 #1D4ED8;
+  clip-path: polygon(0 20%, 100% 20%, 100% 35%, 0 35%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Layer 2: Radiant Sapphire offset slice during glitch */
+.glitch-blue-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+  -webkit-text-fill-color: #1D4ED8;
+  color: #1D4ED8;
+  text-shadow: 2px 0 #051329;
+  clip-path: polygon(0 65%, 100% 65%, 100% 80%, 0 80%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Glitch trigger states */
+.glitch-blue-text.is-glitching::before,
+.glitch-blue-wrapper:hover .glitch-blue-text::before {
+  opacity: 0.9;
+  animation: blue-glitch-slice-1 0.35s steps(2, end) infinite;
+}
+
+.glitch-blue-text.is-glitching::after,
+.glitch-blue-wrapper:hover .glitch-blue-text::after {
+  opacity: 0.9;
+  animation: blue-glitch-slice-2 0.35s steps(2, end) infinite;
+}
+
+@keyframes blue-glitch-slice-1 {
+  0% {
+    clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%);
+    transform: translate(-2px, -1px);
+  }
+  25% {
+    clip-path: polygon(0 45%, 100% 45%, 100% 60%, 0 60%);
+    transform: translate(2px, 1px);
+  }
+  50% {
+    clip-path: polygon(0 75%, 100% 75%, 100% 90%, 0 90%);
+    transform: translate(-1.5px, 1.5px);
+  }
+  75% {
+    clip-path: polygon(0 30%, 100% 30%, 100% 45%, 0 45%);
+    transform: translate(1.5px, -1.5px);
+  }
+  100% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes blue-glitch-slice-2 {
+  0% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+    transform: translate(2px, 1px);
+  }
+  25% {
+    clip-path: polygon(0 10%, 100% 10%, 100% 25%, 0 25%);
+    transform: translate(-2px, -1px);
+  }
+  50% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 55%, 0 55%);
+    transform: translate(1.5px, -1.5px);
+  }
+  75% {
+    clip-path: polygon(0 80%, 100% 80%, 100% 95%, 0 95%);
+    transform: translate(-1.5px, 1.5px);
+  }
+  100% {
+    clip-path: polygon(0 20%, 100% 20%, 100% 35%, 0 35%);
+    transform: translate(0, 0);
+  }
+}
+
+/* Individual character micro-jitter during glitch */
+.char-glitch-active {
+  color: #1D4ED8;
+  -webkit-text-fill-color: #1D4ED8;
+  text-shadow: -1px 0 #051329, 1px 0 #3B82F6;
+  display: inline-block;
+  animation: char-jitter 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes char-jitter {
+  0% { transform: translate(-1px, 1px) skewX(-1deg); }
+  50% { transform: translate(1px, -1px) skewX(1deg); }
+  100% { transform: translate(-1px, -0.5px) skewX(-0.5deg); }
+}
+
+/* Brush swoop underline matching the dark navy to blue gradient in Image 1 */
+.brush-swoop-underline {
+  filter: drop-shadow(0 2px 6px rgba(10, 34, 70, 0.25));
+}
+
+/* ========================================================
+   Baby Image Smooth & Elegant Floating, Rising & Soft Glow
+   (Prominent rising wave: translateY(8px) -> translateY(-26px),
+    subtle breathing zoom, and glowing aura. No rotation or distortion)
+   ======================================================== */
+@keyframes baby-rise-float {
+  0%, 100% {
+    transform: translateY(8px) scale(0.985);
+    filter: drop-shadow(0 16px 28px rgba(15, 23, 42, 0.11)) drop-shadow(0 0 18px rgba(212, 175, 55, 0.12));
+  }
+  50% {
+    transform: translateY(-26px) scale(1.035);
+    filter: drop-shadow(0 34px 52px rgba(15, 23, 42, 0.18)) drop-shadow(0 0 38px rgba(212, 175, 55, 0.28));
+  }
+}
+
+@keyframes baby-glow-rise {
+  0%, 100% {
+    opacity: 0.48;
+    transform: translateY(6px) scale(0.94);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateY(-20px) scale(1.12);
+  }
+}
+
+.animate-baby-float {
+  animation: baby-rise-float 4.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, filter;
+}
+
+.animate-baby-glow {
+  animation: baby-glow-rise 4.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+
 /* Respect user motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -526,3 +772,4 @@
     scroll-behavior: auto !important;
   }
 }
+

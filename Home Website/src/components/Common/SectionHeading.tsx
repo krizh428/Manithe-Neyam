@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import { gsap, EASING, prefersReducedMotion } from '../../animations';
+import { CharacterGlitchText } from '../Animated/CharacterGlitchText';
 
 interface SectionHeadingProps {
   badge?: string;
@@ -8,6 +9,9 @@ interface SectionHeadingProps {
   align?: 'left' | 'center' | 'right';
   className?: string;
   ochreAccent?: boolean;
+  enableGlitch?: boolean;
+  useBrushFont?: boolean;
+  isTamil?: boolean;
 }
 
 export const SectionHeading: React.FC<SectionHeadingProps> = ({
@@ -17,6 +21,9 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
   align = 'center',
   className = '',
   ochreAccent = false,
+  enableGlitch = false,
+  useBrushFont = false,
+  isTamil = false,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const badgeRef = useRef<HTMLDivElement | null>(null);
@@ -118,7 +125,16 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
         ref={titleRef}
         className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-heading-accent tracking-tight leading-tight"
       >
-        {title}
+        {enableGlitch ? (
+          <CharacterGlitchText
+            text={title}
+            useBrushFont={useBrushFont}
+            isTamil={isTamil}
+            showSwoosh={true}
+          />
+        ) : (
+          title
+        )}
       </h2>
 
       {/* Decorative Brand Accent Line */}

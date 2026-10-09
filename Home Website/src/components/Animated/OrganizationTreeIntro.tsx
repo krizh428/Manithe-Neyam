@@ -1,22 +1,20 @@
-import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
-  HeartHandshake,
-  Users,
-  Sparkles,
-  BookOpen,
-  Home,
-  HeartPulse,
-  Scissors,
-  Monitor,
   Stethoscope,
-  UtensilsCrossed,
-  MapPin,
-  Leaf,
+  BookOpen,
+  Accessibility,
+  Monitor,
+  Utensils,
+  Scissors,
+  House,
+  Users,
   X,
+  type LucideProps,
 } from 'lucide-react';
 import { gsap, EASING, prefersReducedMotion } from '../../animations';
 import { useLanguage } from '../../context/LanguageContext';
 import { ORGANIZATIONS_DATA, type OrganizationBranch } from '../../data/organizationsData';
+import { CharacterGlitchText } from './CharacterGlitchText';
 
 interface OrganizationTreeIntroProps {
   isOpen: boolean;
@@ -24,6 +22,268 @@ interface OrganizationTreeIntroProps {
   onComplete: () => void;
 }
 
+// ---------------------------------------------------------------------------
+// Custom line icons (lucide has no shield-heart or elderly-with-cane glyph)
+// ---------------------------------------------------------------------------
+const ShieldHeartIcon: React.FC<LucideProps> = ({ style, className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={style} className={className}>
+    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+    <path d="M9.6 10.2a1.7 1.7 0 0 1 2.4 0 1.7 1.7 0 0 1 2.4 0 1.8 1.8 0 0 1 0 2.5L12 15l-2.4-2.3a1.8 1.8 0 0 1 0-2.5z" />
+  </svg>
+);
+
+const ElderIcon: React.FC<LucideProps> = ({ style, className }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={style} className={className}>
+    <circle cx="10" cy="4" r="2" />
+    <path d="M10.5 8 9 15l-2 6" />
+    <path d="M9 15l3 2 1 4" />
+    <path d="M10.5 8 8 10.5 7 14" />
+    <path d="M10.5 9.5l2.5 2.5 2.5-.5" />
+    <path d="M16 12v9" />
+    <path d="M16 12c0-1.4 2-1.4 2 0" />
+  </svg>
+);
+
+// Per-service visuals matching the design (icon + short tagline)
+const SERVICE_META: Record<
+  string,
+  { Icon: React.FC<LucideProps>; taglineEn: string; taglineTa: string }
+> = {
+  clinic: { Icon: Stethoscope, taglineEn: 'Quality Healthcare for All', taglineTa: 'அனைவருக்கும் தரமான மருத்துவம்' },
+  adoption: { Icon: ShieldHeartIcon, taglineEn: 'Kindness Grows – Families Care', taglineTa: 'அன்பு வளரும் – குடும்பம் காக்கும்' },
+  school: { Icon: BookOpen, taglineEn: 'Knowledge for a Brighter Tomorrow', taglineTa: 'ஒளிமயமான நாளைக்கான கல்வி' },
+  rstc: { Icon: Accessibility, taglineEn: 'Skills for an Independent Life', taglineTa: 'சுயசார்பு வாழ்க்கைக்கான திறன்கள்' },
+  computer: { Icon: Monitor, taglineEn: 'Digital Skills – Better Opportunities', taglineTa: 'டிஜிட்டல் திறன் – சிறந்த வாய்ப்புகள்' },
+  food: { Icon: Utensils, taglineEn: 'Nutritious Meals for All', taglineTa: 'அனைவருக்கும் சத்தான உணவு' },
+  sewing: { Icon: Scissors, taglineEn: 'Skilled Hands – Brighter Futures', taglineTa: 'திறமையான கைகள் – ஒளிமயமான எதிர்காலம்' },
+  'old-age': { Icon: ElderIcon, taglineEn: 'Respect – Care – Comfort', taglineTa: 'மரியாதை – அக்கறை – ஆறுதல்' },
+  'children-theni': { Icon: House, taglineEn: 'A Home – A Safe Life', taglineTa: 'ஒரு இல்லம் – பாதுகாப்பான வாழ்க்கை' },
+  'children-kodangipatti': { Icon: Users, taglineEn: 'Kids Support – Brighter Future', taglineTa: 'குழந்தைகள் நலன் – ஒளிமயமான எதிர்காலம்' },
+};
+
+// ---------------------------------------------------------------------------
+// Geometry helpers
+// ---------------------------------------------------------------------------
+type Pt = { x: number; y: number };
+type Cubic = [Pt, Pt, Pt, Pt];
+type Side = 'top' | 'bottom' | 'left' | 'right';
+
+const bezierPoint = ([p0, p1, p2, p3]: Cubic, t: number): Pt => {
+  const mt = 1 - t;
+  const a = mt * mt * mt;
+  const b = 3 * mt * mt * t;
+  const c = 3 * mt * t * t;
+  const d = t * t * t;
+  return { x: a * p0.x + b * p1.x + c * p2.x + d * p3.x, y: a * p0.y + b * p1.y + c * p2.y + d * p3.y };
+};
+
+const bezierTangent = ([p0, p1, p2, p3]: Cubic, t: number): Pt => {
+  const mt = 1 - t;
+  const x = 3 * mt * mt * (p1.x - p0.x) + 6 * mt * t * (p2.x - p1.x) + 3 * t * t * (p3.x - p2.x);
+  const y = 3 * mt * mt * (p1.y - p0.y) + 6 * mt * t * (p2.y - p1.y) + 3 * t * t * (p3.y - p2.y);
+  const len = Math.hypot(x, y) || 1;
+  return { x: x / len, y: y / len };
+};
+
+const cubicPath = ([p0, p1, p2, p3]: Cubic) =>
+  `M ${p0.x} ${p0.y} C ${p1.x} ${p1.y}, ${p2.x} ${p2.y}, ${p3.x} ${p3.y}`;
+
+// Organic S-curve between two points
+const sCurve = (from: Pt, to: Pt, bend: number): Cubic => {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = -dy / len;
+  const ny = dx / len;
+  return [
+    from,
+    { x: from.x + dx * 0.35 + nx * bend, y: from.y + dy * 0.35 + ny * bend },
+    { x: from.x + dx * 0.7 - nx * bend * 0.6, y: from.y + dy * 0.7 - ny * bend * 0.6 },
+    to,
+  ];
+};
+
+// Filled outline of a vine that tapers from wStart to wEnd
+const taperedOutline = (curve: Cubic, wStart: number, wEnd: number) => {
+  const N = 40;
+  const left: string[] = [];
+  const right: string[] = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const p = bezierPoint(curve, t);
+    const tan = bezierTangent(curve, t);
+    const hw = (wStart + (wEnd - wStart) * t) / 2;
+    left.push(`${(p.x - tan.y * hw).toFixed(1)} ${(p.y + tan.x * hw).toFixed(1)}`);
+    right.push(`${(p.x + tan.y * hw).toFixed(1)} ${(p.y - tan.x * hw).toFixed(1)}`);
+  }
+  return `M ${left.join(' L ')} L ${right.reverse().join(' L ')} Z`;
+};
+
+interface Leaf {
+  t: number;
+  x: number;
+  y: number;
+  rot: number;
+  scale: number;
+  tone: 0 | 1;
+}
+
+const leavesAlong = (
+  curve: Cubic,
+  count: number,
+  wStart: number,
+  wEnd: number,
+  scale: number,
+  tFrom = 0.18,
+  tTo = 0.86
+): Leaf[] =>
+  Array.from({ length: count }, (_, i) => {
+    const t = count === 1 ? (tFrom + tTo) / 2 : tFrom + ((tTo - tFrom) * i) / (count - 1);
+    const side = i % 2 === 0 ? 1 : -1;
+    const p = bezierPoint(curve, t);
+    const tan = bezierTangent(curve, t);
+    const hw = ((wStart + (wEnd - wStart) * t) / 2) * 0.5;
+    const angle = (Math.atan2(tan.y, tan.x) * 180) / Math.PI;
+    return {
+      t,
+      x: p.x - tan.y * hw * side,
+      y: p.y + tan.x * hw * side,
+      rot: angle + side * 52,
+      scale: scale * (1 - t * 0.25),
+      tone: (i % 2) as 0 | 1,
+    };
+  });
+
+interface VineNode {
+  data: OrganizationBranch;
+  curve: Cubic;
+  outline: string;
+  leaves: Leaf[];
+  dot: Pt;
+  card: { x: number; y: number; w: number; h: number };
+  delay: number;
+}
+
+interface Layout {
+  W: number;
+  H: number;
+  logo: { cx: number; cy: number; r: number };
+  dotR: number;
+  trunk: { curve: Cubic; outline: string; leaves: Leaf[] } | null;
+  nodes: VineNode[];
+}
+
+const byId = (id: string) => ORGANIZATIONS_DATA.find((o) => o.id === id)!;
+
+// Clockwise from 12 o'clock, exactly as in the design
+const DESKTOP_SPEC: Array<{ id: string; side: Side; dot: Pt; bend: number }> = [
+  { id: 'clinic', side: 'top', dot: { x: 500, y: 84 }, bend: 12 },
+  { id: 'adoption', side: 'right', dot: { x: 690, y: 78 }, bend: -22 },
+  { id: 'school', side: 'right', dot: { x: 746, y: 176 }, bend: -18 },
+  { id: 'rstc', side: 'right', dot: { x: 746, y: 274 }, bend: 20 },
+  { id: 'computer', side: 'right', dot: { x: 676, y: 372 }, bend: 26 },
+  { id: 'food', side: 'bottom', dot: { x: 500, y: 372 }, bend: -12 },
+  { id: 'sewing', side: 'left', dot: { x: 324, y: 372 }, bend: -26 },
+  { id: 'old-age', side: 'left', dot: { x: 254, y: 274 }, bend: -20 },
+  { id: 'children-theni', side: 'left', dot: { x: 254, y: 176 }, bend: 18 },
+  { id: 'children-kodangipatti', side: 'left', dot: { x: 310, y: 78 }, bend: 22 },
+];
+
+const buildDesktopLayout = (): Layout => {
+  const W = 1000;
+  const H = 450;
+  const logo = { cx: 500, cy: 212, r: 54 };
+  const gap = 7;
+
+  const nodes = DESKTOP_SPEC.map(({ id, side, dot, bend }, i): VineNode => {
+    const dx = dot.x - logo.cx;
+    const dy = dot.y - logo.cy;
+    const len = Math.hypot(dx, dy);
+    const start = { x: logo.cx + (dx / len) * (logo.r - 6), y: logo.cy + (dy / len) * (logo.r - 6) };
+    const curve = sCurve(start, dot, bend);
+    const leafCount = Math.min(6, Math.max(2, Math.round(len / 42)));
+
+    const vertical = side === 'top' || side === 'bottom';
+    const w = vertical ? 232 : 240;
+    const h = 68;
+    const card =
+      side === 'left'
+        ? { x: dot.x - gap - w, y: dot.y - h / 2, w, h }
+        : side === 'right'
+          ? { x: dot.x + gap, y: dot.y - h / 2, w, h }
+          : side === 'top'
+            ? { x: dot.x - w / 2, y: dot.y - gap - h, w, h }
+            : { x: dot.x - w / 2, y: dot.y + gap, w, h };
+
+    return {
+      data: byId(id),
+      curve,
+      outline: taperedOutline(curve, 8, 3),
+      leaves: leavesAlong(curve, leafCount, 8, 3, 1),
+      dot,
+      card,
+      delay: i * 0.15,
+    };
+  });
+
+  return { W, H, logo, dotR: 6, trunk: null, nodes };
+};
+
+const buildMobileLayout = (): Layout => {
+  const W = 400;
+  const H = 990;
+  const logo = { cx: 200, cy: 70, r: 46 };
+  // Control points equally spaced in y, so y(t) is linear: y = 110 + 850t
+  const trunkCurve: Cubic = [
+    { x: 200, y: 110 },
+    { x: 210, y: 393 },
+    { x: 190, y: 677 },
+    { x: 200, y: 960 },
+  ];
+  const trunkDuration = 1.6;
+  const cardW = 158;
+  const cardH = 72;
+
+  const nodes = DESKTOP_SPEC.map(({ id }, i): VineNode => {
+    const cy = 186 + i * 84;
+    const isLeft = i % 2 === 0;
+    const startY = cy - 40;
+    const tTrunk = (startY - 110) / 850;
+    const start = { x: bezierPoint(trunkCurve, tTrunk).x, y: startY };
+    const dot = { x: isLeft ? 168 : 232, y: cy };
+    const curve = sCurve(start, dot, isLeft ? -8 : 8);
+    return {
+      data: byId(id),
+      curve,
+      outline: taperedOutline(curve, 5, 2.4),
+      leaves: leavesAlong(curve, 1, 5, 2.4, 0.8),
+      dot,
+      card: { x: isLeft ? dot.x - 6 - cardW : dot.x + 6, y: cy - cardH / 2, w: cardW, h: cardH },
+      delay: tTrunk * trunkDuration,
+    };
+  });
+
+  return {
+    W,
+    H,
+    logo,
+    dotR: 4.5,
+    trunk: {
+      curve: trunkCurve,
+      outline: taperedOutline(trunkCurve, 9, 5),
+      leaves: leavesAlong(trunkCurve, 12, 9, 5, 0.95, 0.06, 0.94),
+    },
+    nodes,
+  };
+};
+
+const LEAF_PATH = 'M0 0 L3 0 C7 -7 17 -8 24 0 C17 8 7 7 3 0 Z';
+const LEAF_RIB = 'M3 0 L20 0';
+const LEAF_FILLS = ['#5DAA35', '#79C24A'];
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
   isOpen,
   isReplay: _isReplay = false,
@@ -31,253 +291,28 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 }) => {
   const { isTamil } = useLanguage();
   const [isMobile, setIsMobile] = useState(false);
-  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const titleGroupRef = useRef<HTMLDivElement | null>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const breathingTweenRef = useRef<gsap.core.Tween | null>(null);
 
-  // Responsive device check
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Icon Resolver with clean line styling
-  const getIcon = (name: OrganizationBranch['iconName'], isHovered: boolean) => {
-    const iconClass = `w-5.5 h-5.5 sm:w-6 sm:h-6 transition-transform duration-300 ${
-      isHovered ? 'scale-110 text-inherit' : 'text-[#1B4332]'
-    }`;
+  const layout = useMemo(() => (isMobile ? buildMobileLayout() : buildDesktopLayout()), [isMobile]);
+  const { W, H, logo, dotR, trunk, nodes } = layout;
 
-    switch (name) {
-      case 'HeartHandshake':
-        return <HeartHandshake className={iconClass} />;
-      case 'Users':
-        return <Users className={iconClass} />;
-      case 'Sparkles':
-        return <Sparkles className={iconClass} />;
-      case 'BookOpen':
-        return <BookOpen className={iconClass} />;
-      case 'Home':
-        return <Home className={iconClass} />;
-      case 'HeartPulse':
-        return <HeartPulse className={iconClass} />;
-      case 'Scissors':
-        return <Scissors className={iconClass} />;
-      case 'Monitor':
-        return <Monitor className={iconClass} />;
-      case 'Stethoscope':
-        return <Stethoscope className={iconClass} />;
-      case 'UtensilsCrossed':
-        return <UtensilsCrossed className={iconClass} />;
-      default:
-        return <Sparkles className={iconClass} />;
-    }
-  };
+  // Stage units -> container-query width units, so cards scale with the tree
+  const u = (n: number) => `${((n * 100) / W).toFixed(3)}cqw`;
+  const pctX = (n: number) => `${(n * 100) / W}%`;
+  const pctY = (n: number) => `${(n * 100) / H}%`;
 
-  // FULL SCREEN WIDESCREEN 360° RADIAL TREE GEOMETRY (Canvas: 1520 x 820)
-  // Designed so every card is clearly viewable, spacious, and 100% visible with zero truncation
-  // Center Core at (760, 410)
-  // Large Cards: 260px x 82px
-  const DESKTOP_CANVAS = {
-    cx: 760,
-    cy: 410,
-    rx: 540, // Horizontal radius to span full screen width
-    ry: 295, // Vertical radius fitted to full screen height
-    cardW: 260,
-    cardH: 82,
-  };
-
-  // Harmonious radial distribution (10 positions at 36° intervals):
-  // 0° (Top Center, 12 o'clock): Free Clinic
-  // 180° (Bottom Center, 6 o'clock): Free Food
-  const RADIAL_SERVICE_ORDER: Array<{ dataIndex: number; deg: number }> = [
-    { dataIndex: 2, deg: 0 },    // 0° (Top 12 o'clock): Free Clinic
-    { dataIndex: 0, deg: 36 },   // 36°: Specialised Adoption Centre
-    { dataIndex: 4, deg: 72 },   // 72°: Dream Nursery & Primary School
-    { dataIndex: 3, deg: 108 },  // 108°: Special Training Centre (RSTC)
-    { dataIndex: 9, deg: 144 },  // 144°: Computer Training Centre
-    { dataIndex: 7, deg: 180 },  // 180° (Bottom 6 o'clock): Free Food
-    { dataIndex: 8, deg: 216 },  // 216°: Sewing Training Centre
-    { dataIndex: 6, deg: 252 },  // 252°: Old Age Home
-    { dataIndex: 5, deg: 288 },  // 288°: Children's Home (Theni)
-    { dataIndex: 1, deg: 324 },  // 324°: Children's Home (Kodangipatti)
-  ];
-
-  const desktopNodes = RADIAL_SERVICE_ORDER.map(({ dataIndex, deg }, index) => {
-    const data = ORGANIZATIONS_DATA[dataIndex];
-    const rad = (deg * Math.PI) / 180;
-    const { cx, cy, rx, ry, cardW, cardH } = DESKTOP_CANVAS;
-
-    // Card Center & Top-Left Anchor
-    const cardCenterX = cx + rx * Math.sin(rad);
-    const cardCenterY = cy - ry * Math.cos(rad);
-    const cardX = Math.round(cardCenterX - cardW / 2);
-    const cardY = Math.round(cardCenterY - cardH / 2);
-
-    // Branch Start (perimeter of central circular shield at r = 68)
-    const sx = Math.round(cx + 68 * Math.sin(rad));
-    const sy = Math.round(cy - 68 * Math.cos(rad));
-
-    // Branch End (inner perimeter of card at distance)
-    const ex = Math.round(cx + (rx - 85) * Math.sin(rad));
-    const ey = Math.round(cy - (ry - 48) * Math.cos(rad));
-
-    // Organic curved boughs: control points gently sweep with tangential angle offsets
-    const cp1Rad = ((deg + 14) * Math.PI) / 180;
-    const cp1x = Math.round(cx + (rx * 0.38) * Math.sin(cp1Rad));
-    const cp1y = Math.round(cy - (ry * 0.38) * Math.cos(cp1Rad));
-
-    const cp2Rad = ((deg + 6) * Math.PI) / 180;
-    const cp2x = Math.round(cx + (rx * 0.70) * Math.sin(cp2Rad));
-    const cp2y = Math.round(cy - (ry * 0.70) * Math.cos(cp2Rad));
-
-    const branchPath = `M ${sx} ${sy} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${ex} ${ey}`;
-
-    // Sprouting Leaves along the curved branch
-    const l1Rad = ((deg + 10) * Math.PI) / 180;
-    const l1x = Math.round(cx + (rx * 0.44) * Math.sin(l1Rad));
-    const l1y = Math.round(cy - (ry * 0.44) * Math.cos(l1Rad));
-
-    const l2Rad = ((deg + 4) * Math.PI) / 180;
-    const l2x = Math.round(cx + (rx * 0.74) * Math.sin(l2Rad));
-    const l2y = Math.round(cy - (ry * 0.74) * Math.cos(l2Rad));
-
-    return {
-      ...data,
-      index,
-      cardX,
-      cardY,
-      cardW,
-      cardH,
-      branchPath,
-      leaf1: { x: l1x, y: l1y, rot: deg - 25, scale: 1.15 },
-      leaf2: { x: l2x, y: l2y, rot: deg + 30, scale: 1.25 },
-    };
-  });
-
-  // MOBILE: 420 x 1080 Canvas Coordinates with spacious cards
-  const mobileNodes = [
-    {
-      ...ORGANIZATIONS_DATA[2], // Free Clinic
-      index: 0,
-      cardX: 10,
-      cardY: 110,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 120 C 190 150, 140 150, 107 150',
-      leaf1: { x: 165, y: 135, rot: -30, scale: 1 },
-      leaf2: { x: 130, y: 145, rot: -15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[0], // Adoption
-      index: 1,
-      cardX: 216,
-      cardY: 195,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 210 C 230 235, 280 235, 313 235',
-      leaf1: { x: 255, y: 220, rot: 30, scale: 1 },
-      leaf2: { x: 290, y: 230, rot: 15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[4], // School
-      index: 2,
-      cardX: 10,
-      cardY: 280,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 295 C 190 320, 140 320, 107 320',
-      leaf1: { x: 165, y: 305, rot: -30, scale: 1 },
-      leaf2: { x: 130, y: 315, rot: -15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[3], // RSTC
-      index: 3,
-      cardX: 216,
-      cardY: 365,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 380 C 230 405, 280 405, 313 405',
-      leaf1: { x: 255, y: 390, rot: 30, scale: 1 },
-      leaf2: { x: 290, y: 400, rot: 15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[9], // Computer
-      index: 4,
-      cardX: 10,
-      cardY: 450,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 465 C 190 490, 140 490, 107 490',
-      leaf1: { x: 165, y: 475, rot: -30, scale: 1 },
-      leaf2: { x: 130, y: 485, rot: -15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[7], // Free Food
-      index: 5,
-      cardX: 216,
-      cardY: 535,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 550 C 230 575, 280 575, 313 575',
-      leaf1: { x: 255, y: 560, rot: 30, scale: 1 },
-      leaf2: { x: 290, y: 570, rot: 15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[8], // Sewing
-      index: 6,
-      cardX: 10,
-      cardY: 620,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 635 C 190 660, 140 660, 107 660',
-      leaf1: { x: 165, y: 645, rot: -30, scale: 1 },
-      leaf2: { x: 130, y: 655, rot: -15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[6], // Old Age
-      index: 7,
-      cardX: 216,
-      cardY: 705,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 720 C 230 745, 280 745, 313 745',
-      leaf1: { x: 255, y: 730, rot: 30, scale: 1 },
-      leaf2: { x: 290, y: 740, rot: 15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[5], // Theni
-      index: 8,
-      cardX: 10,
-      cardY: 790,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 805 C 190 830, 140 830, 107 830',
-      leaf1: { x: 165, y: 815, rot: -30, scale: 1 },
-      leaf2: { x: 130, y: 825, rot: -15, scale: 1.05 },
-    },
-    {
-      ...ORGANIZATIONS_DATA[1], // Kodangipatti Children
-      index: 9,
-      cardX: 216,
-      cardY: 875,
-      cardW: 194,
-      cardH: 80,
-      branchPath: 'M 210 890 C 230 915, 280 915, 313 915',
-      leaf1: { x: 255, y: 900, rot: 30, scale: 1 },
-      leaf2: { x: 290, y: 910, rot: 15, scale: 1.05 },
-    },
-  ];
-
-  const currentNodes = isMobile ? mobileNodes : desktopNodes;
-
-  // Master GSAP Timeline & Continuous Breathing Animation
+  // Master GSAP timeline
   useLayoutEffect(() => {
     if (!isOpen) return;
 
@@ -293,262 +328,140 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
     const ctx = gsap.context(() => {
       const container = containerRef.current!;
-      const titleGroup = titleGroupRef.current;
-      const logoGroup = container.querySelector('.central-logo-group');
-      const rippleRings = container.querySelectorAll('.ripple-ring');
-      const branches = container.querySelectorAll<SVGPathElement>('.tree-branch-path');
-      const branchTrails = container.querySelectorAll<SVGPathElement>('.tree-branch-trail');
-      const travelPoints = container.querySelectorAll<SVGCircleElement>('.travel-point');
-      const travelSparkles = container.querySelectorAll<SVGCircleElement>('.travel-sparkle');
-      const leaves = container.querySelectorAll<SVGPathElement>('.tree-leaf');
-      const serviceCards = container.querySelectorAll('.service-card-wrapper');
+      const q = <T extends Element>(sel: string) => container.querySelectorAll<T>(sel);
+      const logoEl = container.querySelector('.org-logo');
+      const halo = q('.org-logo-halo');
+      const allLeaves = q('.org-leaf');
+      const allDots = q('.org-dot');
+      const allCards = q('.org-card');
+      const glows = q('.org-glow');
 
       const tl = gsap.timeline();
       timelineRef.current = tl;
 
-      // 1. Initial State Setup
-      gsap.set(container, { opacity: 1 });
-      if (titleGroup) gsap.set(titleGroup, { opacity: 0, y: -15 });
+      // 1. Initial states
+      gsap.set(container, { opacity: 0 });
+      if (titleGroupRef.current) gsap.set(titleGroupRef.current, { opacity: 0, y: -14 });
+      if (logoEl) gsap.set(logoEl, { scale: 0.4, opacity: 0, rotation: -25 });
+      gsap.set(halo, { scale: 0.5, opacity: 0, transformOrigin: '50% 50%' });
+      gsap.set(q('.org-reveal'), { strokeDasharray: '1 2', strokeDashoffset: 1 });
+      gsap.set(allLeaves, { scale: 0, opacity: 0, transformOrigin: '0% 50%' });
+      gsap.set(allDots, { scale: 0, transformOrigin: '50% 50%' });
+      gsap.set(glows, { opacity: 0 });
+      gsap.set(allCards, { opacity: 0, scale: 0.82, y: 8 });
 
-      // Central logo core starts with a soft breathing scale
-      if (logoGroup) {
-        gsap.set(logoGroup, {
-          scale: 0.65,
-          opacity: 0,
-          transformOrigin: isMobile ? '210px 65px' : '760px 410px',
-        });
+      // 2. Backdrop, title, logo blossom
+      tl.to(container, { opacity: 1, duration: 0.35, ease: 'power1.out' })
+        .to(logoEl, { scale: 1, opacity: 1, rotation: 0, duration: 0.9, ease: 'back.out(1.6)' }, 0.15)
+        .to(halo, { scale: 1, opacity: 1, duration: 1.1, ease: 'power2.out' }, 0.3);
+      if (titleGroupRef.current) {
+        tl.to(titleGroupRef.current, { opacity: 1, y: 0, duration: 0.6, ease: EASING.smooth }, 0.35);
       }
 
-      // Hide ripple rings initially
-      gsap.set(rippleRings, {
-        scale: 0.7,
-        opacity: 0,
-        transformOrigin: isMobile ? '210px 65px' : '760px 410px',
-      });
+      // Grows a vine: reveal mask, light pulse travelling along it, leaves sprout as it passes
+      const growVine = (key: string, at: number, duration: number) => {
+        const reveal = container.querySelector<SVGPathElement>(`.org-reveal-${key}`);
+        const glow = container.querySelector<SVGCircleElement>(`.org-glow-${key}`);
+        if (!reveal) return;
 
-      // Prepare branches for stroke animation
-      branches.forEach((b) => {
-        const len = b.getTotalLength ? b.getTotalLength() : 350;
-        gsap.set(b, { strokeDasharray: len, strokeDashoffset: len, opacity: 0.85 });
-      });
+        tl.to(reveal, { strokeDashoffset: 0, duration, ease: 'power1.inOut' }, at);
 
-      // Prepare branch trails
-      branchTrails.forEach((bt) => {
-        const len = bt.getTotalLength ? bt.getTotalLength() : 350;
-        gsap.set(bt, { strokeDasharray: len, strokeDashoffset: len, opacity: 0.6 });
-      });
+        if (glow) {
+          const total = reveal.getTotalLength();
+          const proxy = { p: 0 };
+          tl.set(glow, { opacity: 1 }, at)
+            .to(
+              proxy,
+              {
+                p: 1,
+                duration,
+                ease: 'power1.inOut',
+                onUpdate: () => {
+                  const pt = reveal.getPointAtLength(proxy.p * total);
+                  glow.setAttribute('cx', pt.x.toFixed(1));
+                  glow.setAttribute('cy', pt.y.toFixed(1));
+                },
+              },
+              at
+            )
+            .to(glow, { opacity: 0, duration: 0.25 }, at + duration - 0.1);
+        }
 
-      // Leaves start hidden
-      gsap.set(leaves, { scale: 0, opacity: 0, transformOrigin: 'center center' });
-
-      // Service cards start softly shifted with 0 opacity
-      gsap.set(serviceCards, { opacity: 0, scale: 0.88 });
-
-      // Points and sparkles start hidden
-      gsap.set(travelPoints, { opacity: 0, scale: 0.8 });
-      gsap.set(travelSparkles, { opacity: 0, scale: 0.6 });
-
-      // 2. Central Logo Core Enters & Blossoms
-      if (logoGroup) {
-        tl.to(logoGroup, {
-          scale: 1,
-          opacity: 1,
-          duration: 0.85,
-          ease: 'back.out(1.4)',
+        q<SVGPathElement>(`.org-leaf-${key}`).forEach((leaf) => {
+          const t = Number(leaf.dataset.t ?? 0.5);
+          tl.to(leaf, { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(2.4)' }, at + t * duration);
         });
+      };
+
+      const vinesStart = 0.95;
+      let branchesStart = vinesStart;
+      if (trunk) {
+        growVine('trunk', vinesStart, 1.6);
+        branchesStart = vinesStart + 0.05;
       }
 
-      // Ripple rings pulse outward from core
-      tl.to(
-        rippleRings,
-        {
-          scale: 1,
-          opacity: (i) => 0.55 - i * 0.1,
-          duration: 0.9,
-          stagger: 0.1,
-          ease: 'power2.out',
-        },
-        '-=0.55'
-      );
-
-      // 3. Top Heading & Subtitle Fade In
-      if (titleGroup) {
+      // 3. Each branch grows, ends in a dot, then its card blooms
+      const vineDuration = isMobile ? 0.55 : 1.0;
+      nodes.forEach((node, i) => {
+        const at = branchesStart + node.delay;
+        growVine(String(i), at, vineDuration);
+        tl.to(`.org-dot-${i}`, { scale: 1, duration: 0.35, ease: 'back.out(3)' }, at + vineDuration - 0.08);
         tl.to(
-          titleGroup,
-          {
+          `.org-card-${i}`,
+          { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: 'back.out(1.5)' },
+          at + vineDuration - 0.02
+        );
+      });
+
+      // 4. Gentle idle life once everything is in place
+      tl.call(() => {
+        ctx.add(() => {
+          gsap.to(halo, { scale: 1.08, opacity: 0.75, duration: 2.6, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+          gsap.to(allLeaves, {
+            rotation: () => gsap.utils.random(-8, 8),
+            duration: () => gsap.utils.random(2.2, 3.6),
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            stagger: { each: 0.05, from: 'random' },
+          });
+          gsap.to(q('.org-card-glow'), {
             opacity: 1,
-            y: 0,
-            duration: 0.65,
-            ease: EASING.smooth,
-          },
-          '-=0.45'
-        );
-      }
-
-      // 4. Sequential Branch Growth + Light Energy Flow + Leaves + Large Cards Reveal
-      branches.forEach((branch, index) => {
-        const point = travelPoints[index];
-        const sparkle = travelSparkles[index];
-        const card = serviceCards[index];
-        const branchLeaves = container.querySelectorAll<SVGPathElement>(`.leaf-branch-${index}`);
-        const branchLen = branch.getTotalLength ? branch.getTotalLength() : 350;
-
-        const startTime = (tl.duration() - 0.28) > 0 ? (tl.duration() - 0.28) : 1.0;
-
-        // A. Branch curves smoothly outward like natural boughs
-        tl.to(
-          branch,
-          {
-            strokeDashoffset: 0,
-            duration: 0.7,
-            ease: 'power2.inOut',
-          },
-          startTime
-        );
-
-        // B. Light energy pulse flows through the branch
-        if (point) {
-          const proxy = { progress: 0 };
-          tl.to(
-            point,
-            {
-              opacity: 1,
-              duration: 0.08,
-            },
-            startTime
-          ).to(
-            proxy,
-            {
-              progress: 1,
-              duration: 0.7,
-              ease: 'power2.inOut',
-              onUpdate: () => {
-                if (branch.getPointAtLength) {
-                  const pt = branch.getPointAtLength(proxy.progress * branchLen);
-                  point.setAttribute('cx', pt.x.toString());
-                  point.setAttribute('cy', pt.y.toString());
-                }
-              },
-            },
-            startTime
-          );
-
-          tl.to(
-            point,
-            {
-              scale: 2.2,
-              opacity: 0,
-              duration: 0.25,
-              ease: 'power2.out',
-            },
-            startTime + 0.62
-          );
-        }
-
-        // C. Trailing sparkle follows the main beam
-        if (sparkle) {
-          const sparkleProxy = { progress: 0 };
-          tl.to(
-            sparkle,
-            {
-              opacity: 0.85,
-              duration: 0.08,
-            },
-            startTime + 0.12
-          ).to(
-            sparkleProxy,
-            {
-              progress: 1,
-              duration: 0.65,
-              ease: 'power2.inOut',
-              onUpdate: () => {
-                if (branch.getPointAtLength) {
-                  const pt = branch.getPointAtLength(sparkleProxy.progress * branchLen);
-                  sparkle.setAttribute('cx', pt.x.toString());
-                  sparkle.setAttribute('cy', pt.y.toString());
-                }
-              },
-            },
-            startTime + 0.12
-          ).to(
-            sparkle,
-            {
-              scale: 1.8,
-              opacity: 0,
-              duration: 0.2,
-              ease: 'power2.out',
-            },
-            startTime + 0.72
-          );
-        }
-
-        // D. Gentle leaves unfurl along the branch
-        if (branchLeaves.length > 0) {
-          tl.to(
-            branchLeaves,
-            {
-              scale: 1,
-              opacity: 0.9,
-              duration: 0.5,
-              stagger: 0.1,
-              ease: 'back.out(2)',
-            },
-            startTime + 0.35
-          );
-        }
-
-        // E. Large Service Card Softly Blooms In
-        if (card) {
-          tl.to(
-            card,
-            {
-              opacity: 1,
-              scale: 1,
-              duration: 0.55,
-              ease: 'power2.out',
-            },
-            startTime + 0.5
-          );
-        }
-      });
-
-      // 5. Subtle Continuous Breathing & Ripple Loop after entrance completes
-      tl.add(() => {
-        breathingTweenRef.current = gsap.to(rippleRings, {
-          scale: 1.15,
-          opacity: (i) => 0.65 - i * 0.12,
-          duration: 2.8,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          stagger: 0.25,
-        });
-
-        gsap.to(leaves, {
-          rotation: '+=8',
-          duration: 3.5,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          stagger: {
-            each: 0.15,
-            from: 'random',
-          },
+            duration: 1.4,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            stagger: { each: 0.22, from: 'random' },
+          });
+          gsap.to(q('.org-card-heart'), {
+            scale: 1.25,
+            transformOrigin: '50% 60%',
+            duration: 0.6,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            stagger: { each: 0.15, from: 'random' },
+          });
+          gsap.to(q('.org-dot-ring'), {
+            scale: 2.2,
+            opacity: 0,
+            duration: 1.8,
+            ease: 'power1.out',
+            transformOrigin: '50% 50%',
+            stagger: { each: 0.18, repeat: -1 },
+          });
         });
       });
     }, containerRef);
 
     return () => {
       ctx.revert();
-      if (breathingTweenRef.current) breathingTweenRef.current.kill();
       document.body.style.overflow = 'auto';
     };
   }, [isOpen, isMobile]);
 
-  // Handle User Skip or Continue
   const handleSkip = () => {
     if (timelineRef.current) timelineRef.current.pause();
-    if (breathingTweenRef.current) breathingTweenRef.current.kill();
 
     const container = containerRef.current;
     if (container) {
@@ -570,9 +483,7 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        handleSkip();
-      }
+      if (e.key === 'Escape' && isOpen) handleSkip();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -580,313 +491,310 @@ export const OrganizationTreeIntro: React.FC<OrganizationTreeIntroProps> = ({
 
   if (!isOpen) return null;
 
+  const renderLeaves = (leaves: Leaf[], key: string, highlighted = false) =>
+    leaves.map((leaf, li) => (
+      <g key={`leaf-${key}-${li}`} transform={`translate(${leaf.x.toFixed(1)} ${leaf.y.toFixed(1)}) rotate(${leaf.rot.toFixed(1)}) scale(${leaf.scale.toFixed(2)})`}>
+        <g className={`org-leaf org-leaf-${key}`} data-t={leaf.t.toFixed(3)}>
+          <path d={LEAF_PATH} fill={highlighted ? '#8BD45A' : LEAF_FILLS[leaf.tone]} />
+          <path d={LEAF_RIB} stroke="#3F8424" strokeOpacity="0.45" strokeWidth="0.9" strokeLinecap="round" />
+        </g>
+      </g>
+    ));
+
+  const renderVine = (key: string, curve: Cubic, outline: string, revealWidth: number, highlighted = false) => (
+    <>
+      <mask id={`org-mask-${key}`} maskUnits="userSpaceOnUse" x="0" y="0" width={W} height={H}>
+        <path
+          className={`org-reveal org-reveal-${key}`}
+          d={cubicPath(curve)}
+          pathLength={1}
+          stroke="#fff"
+          strokeWidth={revealWidth}
+          strokeLinecap="round"
+          fill="none"
+        />
+      </mask>
+      <g mask={`url(#org-mask-${key})`} filter={highlighted ? 'url(#org-vine-glow)' : undefined}>
+        <path d={outline} fill="url(#org-vine-fill)" />
+        <path d={cubicPath(curve)} stroke="#A9DC7E" strokeOpacity="0.55" strokeWidth="1" fill="none" strokeLinecap="round" />
+      </g>
+    </>
+  );
+
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[120] overflow-hidden flex flex-col items-center justify-between p-1 sm:p-2.5 select-none"
+      className={`fixed inset-0 z-[120] flex flex-col items-center select-none ${isMobile ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'}`}
       style={{
-        background: 'radial-gradient(ellipse at 50% 50%, #FDFBF7 0%, #F6EFE8 55%, #ECE2D4 100%)',
+        background: 'radial-gradient(ellipse at 50% 52%, #FFFFFF 0%, #F6F9F5 45%, #ECF2EA 100%)',
       }}
     >
-      {/* Subtle organic ambient backdrop glow */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1400px] h-[900px] rounded-full bg-gradient-to-tr from-[#1B4332]/6 via-[#D4AF37]/10 to-[#5C3A21]/6 blur-3xl pointer-events-none" />
-      </div>
+      {/* Close button */}
+      <button
+        type="button"
+        onClick={handleSkip}
+        className="fixed top-4 right-4 sm:top-5 sm:right-6 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white backdrop-blur-md border border-[#DCE7DA] text-[#2E5E3E] flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md hover:scale-105 active:scale-95 group"
+        aria-label={isTamil ? 'மூடு' : 'Close'}
+        title={isTamil ? 'மூடு' : 'Close'}
+      >
+        <X className="w-4 h-4 sm:w-[18px] sm:h-[18px] stroke-[2.2] transition-transform duration-300 group-hover:rotate-90" />
+      </button>
 
-      {/* Top Header Controls: Skip Button */}
-      <div className="w-full max-w-7xl flex items-center justify-end z-30 shrink-0 px-2 sm:px-4 pt-0.5">
-        <button
-          type="button"
-          onClick={handleSkip}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/95 backdrop-blur-md border border-[#E5DDD2] text-xs sm:text-sm font-black text-[#5C3A21] hover:text-[#1B4332] hover:border-[#1B4332]/60 hover:bg-white transition-all cursor-pointer shadow-xs active:scale-95"
-          title={isTamil ? 'அறிமுகத்தை தவிர்க்க' : 'Skip Introduction'}
-        >
-          <span>{isTamil ? 'தவிர்க்க' : 'Skip'}</span>
-          <X className="w-3.5 h-3.5 stroke-[2.5]" />
-        </button>
-      </div>
-
-      {/* Top Heading in Rich Warm Brown Color (#5C3A21) */}
-      <div ref={titleGroupRef} className="text-center z-20 -mt-1 max-w-4xl px-4 shrink-0">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#5C3A21] font-tamil tracking-tight leading-tight">
-          {isTamil ? 'மனிதநேயம் – எங்கள் சேவைகள்' : 'MANITHANEYA – OUR SERVICES'}
+      {/* Heading */}
+      <div ref={titleGroupRef} className="text-center z-20 pt-3 sm:pt-4 max-w-4xl px-4 shrink-0">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight flex justify-center">
+          <CharacterGlitchText
+            text={isTamil ? 'மனிதநேயம் – எங்கள் சேவைகள்' : 'Manitheneyam – Our Services'}
+            isTamil={isTamil}
+            useBrushFont={!isTamil}
+            showSwoosh={true}
+          />
         </h2>
-        <p className="text-xs sm:text-sm md:text-base font-bold text-[#7A614D] mt-0.5 font-tamil">
-          {isTamil
-            ? 'ஒரே அன்பிலிருந்து மலரும் பத்து மனிதநேயக் கிளைகள்'
-            : 'From One Shared Love, Ten Flourishing Branches of Humanity'}
-        </p>
       </div>
 
-      {/* Main Full-Screen Radial Tree Canvas Area */}
-      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden my-auto">
-        <svg
-          viewBox={isMobile ? '0 0 420 1080' : '0 0 1520 820'}
-          className="w-full h-full max-h-[calc(100vh-80px)] max-w-[1720px] pointer-events-none"
-          preserveAspectRatio="xMidYMid meet"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+      {/* Tree stage */}
+      <div className={`w-full flex-1 flex justify-center px-2 sm:px-6 ${isMobile ? 'items-start py-4' : 'items-center min-h-0 pb-4'}`}>
+        <div
+          className="relative"
+          style={{
+            aspectRatio: `${W} / ${H}`,
+            width: isMobile ? 'min(100%, 440px)' : `min(100%, 1600px, calc((100dvh - 130px) * ${W / H}))`,
+            containerType: 'inline-size',
+          }}
         >
-          <defs>
-            <filter id="gold-flow-glow" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="4.5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
+          <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 w-full h-full overflow-visible" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="org-vine-fill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#3E8E24" />
+                <stop offset="100%" stopColor="#5BAA33" />
+              </linearGradient>
+              <radialGradient id="org-halo" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#CDEBBE" stopOpacity="0.95" />
+                <stop offset="55%" stopColor="#E3F3DA" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#F6F9F5" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="org-dot-fill" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stopColor="#8DD45E" />
+                <stop offset="100%" stopColor="#3B8A22" />
+              </radialGradient>
+              <filter id="org-vine-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2.5" result="b" />
+                <feMerge>
+                  <feMergeNode in="b" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="org-pulse-glow" x="-200%" y="-200%" width="500%" height="500%">
+                <feGaussianBlur stdDeviation="3" />
+              </filter>
+            </defs>
 
-            <filter id="emerald-glow" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
+            {/* Soft light behind the logo */}
+            <circle className="org-logo-halo" cx={logo.cx} cy={logo.cy} r={logo.r * 2.4} fill="url(#org-halo)" />
 
-            <linearGradient id="branchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#5C3A21" stopOpacity="0.88" />
-              <stop offset="55%" stopColor="#2D6A4F" stopOpacity="0.82" />
-              <stop offset="100%" stopColor="#1B4332" stopOpacity="0.92" />
-            </linearGradient>
-
-            <linearGradient id="activeBranchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#D4AF37" stopOpacity="1" />
-              <stop offset="60%" stopColor="#2D6A4F" stopOpacity="1" />
-              <stop offset="100%" stopColor="#1B4332" stopOpacity="1" />
-            </linearGradient>
-          </defs>
-
-          {/* 1. Organic Tree Canopy Rings / Tree Trunk Roots */}
-          {!isMobile && (
-            <g className="tree-mandala-background opacity-45">
-              {/* Outer Canopy Ring connecting branches */}
-              <ellipse
-                cx={760}
-                cy={410}
-                rx={270}
-                ry={150}
-                stroke="#D4AF37"
-                strokeWidth="1.5"
-                strokeDasharray="6 12"
-                strokeOpacity="0.35"
-              />
-              {/* Ground Anchor Roots extending gently downward */}
-              <path
-                d="M 750 470 Q 740 540, 715 615"
-                stroke="#5C3A21"
-                strokeWidth="5"
-                strokeLinecap="round"
-                strokeOpacity="0.35"
-              />
-              <path
-                d="M 770 470 Q 780 540, 805 615"
-                stroke="#5C3A21"
-                strokeWidth="5"
-                strokeLinecap="round"
-                strokeOpacity="0.35"
-              />
-              <path
-                d="M 760 470 L 760 595"
-                stroke="#5C3A21"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeOpacity="0.35"
-              />
-            </g>
-          )}
-
-          {/* 2. Organic Radial Service Branches for All 10 Services */}
-          {currentNodes.map((node) => {
-            const isHovered = hoveredNodeId === node.id;
-            return (
-              <g key={`branch-group-${node.id}`}>
-                {/* Secondary Soft Ambient Trail */}
-                <path
-                  d={node.branchPath}
-                  className="tree-branch-trail"
-                  stroke={isHovered ? '#D4AF37' : '#1B4332'}
-                  strokeWidth={isMobile ? (isHovered ? '7' : '4') : (isHovered ? '8' : '4.8')}
-                  strokeLinecap="round"
-                  strokeOpacity={isHovered ? '0.55' : '0.15'}
-                  filter={isHovered ? 'url(#gold-flow-glow)' : undefined}
-                />
-
-                {/* Primary Organic Branch Path */}
-                <path
-                  d={node.branchPath}
-                  className="tree-branch-path"
-                  stroke={isHovered ? 'url(#activeBranchGradient)' : 'url(#branchGradient)'}
-                  strokeWidth={isMobile ? (isHovered ? '4' : '3') : (isHovered ? '5' : '3.8')}
-                  strokeLinecap="round"
-                />
-
-                {/* Gentle Leaves Sprouting along the Branch */}
-                {node.leaf1 && (
-                  <path
-                    d="M 0,0 C -7,-12 7,-16 14,-12 C 12,-4 5,0 0,0"
-                    transform={`translate(${node.leaf1.x}, ${node.leaf1.y}) rotate(${node.leaf1.rot}) scale(${node.leaf1.scale})`}
-                    className={`tree-leaf leaf-branch-${node.index}`}
-                    fill={isHovered ? '#D4AF37' : '#2D6A4F'}
-                    stroke="#1B4332"
-                    strokeWidth="1"
-                  />
-                )}
-                {node.leaf2 && (
-                  <path
-                    d="M 0,0 C -6,-11 6,-15 13,-11 C 11,-4 4,0 0,0"
-                    transform={`translate(${node.leaf2.x}, ${node.leaf2.y}) rotate(${node.leaf2.rot}) scale(${node.leaf2.scale})`}
-                    className={`tree-leaf leaf-branch-${node.index}`}
-                    fill={isHovered ? '#E5A93C' : '#235D43'}
-                    stroke="#1B4332"
-                    strokeWidth="1"
-                  />
-                )}
+            {/* Trunk (mobile) */}
+            {trunk && (
+              <g>
+                {renderVine('trunk', trunk.curve, trunk.outline, 14)}
+                {renderLeaves(trunk.leaves, 'trunk')}
               </g>
-            );
-          })}
+            )}
 
-          {/* 3. Flowing Light Energy Particles */}
-          {currentNodes.map((node) => (
-            <g key={`energy-${node.id}`}>
+            {/* Branch vines + leaves */}
+            {nodes.map((node, i) => {
+              const hl = hoveredId === node.data.id;
+              return (
+                <g key={`vine-${node.data.id}`}>
+                  {renderVine(String(i), node.curve, node.outline, isMobile ? 9 : 12, hl)}
+                  {renderLeaves(node.leaves, String(i), hl)}
+                </g>
+              );
+            })}
+
+            {/* Travelling light pulses */}
+            {trunk && <circle className="org-glow org-glow-trunk" cx={trunk.curve[0].x} cy={trunk.curve[0].y} r={dotR * 1.6} fill="#DFFFC4" filter="url(#org-pulse-glow)" />}
+            {nodes.map((node, i) => (
               <circle
-                className="travel-point fill-[#D4AF37]"
-                r={isMobile ? '6' : '8'}
-                cx={isMobile ? 210 : 760}
-                cy={isMobile ? 65 : 410}
-                filter="url(#gold-flow-glow)"
+                key={`glow-${node.data.id}`}
+                className={`org-glow org-glow-${i}`}
+                cx={node.curve[0].x}
+                cy={node.curve[0].y}
+                r={dotR * 1.6}
+                fill="#DFFFC4"
+                filter="url(#org-pulse-glow)"
               />
-              <circle
-                className="travel-sparkle fill-[#2D6A4F]"
-                r={isMobile ? '4' : '5.5'}
-                cx={isMobile ? 210 : 760}
-                cy={isMobile ? 65 : 410}
-                filter="url(#emerald-glow)"
-              />
-            </g>
-          ))}
+            ))}
 
-          {/* 4. Large Bold Central Logo Root / Core at Exact Center (760, 410) */}
-          <g className="central-logo-group pointer-events-auto">
-            {/* Outer Ripple Ring 3 */}
-            <circle
-              cx={isMobile ? 210 : 760}
-              cy={isMobile ? 65 : 410}
-              r={isMobile ? 60 : 155}
-              className="ripple-ring stroke-[#D4AF37]/35 fill-none"
-              strokeWidth="2"
-              strokeDasharray="8 8"
-            />
+            {/* End dots */}
+            {nodes.map((node, i) => (
+              <g key={`dot-${node.data.id}`} className={`org-dot org-dot-${i}`}>
+                <circle className="org-dot-ring" cx={node.dot.x} cy={node.dot.y} r={dotR} fill="none" stroke="#5BAA33" strokeWidth="1.2" />
+                <circle cx={node.dot.x} cy={node.dot.y} r={dotR} fill="url(#org-dot-fill)" stroke="#2F7419" strokeWidth="0.8" />
+              </g>
+            ))}
+          </svg>
 
-            {/* Middle Ripple Ring 2 */}
-            <circle
-              cx={isMobile ? 210 : 760}
-              cy={isMobile ? 65 : 410}
-              r={isMobile ? 48 : 116}
-              className="ripple-ring stroke-[#2D6A4F]/40 fill-[#2D6A4F]/5"
-              strokeWidth="2.5"
-            />
+          {/* Central logo */}
+          <div
+            className="org-logo absolute rounded-full bg-white"
+            style={{
+              left: pctX(logo.cx - logo.r),
+              top: pctY(logo.cy - logo.r),
+              width: pctX(logo.r * 2),
+              height: pctY(logo.r * 2),
+              padding: u(3),
+              boxShadow: '0 0 0 1px rgba(61,140,36,0.25), 0 10px 30px -6px rgba(30,77,59,0.35)',
+            }}
+          >
+            <img src="/tree-logo.png" alt="Manithaneyam Official Seal" className="w-full h-full object-contain rounded-full" draggable={false} />
+          </div>
 
-            {/* Inner Shield Ring 1 */}
-            <circle
-              cx={isMobile ? 210 : 760}
-              cy={isMobile ? 65 : 410}
-              r={isMobile ? 38 : 86}
-              className="ripple-ring stroke-[#5C3A21]/45 fill-[#FAF7F2]"
-              strokeWidth="3"
-            />
-
-            {/* Solid Center Shield */}
-            <circle
-              cx={isMobile ? 210 : 760}
-              cy={isMobile ? 65 : 410}
-              r={isMobile ? 32 : 68}
-              className="fill-white stroke-[#5C3A21] shadow-xl"
-              strokeWidth="4"
-            />
-
-            {/* Official Manithaneyam Seal Emblem */}
-            <foreignObject
-              x={isMobile ? 210 - 32 : 760 - 68}
-              y={isMobile ? 65 - 32 : 410 - 68}
-              width={isMobile ? 64 : 136}
-              height={isMobile ? 64 : 136}
-              className="pointer-events-none"
-            >
-              <div className="w-full h-full flex items-center justify-center p-0.5">
-                <img
-                  src="/tree-logo.png"
-                  alt="Manithaneyam Official Seal"
-                  className="w-full h-full object-contain filter drop-shadow-md rounded-full"
-                />
-              </div>
-            </foreignObject>
-          </g>
-
-          {/* 5. 10 Service Cards - Exactly fitted like the Free Clinic reference card */}
-          {currentNodes.map((node) => {
-            const isHovered = hoveredNodeId === node.id;
+          {/* Service cards – glowing banner style */}
+          {nodes.map((node, i) => {
+            const meta = SERVICE_META[node.data.id];
+            const Icon = meta?.Icon;
+            const title = isTamil ? node.data.shortTa : node.data.shortEn;
+            const tagline = meta ? (isTamil ? meta.taglineTa : meta.taglineEn) : isTamil ? node.data.descriptionTa : node.data.descriptionEn;
+            const words = title.trim().split(/\s+/);
+            const titleLead = words.length > 1 ? words.slice(0, -1).join(' ') : '';
+            const titleAccent = words[words.length - 1];
+            const m = isMobile;
+            // Shrink long titles/taglines to fit the card instead of cutting them off
+            const textWidth = node.card.w - (m ? 5 + 6 + 34 + 5 : 7 + 10 + 50 + 8);
+            const fit = (text: string, max: number, perChar: number, reserve = 0) =>
+              Math.min(max, (textWidth - reserve) / (text.length * perChar));
+            const titleSize = m ? (isTamil ? 11 : 13) : fit(title, isTamil ? 12.5 : 16.5, isTamil ? 0.72 : 0.54);
+            const taglineSize = m ? (isTamil ? 8.5 : 9.5) : isTamil ? 9 : fit(tagline, 10.5, 0.46, 26);
 
             return (
-              <g key={`service-card-${node.id}`} className="service-card-wrapper">
-                <foreignObject
-                  x={node.cardX}
-                  y={node.cardY}
-                  width={node.cardW}
-                  height={node.cardH}
-                  className="overflow-visible pointer-events-auto"
+              <div
+                key={`card-${node.data.id}`}
+                className={`org-card org-card-${i} absolute`}
+                style={{ left: pctX(node.card.x), top: pctY(node.card.y), width: pctX(node.card.w), height: pctY(node.card.h) }}
+              >
+                <button
+                  type="button"
+                  onClick={handleSkip}
+                  onMouseEnter={() => setHoveredId(node.data.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  onFocus={() => setHoveredId(node.data.id)}
+                  onBlur={() => setHoveredId(null)}
+                  className="group relative w-full h-full flex items-center cursor-pointer transition-transform duration-300 hover:-translate-y-[3px] focus-visible:outline-2 focus-visible:outline-[#F2B705]"
+                  style={{
+                    borderRadius: u(m ? 18 : 22),
+                    padding: `0 ${u(m ? 6 : 10)} 0 ${u(m ? 5 : 7)}`,
+                    gap: u(m ? 5 : 8),
+                    background: 'linear-gradient(115deg, #FFFDF3 0%, #F6FBEE 55%, #FFF8E4 100%)',
+                    border: `${u(1.3)} solid #FFE28F`,
+                    boxShadow: `0 0 ${u(7)} ${u(0.5)} rgba(255, 196, 60, 0.45), inset 0 0 ${u(6)} rgba(255, 226, 143, 0.65), 0 ${u(4)} ${u(12)} -${u(5)} rgba(170, 110, 10, 0.3)`,
+                  }}
                 >
-                  <div
-                    onMouseEnter={() => setHoveredNodeId(node.id)}
-                    onMouseLeave={() => setHoveredNodeId(null)}
-                    onClick={handleSkip}
-                    className={`relative w-full h-full px-3 sm:px-3.5 py-2.5 rounded-2xl transition-all duration-300 flex items-center gap-3 cursor-pointer select-none group ${
-                      isHovered
-                        ? 'bg-white border-[#2D6A4F] shadow-[0_20px_42px_-8px_rgba(27,67,50,0.25)] ring-2 ring-[#2D6A4F]/40 -translate-y-1'
-                        : 'bg-white/96 backdrop-blur-md border border-[#E5DDD2] shadow-[0_6px_20px_-3px_rgba(92,58,33,0.08),0_2px_8px_-1px_rgba(0,0,0,0.04)] hover:shadow-2xl hover:border-[#2D6A4F]/70'
-                    }`}
+                  {/* Pulsing outer glow */}
+                  <span
+                    className="org-card-glow absolute pointer-events-none opacity-50 group-hover:!opacity-100 transition-opacity duration-300"
+                    style={{
+                      inset: `-${u(2)}`,
+                      borderRadius: u(m ? 20 : 24),
+                      boxShadow: `0 0 ${u(12)} ${u(2)} rgba(255, 200, 50, 0.6)`,
+                    }}
+                  />
+
+                  {/* Leaf sprig on the left edge */}
+                  <svg
+                    viewBox="0 0 30 50"
+                    className="absolute pointer-events-none"
+                    style={{ left: `-${u(m ? 6 : 9)}`, top: '8%', width: u(m ? 11 : 16) }}
+                    aria-hidden="true"
                   >
-                    {/* Small Decorative Corner Leaf Accent */}
-                    <div
-                      className={`absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300 pointer-events-none ${
-                        isHovered
-                          ? 'bg-[#1B4332] text-[#F4D35E] scale-110 shadow-sm'
-                          : 'bg-[#EBF4EE] text-[#2D6A4F]/80 border border-[#2D6A4F]/20'
-                      }`}
+                    <path d="M24 48 C 18 36, 12 22, 10 4" stroke="#4E9F2F" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+                    <path d="M10 6 C 2 10, 0 20, 4 26 C 12 22, 14 12, 10 6 Z" fill="#6DBE45" />
+                    <path d="M14 22 C 6 26, 4 36, 8 42 C 16 38, 18 28, 14 22 Z" fill="#58AE36" />
+                    <path d="M17 28 C 26 26, 30 34, 28 40 C 20 40, 16 34, 17 28 Z" fill="#7CCB52" />
+                  </svg>
+
+                  {/* Leaf + heart at the bottom-right corner */}
+                  <svg
+                    viewBox="0 0 40 30"
+                    className="absolute pointer-events-none"
+                    style={{ right: `-${u(m ? 3 : 5)}`, bottom: `-${u(m ? 3 : 4)}`, width: u(m ? 16 : 24) }}
+                    aria-hidden="true"
+                  >
+                    <path d="M2 28 C 14 26, 26 20, 34 6" stroke="#5BAA33" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+                    <path d="M34 4 C 26 6, 22 14, 24 20 C 32 18, 36 10, 34 4 Z" fill="#6DBE45" />
+                    <path
+                      className="org-card-heart"
+                      d="M16 24 C 10 20, 8 16, 10 13.5 C 12 11, 15 12, 16 14 C 17 12, 20 11, 22 13.5 C 24 16, 22 20, 16 24 Z"
+                      fill="#FFC21A"
+                    />
+                  </svg>
+
+                  {/* Glowing emblem */}
+                  <span
+                    className="relative shrink-0 rounded-full flex items-center justify-center text-[#127045] transition-transform duration-300 group-hover:scale-105"
+                    style={{
+                      width: u(m ? 34 : 50),
+                      height: u(m ? 34 : 50),
+                      background: 'radial-gradient(circle at 50% 38%, #FFFFFF 0%, #FFF7D9 55%, #E6F4DD 100%)',
+                      border: `${u(1.5)} solid #FFD45C`,
+                      boxShadow: `0 0 ${u(7)} rgba(255, 196, 50, 0.75), inset 0 0 ${u(5)} rgba(255, 214, 102, 0.7)`,
+                    }}
+                  >
+                    {Icon && <Icon style={{ width: u(m ? 18 : 26), height: u(m ? 18 : 26) }} strokeWidth={2.4} />}
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="org-card-heart absolute"
+                      style={{ right: `-${u(1)}`, bottom: `-${u(1)}`, width: u(m ? 10 : 14), filter: 'drop-shadow(0 0 2px rgba(255,190,30,0.9))' }}
+                      aria-hidden="true"
                     >
-                      <Leaf className="w-2.5 h-2.5" />
-                    </div>
+                      <path d="M12 21 C 4 15, 2 11, 3.5 7.5 C 5 4, 9.5 4, 12 7.5 C 14.5 4, 19 4, 20.5 7.5 C 22 11, 20 15, 12 21 Z" fill="#FFC21A" stroke="#fff" strokeWidth="1.5" />
+                    </svg>
+                  </span>
 
-                    {/* Icon Pill with Soft Tint & Nature Green Line Icon */}
-                    <div
-                      className={`w-11 h-11 sm:w-11.5 sm:h-11.5 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
-                        isHovered
-                          ? 'bg-gradient-to-br from-[#1B4332] to-[#2D6A4F] text-[#F4D35E] shadow-md shadow-[#1B4332]/30 scale-105'
-                          : 'bg-[#EBF3ED] text-[#1B4332] border border-[#1B4332]/15 group-hover:bg-[#1B4332]/12'
-                      }`}
+                  {/* Title + tagline */}
+                  <span className="relative min-w-0 flex-1 flex flex-col items-center text-center" style={{ gap: u(m ? 1 : 1.5) }}>
+                    {!m && (
+                      <svg viewBox="0 0 60 16" className="absolute pointer-events-none" style={{ top: `-${u(12)}`, width: u(30) }} aria-hidden="true">
+                        <path d="M6 13 C 14 6, 22 5, 26 6" stroke="#F2B705" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+                        <path d="M54 13 C 46 6, 38 5, 34 6" stroke="#F2B705" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+                        <path
+                          d="M30 13 C 26 10, 24.5 8, 25.3 6 C 26.1 4, 28.5 4, 30 6 C 31.5 4, 33.9 4, 34.7 6 C 35.5 8, 34 10, 30 13 Z"
+                          fill="none"
+                          stroke="#F2A30F"
+                          strokeWidth="1.5"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    )}
+                    <span
+                      className={`block w-full leading-[1.1] ${m ? 'line-clamp-2' : 'truncate'} ${isTamil ? 'font-tamil font-extrabold' : 'font-semibold'}`}
+                      style={{
+                        fontFamily: isTamil ? undefined : "'Fredoka', 'Baloo 2', system-ui, sans-serif",
+                        fontSize: u(titleSize),
+                        textShadow: `0 0 ${u(4)} rgba(255, 232, 150, 0.95)`,
+                      }}
                     >
-                      {getIcon(node.iconName, isHovered)}
-                    </div>
-
-                    {/* Direct Clean Two-Line Service Information - Zero Truncation */}
-                    <div className="flex-1 min-w-0 pr-1">
-                      {/* Line 1: Service Name in Bold, Large Font */}
-                      <h4 className="text-[13px] sm:text-[14px] font-bold text-[#3B2314] leading-snug tracking-tight font-tamil truncate">
-                        {isTamil ? node.shortTa : node.shortEn}
-                      </h4>
-
-                      {/* Line 2: Supporting Description / Location in Crisp Readable Font */}
-                      <p className="text-[10.5px] sm:text-[11.5px] font-medium text-[#7A614D] flex items-center gap-1.5 mt-0.5 font-tamil whitespace-nowrap">
-                        <MapPin className="w-3.5 h-3.5 text-[#2D6A4F] shrink-0" />
-                        <span className="truncate">{isTamil ? node.descriptionTa : node.descriptionEn}</span>
-                      </p>
-                    </div>
-                  </div>
-                </foreignObject>
-              </g>
+                      {titleLead && <span className="text-[#127045]">{titleLead} </span>}
+                      <span className="text-[#F09A0C]">{titleAccent}</span>
+                    </span>
+                    <span className="flex items-center w-full justify-center min-w-0" style={{ gap: u(3) }}>
+                      {!m && <span className="shrink-0 rounded-full bg-[#F2B705]" style={{ width: u(9), height: u(1.1) }} />}
+                      <span
+                        className={`min-w-0 text-[#1B6B44] leading-snug ${m || isTamil ? 'line-clamp-2' : 'truncate'} ${isTamil ? 'font-tamil font-semibold' : ''}`}
+                        style={{
+                          fontFamily: isTamil ? undefined : "'Kalam', 'Patrick Hand', cursive",
+                          fontSize: u(taglineSize),
+                        }}
+                      >
+                        {tagline}
+                      </span>
+                      {!m && <span className="shrink-0 rounded-full bg-[#F2B705]" style={{ width: u(9), height: u(1.1) }} />}
+                    </span>
+                  </span>
+                </button>
+              </div>
             );
           })}
-        </svg>
+        </div>
       </div>
     </div>
   );
