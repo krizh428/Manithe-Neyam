@@ -180,32 +180,32 @@ export const VisionMission: React.FC = () => {
         if (!card) return;
         const q = gsap.utils.selector(card);
 
-        gsap.set(card, { opacity: 0, y: 48, x: idx === 0 ? -18 : 18 });
-        gsap.set(q('.vm-icon'), { scale: 0.4, opacity: 0, rotation: -30 });
+        gsap.set(card, { opacity: 0, y: 44, scale: 0.98 });
+        gsap.set(q('.vm-icon'), { scale: 0.8, opacity: 0, y: 12 });
         gsap.set(q('.vm-bar'), { scaleX: 0 });
-        gsap.set(q('.vm-point'), { opacity: 0, x: -14 });
+        gsap.set(q('.vm-point'), { opacity: 0, x: -12 });
         gsap.set(q('.vm-script'), { opacity: 0, y: 12 });
-        gsap.set(q('.vm-illustration'), { opacity: 0, y: 30, scale: 0.9 });
+        gsap.set(q('.vm-illustration'), { opacity: 0, y: 24, scale: 0.94 });
 
         const tl = gsap.timeline({
-          delay: idx * 0.15,
-          scrollTrigger: { trigger: card, start: 'top 82%', once: true },
+          delay: idx * 0.18,
+          scrollTrigger: { trigger: card, start: 'top 84%', once: true },
         });
 
-        tl.to(card, { opacity: 1, y: 0, x: 0, duration: 0.85, ease: EASING.cinematic })
-          .to(q('.vm-icon'), { scale: 1, opacity: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.8)' }, 0.2)
-          .to(q('.vm-bar'), { scaleX: 1, duration: 0.8, ease: 'power3.out' }, 0.45)
-          .to(q('.vm-point'), { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: EASING.smooth }, 0.55)
-          .to(q('.vm-illustration'), { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'back.out(1.4)' }, 0.7)
-          .to(q('.vm-script'), { opacity: 1, y: 0, duration: 0.8, ease: EASING.smooth }, 0.85)
+        tl.to(card, { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: EASING.cinematic })
+          .to(q('.vm-icon'), { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.4)' }, 0.2)
+          .to(q('.vm-bar'), { scaleX: 1, duration: 0.75, ease: 'power3.out' }, 0.4)
+          .to(q('.vm-point'), { opacity: 1, x: 0, duration: 0.45, stagger: 0.08, ease: EASING.smooth }, 0.5)
+          .to(q('.vm-illustration'), { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'back.out(1.3)' }, 0.65)
+          .to(q('.vm-script'), { opacity: 1, y: 0, duration: 0.7, ease: EASING.smooth }, 0.8)
           .call(() => {
             // Gentle idle motion once revealed
             ctx.add(() => {
-              gsap.to(q('.vm-illustration'), { y: -6, duration: 2.6, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+              gsap.to(q('.vm-illustration'), { y: -6, duration: 2.8, repeat: -1, yoyo: true, ease: 'sine.inOut' });
               gsap.to(q('.illus-heart'), {
                 scale: 1.06,
                 transformOrigin: '50% 60%',
-                duration: 0.9,
+                duration: 1.0,
                 repeat: -1,
                 yoyo: true,
                 ease: 'sine.inOut',

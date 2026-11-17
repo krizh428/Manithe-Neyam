@@ -31,62 +31,64 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
     if (prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.15 });
+      const tl = gsap.timeline({ delay: 0.1 });
 
       // 1. Badge entrance
       if (badgeRef.current) {
-        gsap.set(badgeRef.current, { opacity: 0, y: 14, scale: 0.95 });
+        gsap.set(badgeRef.current, { opacity: 0, y: 16, scale: 0.92 });
         tl.to(badgeRef.current, {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.55,
-          ease: EASING.cinematic,
+          duration: 0.6,
+          ease: 'back.out(1.7)',
         });
       }
 
       // 2. Heading lines reveal
       const headingParts = headingRef.current?.querySelectorAll('[data-hero-part]');
       if (headingParts && headingParts.length > 0) {
-        gsap.set(headingParts, { opacity: 0, y: 35 });
+        gsap.set(headingParts, { opacity: 0, y: 36, filter: 'blur(4px)' });
         tl.to(
           headingParts,
           {
             opacity: 1,
             y: 0,
-            duration: 0.75,
-            stagger: 0.12,
+            filter: 'blur(0px)',
+            duration: 0.85,
+            stagger: 0.14,
             ease: EASING.cinematic,
           },
-          '-=0.3'
+          '-=0.35'
         );
       }
 
       // 3. Subtitle fade up
       if (subtitleRef.current) {
-        gsap.set(subtitleRef.current, { opacity: 0, y: 20 });
+        gsap.set(subtitleRef.current, { opacity: 0, y: 22 });
         tl.to(
           subtitleRef.current,
           {
             opacity: 1,
             y: 0,
-            duration: 0.6,
+            duration: 0.65,
             ease: EASING.smooth,
           },
-          '-=0.4'
+          '-=0.45'
         );
       }
 
       // 4. Location indicator
       if (locationPillRef.current) {
-        gsap.set(locationPillRef.current, { opacity: 0, y: 16 });
+        gsap.set(locationPillRef.current, { opacity: 0, y: 18, scale: 0.95 });
         tl.to(
           locationPillRef.current,
           {
             opacity: 1,
             y: 0,
-            duration: 0.5,
-            ease: EASING.smooth,
+            scale: 1,
+            duration: 0.55,
+            ease: 'back.out(1.4)',
           },
           '-=0.35'
         );
@@ -94,15 +96,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
 
       // 5. CTA buttons stagger
       if (ctaGroupRef.current) {
-        gsap.set(ctaGroupRef.current.children, { opacity: 0, y: 20 });
+        gsap.set(ctaGroupRef.current.children, { opacity: 0, y: 22, scale: 0.95 });
         tl.to(
           ctaGroupRef.current.children,
           {
             opacity: 1,
             y: 0,
-            duration: 0.55,
+            scale: 1,
+            duration: 0.6,
             stagger: 0.1,
-            ease: EASING.medium,
+            ease: 'back.out(1.5)',
           },
           '-=0.35'
         );
@@ -110,31 +113,32 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
 
       // 6. Trust markers
       if (trustMarkersRef.current) {
-        gsap.set(trustMarkersRef.current, { opacity: 0, y: 15 });
+        gsap.set(trustMarkersRef.current, { opacity: 0, y: 16 });
         tl.to(
           trustMarkersRef.current,
           {
             opacity: 1,
             y: 0,
-            duration: 0.5,
+            duration: 0.55,
             ease: EASING.smooth,
           },
           '-=0.2'
         );
       }
 
-      // 7. Right Hero Baby Image rising reveal entrance
+      // 7. Right Hero Image rising reveal entrance
       if (imageColumnRef.current) {
-        gsap.set(imageColumnRef.current, { opacity: 0, y: 48 });
+        gsap.set(imageColumnRef.current, { opacity: 0, y: 55, scale: 0.94 });
         tl.to(
           imageColumnRef.current,
           {
             opacity: 1,
             y: 0,
-            duration: 1.25,
+            scale: 1,
+            duration: 1.15,
             ease: EASING.cinematic,
           },
-          '-=0.7'
+          '-=0.75'
         );
       }
 
@@ -142,8 +146,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
       if (floatingBadge1Ref.current && floatingBadge2Ref.current) {
         gsap.set([floatingBadge1Ref.current, floatingBadge2Ref.current], {
           opacity: 0,
-          scale: 0.85,
-          y: 12,
+          scale: 0.8,
+          y: 16,
         });
         tl.to(
           [floatingBadge1Ref.current, floatingBadge2Ref.current],
@@ -151,18 +155,37 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
             opacity: 1,
             scale: 1,
             y: 0,
-            duration: 0.6,
-            stagger: 0.15,
-            ease: 'back.out(1.5)',
+            duration: 0.7,
+            stagger: 0.18,
+            ease: 'back.out(1.8)',
           },
           '-=0.3'
         );
+
+        // Gentle idle levitation loop for badges
+        tl.call(() => {
+          gsap.to(floatingBadge1Ref.current, {
+            y: -8,
+            duration: 2.8,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+          });
+          gsap.to(floatingBadge2Ref.current, {
+            y: 8,
+            duration: 3.2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: 0.5,
+          });
+        });
       }
 
-      // Scroll Parallax on Hero Image Container
-      if (imageColumnRef.current) {
+      // Lightweight Scroll Parallax on Hero Image Container
+      if (imageColumnRef.current && heroRef.current) {
         gsap.to(imageColumnRef.current, {
-          y: 35,
+          y: 45,
           ease: 'none',
           scrollTrigger: {
             trigger: heroRef.current,
@@ -195,6 +218,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSupport }) => {
       id="hero"
       className="relative min-h-[92vh] pt-28 pb-16 sm:pt-36 sm:pb-24 flex items-center justify-center overflow-hidden bg-gradient-to-b from-theme-bg via-transparent to-theme-secondary"
     >
+      {/* Background Animated Gradient Glow Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }} />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s', animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-400/5 rounded-full blur-[100px]" />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Editorial Heading & Content */}

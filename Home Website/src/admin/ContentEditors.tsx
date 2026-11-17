@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
 import { useAdminData } from '../context/AdminDataContext';
 import { ACTIVITY_CATEGORIES } from '../data/siteData';
 import { IMAGES } from '../assets/images';
 import { photosOf } from '../components/Common/PhotoSlider';
-import type { ActivityCategory } from '../types';
+import type { ActivityCategory, FacilityHighlight } from '../types';
 import {
   AccordionItem,
   AreaField,
@@ -91,13 +91,145 @@ export const HeroEditor: React.FC = () => {
 
 export const AboutEditor: React.FC = () => {
   const { about, updateAbout } = useAdminData();
+
+  const highlights = (about.highlights || []) as FacilityHighlight[];
+
+  const updateHighlight = (index: number, patch: Partial<FacilityHighlight>) => {
+    const next = highlights.map((item, i) => (i === index ? { ...item, ...patch } : item));
+    updateAbout({ highlights: next });
+  };
+
+  const addHighlight = () => {
+    const newItem: FacilityHighlight = {
+      id: `highlight-${Date.now()}`,
+      titleTa: '',
+      titleEn: '',
+    };
+    updateAbout({ highlights: [...highlights, newItem] });
+  };
+
+  const removeHighlight = (index: number) => {
+    const target = highlights[index];
+    const name = target?.titleEn || target?.titleTa || 'this item';
+    if (confirmDelete(name)) {
+      updateAbout({ highlights: highlights.filter((_, i) => i !== index) });
+    }
+  };
+
+  const moveHighlight = (index: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= highlights.length) return;
+    const next = [...highlights];
+    const [moved] = next.splice(index, 1);
+    next.splice(targetIndex, 0, moved);
+    updateAbout({ highlights: next });
+  };
+
   return (
-    <SectionCard title="About us" description="Your story, shown in the 'About' section.">
-      <BiText label="Title" base="title" data={about} onChange={updateAbout} />
-      <BiText label="Quote" base="quote" data={about} onChange={updateAbout} multiline rows={2} />
-      <BiLines label="Story paragraphs" base="paragraphs" data={about} onChange={updateAbout} rows={8} />
-      <ImageField label="Section image" value={about.image} onChange={(image) => updateAbout({ image })} />
-    </SectionCard>
+    <div className="space-y-6">
+      <SectionCard title="About us" description="Your story, shown in the 'About' section.">
+        <BiText label="Title" base="title" data={about} onChange={updateAbout} />
+        <BiText label="Quote" base="quote" data={about} onChange={updateAbout} multiline rows={2} />
+        <BiLines label="Story paragraphs" base="paragraphs" data={about} onChange={updateAbout} rows={8} />
+        <ImageField label="Section image" value={about.image} onChange={(image) => updateAbout({ image })} />
+      </SectionCard>
+
+      <div id="facilities">
+        <SectionCard
+          title="Residential Facilities & Mission Highlights"
+          description="The highlighted facility and mission points shown in the About section on the home page."
+        >
+          <BiText
+            label="Section heading"
+            base="facilitiesHeading"
+            data={{
+              facilitiesHeadingTa: about.facilitiesHeadingTa ?? 'எங்கள் அடிப்படை இல்லங்கள் & பணிகள்',
+              facilitiesHeadingEn: about.facilitiesHeadingEn ?? 'Our Residential Facilities & Mission',
+            }}
+            onChange={updateAbout}
+          />
+
+          <div className="pt-2 border-t border-theme-border/70 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-semibold text-theme-text">Facility & Mission Points</h4>
+                <p className="text-xs text-theme-text-muted">
+                  These appear as checked highlight cards in the About Us section.
+                </p>
+              </div>
+              <AddButton label="Add Item" onClick={addHighlight} />
+            </div>
+
+            <div className="space-y-3 pt-1">
+              {highlights.map((item, index) => (
+                <div
+                  key={item.id || index}
+                  className="p-3.5 rounded-xl border border-theme-border bg-theme-bg/60 hover:border-brand-primary/40 transition-colors space-y-3"
+                >
+                  <div className="flex items-center justify-between gap-2 border-b border-theme-border/50 pb-2">
+                    <span className="text-xs font-bold text-brand-primary uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center text-[11px]">
+                        {index + 1}
+                      </span>
+                      {item.titleEn || item.titleTa || `Item ${index + 1}`}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        disabled={index === 0}
+                        onClick={() => moveHighlight(index, 'up')}
+                        title="Move Up"
+                        className="p-1 rounded text-theme-text-muted hover:text-theme-text hover:bg-theme-secondary disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer transition"
+                      >
+                        <ChevronUp className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={index === highlights.length - 1}
+                        onClick={() => moveHighlight(index, 'down')}
+                        title="Move Down"
+                        className="p-1 rounded text-theme-text-muted hover:text-theme-text hover:bg-theme-secondary disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer transition"
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeHighlight(index)}
+                        title="Delete item"
+                        className="p-1 rounded text-red-500 hover:bg-red-500/10 cursor-pointer transition ml-1"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <Bilingual>
+                    <TextField
+                      label="தமிழ் தலைப்பு (Tamil Title)"
+                      value={item.titleTa}
+                      onChange={(v) => updateHighlight(index, { titleTa: v })}
+                      placeholder="எ.கா. ஆண் குழந்தைகள் இல்லம் (கோடாங்கிபட்டி)"
+                    />
+                    <TextField
+                      label="English Title"
+                      value={item.titleEn}
+                      onChange={(v) => updateHighlight(index, { titleEn: v })}
+                      placeholder="e.g. Boys Care Home (Kodangipatti)"
+                    />
+                  </Bilingual>
+                </div>
+              ))}
+
+              {highlights.length === 0 && (
+                <div className="text-center py-6 border border-dashed border-theme-border rounded-xl text-theme-text-muted text-sm">
+                  No facility items added yet. Click &quot;Add Item&quot; to create one.
+                </div>
+              )}
+            </div>
+          </div>
+        </SectionCard>
+      </div>
+    </div>
   );
 };
 

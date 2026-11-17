@@ -173,13 +173,29 @@ export const Introduction: React.FC = () => {
 
             {/* Highlights Grid */}
             <div className="pt-4 border-t border-theme-border">
-              <h4 className="text-sm font-bold text-theme-text uppercase tracking-wider mb-4">
-                {isTamil ? 'எங்கள் அடிப்படை இல்லங்கள் & பணிகள்' : 'Our Residential Facilities & Mission'}
-              </h4>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm font-bold text-theme-text uppercase tracking-wider">
+                  {isTamil
+                    ? (about.facilitiesHeadingTa || 'எங்கள் அடிப்படை இல்லங்கள் & பணிகள்')
+                    : (about.facilitiesHeadingEn || 'Our Residential Facilities & Mission')}
+                </h4>
+                {isAdmin && (
+                  <a
+                    href="/admin/about#facilities"
+                    className="text-xs font-semibold text-brand-primary hover:underline flex items-center gap-1 opacity-80 hover:opacity-100 transition-opacity"
+                    title="Edit in Admin Panel"
+                  >
+                    Edit
+                  </a>
+                )}
+              </div>
               <div ref={highlightsRef} className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {INTRODUCTION_DATA.highlights.map((item, index) => (
+                {(about.highlights && about.highlights.length > 0
+                  ? about.highlights
+                  : INTRODUCTION_DATA.highlights
+                ).map((item, index) => (
                   <div
-                    key={index}
+                    key={(item as any).id || index}
                     className="flex items-center gap-3 p-3.5 rounded-2xl bg-theme-card border border-theme-border hover:border-brand-primary text-card-heading transition-all duration-300 hover:translate-x-1.5 hover:shadow-xs group spotlight-card relative"
                   >
                     <div className="w-7 h-7 rounded-full bg-brand-bg text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">

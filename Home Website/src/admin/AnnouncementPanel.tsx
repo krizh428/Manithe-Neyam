@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Eye, ImagePlus, Loader2, Power, Trash2, Upload, X } from 'lucide-react';
 import { api, ApiError } from '../services/api';
 import type { AnnouncementItem } from '../types';
@@ -99,22 +99,37 @@ export const AnnouncementPanel: React.FC<Props> = ({ onAuthError }) => {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-16">
-        <Loader2 className="w-7 h-7 animate-spin text-brand-primary" />
+      <div className="space-y-6 max-w-3xl animate-pulse">
+        <div className="h-56 bg-theme-secondary rounded-2xl border border-theme-border" />
+        <div className="h-40 bg-theme-secondary rounded-2xl border border-theme-border" />
       </div>
     );
   }
 
   return (
     <div className="space-y-6 max-w-3xl">
-      {success && (
-        <p className="flex items-center gap-2 text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-4 py-2.5">
-          <CheckCircle2 className="w-4 h-4 shrink-0" /> {success}
-        </p>
-      )}
-      {error && (
-        <p className="text-sm font-medium text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-2.5">{error}</p>
-      )}
+      <AnimatePresence>
+        {success && (
+          <motion.p
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="flex items-center gap-2 text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-4 py-2.5 shadow-xs"
+          >
+            <CheckCircle2 className="w-4 h-4 shrink-0" /> {success}
+          </motion.p>
+        )}
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="flex items-center gap-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-2.5 shadow-xs"
+          >
+            {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
 
       <SectionCard title="Current announcement" description="What visitors see in the popup when they open the website.">
         {current ? (

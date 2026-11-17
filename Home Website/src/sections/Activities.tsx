@@ -92,21 +92,22 @@ export const Activities: React.FC = () => {
           layout
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          <AnimatePresence>
-            {filteredActivities.map((act) => (
+          <AnimatePresence mode="popLayout">
+            {filteredActivities.map((act, index) => (
               <motion.div
                 key={act.id}
                 layout
-                initial={{ opacity: 0, scale: 0.94 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.94 }}
-                transition={{ duration: 0.35 }}
-                className="bg-theme-card hover:bg-brand-bg/40 rounded-3xl border border-theme-border hover:border-brand-primary shadow-soft hover:shadow-card-hover overflow-hidden transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5 spotlight-card relative"
+                initial={{ opacity: 0, y: 24, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.2 } }}
+                transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.3) }}
+                whileHover={{ y: -6 }}
+                className="bg-theme-card hover:bg-brand-bg/40 rounded-3xl border border-theme-border hover:border-brand-primary shadow-soft hover:shadow-card-hover overflow-hidden transition-all duration-300 flex flex-col justify-between group spotlight-card relative"
               >
                 <div>
                   {/* Image with overlay tags and zoom effect */}
-                  <div className="relative h-52 w-full overflow-hidden bg-theme-bg">
-                    <div className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-105">
+                  <div className="relative h-56 w-full overflow-hidden bg-theme-bg">
+                    <div className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-108">
                       <PhotoSlider id={act.id} titleTa={act.titleTa} titleEn={act.titleEn} photos={photosOf(act)} />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />

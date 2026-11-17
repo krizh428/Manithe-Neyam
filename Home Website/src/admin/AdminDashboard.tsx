@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart3,
   BookOpen,
@@ -19,6 +20,8 @@ import {
   MapPin,
   Settings,
   Megaphone,
+  Menu,
+  X,
 } from 'lucide-react';
 import { useAdminData } from '../context/AdminDataContext';
 import { ThemeToggle } from '../components/Theme/ThemeToggle';
@@ -82,16 +85,21 @@ const Overview: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {counts.map((c) => (
-          <button
+        {counts.map((c, i) => (
+          <motion.button
             key={c.label}
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: i * 0.05 }}
+            whileHover={{ y: -3, scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
             type="button"
             onClick={() => navigate(`/admin/${c.to}`)}
-            className={`${cardClass} p-4 text-left hover:border-brand-primary/50 transition-colors`}
+            className={`${cardClass} p-4 text-left hover:border-brand-primary/50 transition-all cursor-pointer shadow-xs hover:shadow-card`}
           >
             <div className="text-2xl font-bold text-theme-text">{c.value}</div>
             <div className="text-xs text-theme-text-muted mt-0.5">{c.label}</div>
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -132,7 +140,7 @@ const Overview: React.FC = () => {
         </div>
         <button
           type="button"
-          className={`${buttonGhost} text-red-500`}
+          className={`${buttonGhost} text-red-500 cursor-pointer`}
           onClick={() => window.confirm('Reset ALL website content to the original defaults?') && resetToDefaults()}
         >
           <RotateCcw className="w-4 h-4" /> Reset all content
@@ -146,6 +154,7 @@ export function AdminDashboard() {
   const { isAdmin, adminUser, logout } = useAdminData();
   const { tab = 'overview' } = useParams();
   const navigate = useNavigate();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   if (!isAdmin) return <Navigate to="/admin/login" replace />;
 
@@ -196,22 +205,71 @@ export function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-theme-bg text-theme-text flex flex-col lg:flex-row">
-      {/* Sidebar */}
+      {/* Sidebar - Desktop */}
       <aside className="lg:w-64 lg:shrink-0 lg:h-screen lg:sticky lg:top-0 bg-theme-card border-b lg:border-b-0 lg:border-r border-theme-border flex flex-col">
-        <div className="px-5 py-4 flex items-center justify-between lg:block">
+        <div className="px-5 py-4 flex items-center justify-between">
           <div>
             <div className="font-bold text-theme-text leading-tight">Admin Panel</div>
             <div className="text-xs text-theme-text-muted">Manithaneyam Orphanage Home</div>
           </div>
-          <div className="lg:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen(!mobileNavOpen)}
+              className="p-2 rounded-lg border border-theme-border text-theme-text hover:bg-theme-secondary transition-colors"
+              aria-label="Toggle navigation"
+            >
+              {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
 
-        <nav className="flex lg:flex-col gap-1 px-3 pb-3 lg:pb-4 overflow-x-auto lg:overflow-y-auto lg:flex-1">
+        {/* Mobile Navigation Drawer */}
+        <AnimatePresence>
+          {mobileNavOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="lg:hidden border-t border-theme-border overflow-hidden px-4 py-3 bg-theme-card space-y-4"
+            >
+              {groups.map((group) => (
+                <div key={group}>
+                  <div className="px-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-theme-text-muted">
+                    {group}
+                  </div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {TABS.filter((t) => t.group === group).map((t) => {
+                      const Icon = t.icon;
+                      const isActive = t.id === active.id;
+                      return (
+                        <Link
+                          key={t.id}
+                          to={t.id === 'overview' ? '/admin' : `/admin/${t.id}`}
+                          onClick={() => setMobileNavOpen(false)}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                            isActive ? 'bg-brand-primary text-on-primary' : 'text-theme-text-secondary hover:bg-theme-secondary'
+                          }`}
+                        >
+                          <Icon className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{t.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Desktop Sidebar Navigation */}
+        <nav className="hidden lg:flex flex-col gap-1 px-3 pb-4 overflow-y-auto flex-1">
           {groups.map((group) => (
             <React.Fragment key={group}>
-              <div className="hidden lg:block px-2 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-theme-text-muted">
+              <div className="px-2 pt-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-theme-text-muted">
                 {group}
               </div>
               {TABS.filter((t) => t.group === group).map((t) => {
@@ -221,8 +279,8 @@ export function AdminDashboard() {
                   <Link
                     key={t.id}
                     to={t.id === 'overview' ? '/admin' : `/admin/${t.id}`}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                      isActive ? 'bg-brand-primary text-on-primary' : 'text-theme-text-secondary hover:bg-theme-secondary'
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                      isActive ? 'bg-brand-primary text-on-primary shadow-xs' : 'text-theme-text-secondary hover:bg-theme-secondary hover:text-theme-text'
                     }`}
                   >
                     <Icon className="w-4 h-4 shrink-0" />
@@ -264,7 +322,18 @@ export function AdminDashboard() {
               Make all your edits, then press “Save changes” at the bottom of the screen. Saved changes are recorded in the Change history and are stored in this browser.
             </p>
           )}
-          {renderTab()}
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            >
+              {renderTab()}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>

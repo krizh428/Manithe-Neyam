@@ -24,6 +24,7 @@ import type {
   ChangeEntry,
   FieldChange,
   Attachment,
+  FacilityHighlight,
 } from '../types';
 
 export interface SiteBrandData {
@@ -70,6 +71,9 @@ export interface AboutContentData {
   paragraphsTa: string[];
   paragraphsEn: string[];
   image?: string;
+  facilitiesHeadingTa?: string;
+  facilitiesHeadingEn?: string;
+  highlights?: FacilityHighlight[];
 }
 
 export interface VisionBlock {
@@ -188,6 +192,13 @@ const DEFAULT_ABOUT: AboutContentData = {
   paragraphsTa: INTRODUCTION_DATA.paragraphsTa,
   paragraphsEn: INTRODUCTION_DATA.paragraphsEn,
   image: IMAGES.introduction,
+  facilitiesHeadingTa: 'எங்கள் அடிப்படை இல்லங்கள் & பணிகள்',
+  facilitiesHeadingEn: 'Our Residential Facilities & Mission',
+  highlights: (INTRODUCTION_DATA.highlights || []).map((h, i) => ({
+    id: `highlight-${i + 1}`,
+    titleTa: h.titleTa,
+    titleEn: h.titleEn,
+  })),
 };
 
 const readStored = <T,>(key: string, fallback: T): T => {
@@ -287,7 +298,15 @@ export const AdminDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const brand = brandS.value;
   const hero = heroS.value;
-  const about = aboutS.value;
+  const about: AboutContentData = {
+    ...aboutS.value,
+    facilitiesHeadingTa: aboutS.value.facilitiesHeadingTa || DEFAULT_ABOUT.facilitiesHeadingTa,
+    facilitiesHeadingEn: aboutS.value.facilitiesHeadingEn || DEFAULT_ABOUT.facilitiesHeadingEn,
+    highlights:
+      aboutS.value.highlights && aboutS.value.highlights.length > 0
+        ? aboutS.value.highlights
+        : DEFAULT_ABOUT.highlights,
+  };
   const locations = locationsS.value;
   const services = servicesS.value;
   const gallery = galleryS.value;

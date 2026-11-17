@@ -60,6 +60,23 @@ export function diffObjects(before: unknown, after: unknown, prefix = ''): Field
       }
       continue;
     }
+    if (key === 'highlights' && (Array.isArray(b[key]) || Array.isArray(a[key]))) {
+      const formatHighlights = (list: unknown) =>
+        Array.isArray(list)
+          ? list.map((h: any) => h?.titleEn || h?.titleTa || '').filter(Boolean).join(', ')
+          : '';
+      const before = formatHighlights(b[key]);
+      const after = formatHighlights(a[key]);
+      if (before !== after) {
+        out.push({
+          field: 'Facilities & Mission Highlights',
+          from: before || '(none)',
+          to: after || '(none)',
+          kind: 'text',
+        });
+      }
+      continue;
+    }
     const from = stringify(b[key]);
     const to = stringify(a[key]);
     if (from !== to) {

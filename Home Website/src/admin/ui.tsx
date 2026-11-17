@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ImagePlus, Loader2, Trash2, ChevronDown, ChevronLeft, ChevronRight, Star, X } from 'lucide-react';
 import { api } from '../services/api';
 
@@ -198,9 +199,9 @@ interface AccordionItemProps {
 }
 
 export const AccordionItem: React.FC<AccordionItemProps> = ({ title, subtitle, image, open, onToggle, onDelete, children }) => (
-  <div className={`${cardClass} overflow-hidden`}>
+  <div className={`${cardClass} overflow-hidden transition-shadow hover:shadow-card`}>
     <div className="flex items-center gap-3 p-3">
-      <button type="button" onClick={onToggle} className="flex-1 flex items-center gap-3 min-w-0 text-left">
+      <button type="button" onClick={onToggle} className="flex-1 flex items-center gap-3 min-w-0 text-left cursor-pointer">
         {image !== undefined && (
           <span className="w-12 h-12 rounded-lg overflow-hidden bg-theme-secondary shrink-0 border border-theme-border">
             {image && <img src={image} alt="" className="w-full h-full object-cover" />}
@@ -210,20 +211,32 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({ title, subtitle, i
           <span className="block font-semibold text-sm text-theme-text truncate">{title || 'Untitled'}</span>
           {subtitle && <span className="block text-xs text-theme-text-muted truncate">{subtitle}</span>}
         </span>
-        <ChevronDown className={`w-4 h-4 text-theme-text-muted transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-theme-text-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
       {onDelete && (
         <button
           type="button"
           onClick={onDelete}
           title="Delete"
-          className="p-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors"
+          className="p-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
         >
           <Trash2 className="w-4 h-4" />
         </button>
       )}
     </div>
-    {open && <div className="p-4 pt-2 border-t border-theme-border space-y-4">{children}</div>}
+    <AnimatePresence initial={false}>
+      {open && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.22, ease: 'easeOut' }}
+          className="overflow-hidden border-t border-theme-border"
+        >
+          <div className="p-4 pt-2 space-y-4">{children}</div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   </div>
 );
 

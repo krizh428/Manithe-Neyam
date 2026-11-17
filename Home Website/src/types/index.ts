@@ -34,6 +34,12 @@ export interface HomeLocation {
   featuresEn: string[];
 }
 
+export interface FacilityHighlight {
+  id?: string;
+  titleTa: string;
+  titleEn: string;
+}
+
 export interface ServiceItem {
   id: string;
   iconName: string;

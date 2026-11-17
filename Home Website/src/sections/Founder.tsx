@@ -22,11 +22,12 @@ export const Founder: React.FC = () => {
     const ctx = gsap.context(() => {
       // 1. Portrait entrance
       if (portraitRef.current) {
-        gsap.set(portraitRef.current, { opacity: 0, scale: 0.94 });
+        gsap.set(portraitRef.current, { opacity: 0, y: 30, scale: 0.94 });
         gsap.to(portraitRef.current, {
           opacity: 1,
+          y: 0,
           scale: 1,
-          duration: 0.8,
+          duration: 0.85,
           ease: EASING.cinematic,
           scrollTrigger: {
             trigger: portraitRef.current,
@@ -34,18 +35,37 @@ export const Founder: React.FC = () => {
             once: true,
           },
         });
+
+        // Subtle portrait image parallax
+        const imgEl = portraitRef.current.querySelector('img');
+        if (imgEl) {
+          gsap.fromTo(
+            imgEl,
+            { scale: 1.08, yPercent: -4 },
+            {
+              yPercent: 6,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: portraitRef.current,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.4,
+              },
+            }
+          );
+        }
       }
 
       // 2. 25+ Years Legacy Badge
       if (badgeRef.current) {
-        gsap.set(badgeRef.current, { opacity: 0, scale: 0.7, y: 12 });
+        gsap.set(badgeRef.current, { opacity: 0, scale: 0.7, y: 14 });
         gsap.to(badgeRef.current, {
           opacity: 1,
           scale: 1,
           y: 0,
-          duration: 0.6,
-          delay: 0.3,
-          ease: 'back.out(1.6)',
+          duration: 0.65,
+          delay: 0.25,
+          ease: 'back.out(1.8)',
           scrollTrigger: {
             trigger: portraitRef.current,
             start: 'top 80%',
@@ -56,11 +76,11 @@ export const Founder: React.FC = () => {
 
       // 3. Quote banner slide up
       if (quoteBannerRef.current) {
-        gsap.set(quoteBannerRef.current, { opacity: 0, y: 24 });
+        gsap.set(quoteBannerRef.current, { opacity: 0, y: 26 });
         gsap.to(quoteBannerRef.current, {
           opacity: 1,
           y: 0,
-          duration: 0.65,
+          duration: 0.7,
           ease: EASING.medium,
           scrollTrigger: {
             trigger: quoteBannerRef.current,
@@ -70,19 +90,19 @@ export const Founder: React.FC = () => {
         });
       }
 
-      // 4. Bio paragraphs
+      // 4. Bio paragraphs progressive reveal
       const paras = bioRef.current?.querySelectorAll('p');
       if (paras && paras.length > 0) {
-        gsap.set(paras, { opacity: 0, y: 18 });
+        gsap.set(paras, { opacity: 0, y: 20 });
         gsap.to(paras, {
           opacity: 1,
           y: 0,
-          duration: 0.6,
-          stagger: 0.12,
+          duration: 0.65,
+          stagger: 0.16,
           ease: EASING.smooth,
           scrollTrigger: {
             trigger: bioRef.current,
-            start: 'top 85%',
+            start: 'top 84%',
             once: true,
           },
         });
@@ -91,16 +111,17 @@ export const Founder: React.FC = () => {
       // 5. Values pills
       const pills = valuesRef.current?.children;
       if (pills && pills.length > 0) {
-        gsap.set(pills, { opacity: 0, scale: 0.9 });
+        gsap.set(pills, { opacity: 0, scale: 0.85, y: 8 });
         gsap.to(pills, {
           opacity: 1,
           scale: 1,
-          duration: 0.45,
+          y: 0,
+          duration: 0.5,
           stagger: 0.08,
-          ease: EASING.smooth,
+          ease: 'back.out(1.6)',
           scrollTrigger: {
             trigger: valuesRef.current,
-            start: 'top 90%',
+            start: 'top 92%',
             once: true,
           },
         });

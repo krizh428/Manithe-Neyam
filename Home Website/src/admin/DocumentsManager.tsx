@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   AlertTriangle,
   Download,
@@ -277,6 +278,21 @@ const DocumentForm: React.FC<{
         />
       </div>
 
+      {saving && (
+        <div className="space-y-1.5 p-3 rounded-xl bg-brand-primary/5 border border-brand-primary/20">
+          <div className="flex items-center justify-between text-xs font-semibold text-brand-primary">
+            <span className="flex items-center gap-1.5">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <span>Uploading & Processing Document...</span>
+            </span>
+            <span>Please wait</span>
+          </div>
+          <div className="w-full h-1.5 bg-brand-primary/10 rounded-full overflow-hidden">
+            <div className="h-full bg-brand-primary rounded-full animate-pulse w-full" />
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-end gap-2">
         <button type="button" onClick={onCancel} className={buttonGhost}>
           Cancel
@@ -451,15 +467,21 @@ export const DocumentsManager: React.FC<Props> = ({ onAuthError }) => {
 
   return (
     <div className="space-y-5">
-      {toast && (
-        <div
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] px-5 py-3 rounded-lg shadow-xl text-sm font-medium text-white ${
-            toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
-          }`}
-        >
-          {toast.text}
-        </div>
-      )}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 15, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: 15, x: '-50%' }}
+            transition={{ duration: 0.2 }}
+            className={`fixed bottom-6 left-1/2 z-[70] px-5 py-3 rounded-xl shadow-xl text-sm font-semibold text-white ${
+              toast.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+            }`}
+          >
+            {toast.text}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
@@ -533,8 +555,10 @@ export const DocumentsManager: React.FC<Props> = ({ onAuthError }) => {
       )}
 
       {loading ? (
-        <div className="flex justify-center py-16">
-          <Loader2 className="w-7 h-7 animate-spin text-brand-primary" />
+        <div className="space-y-3 animate-pulse">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className={`${cardClass} p-5 h-28 bg-theme-secondary/70 border border-theme-border/60`} />
+          ))}
         </div>
       ) : loadError ? (
         <div className={`${cardClass} p-8 text-center space-y-3`}>
@@ -632,27 +656,40 @@ export const DocumentsManager: React.FC<Props> = ({ onAuthError }) => {
         </ul>
       )}
 
-      {deleting && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className={`${cardClass} max-w-sm w-full p-6 text-center space-y-4`}>
-            <AlertTriangle className="w-10 h-10 mx-auto text-red-500" />
-            <h3 className="font-bold text-theme-text">Delete “{deleting.title}”?</h3>
-            <p className="text-sm text-theme-text-secondary">The PDF and all attached images will be permanently removed.</p>
-            <div className="flex gap-3">
-              <button type="button" onClick={() => setDeleting(null)} className={`${buttonGhost} flex-1 justify-center`}>
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={confirmDelete}
-                className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {deleting && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.94, opacity: 0, y: 15 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.94, opacity: 0, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className={`${cardClass} max-w-sm w-full p-6 text-center space-y-4`}
+            >
+              <AlertTriangle className="w-10 h-10 mx-auto text-red-500" />
+              <h3 className="font-bold text-theme-text">Delete “{deleting.title}”?</h3>
+              <p className="text-sm text-theme-text-secondary">The PDF and all attached images will be permanently removed.</p>
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setDeleting(null)} className={`${buttonGhost} flex-1 justify-center`}>
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  className="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 cursor-pointer"
+                >
+                  Delete
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
